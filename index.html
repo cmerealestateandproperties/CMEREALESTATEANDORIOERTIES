@@ -1,1 +1,1643 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>NestView — Find your next home</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
+<style>
+/* ============================================================
+   DESIGN TOKENS
+   ============================================================ */
+:root{
+  --ink:#0d1b2a;
+  --ink-2:#33465c;
+  --muted:#6b7a8d;
+  --line:#e6eaf0;
+  --line-2:#eef1f6;
+  --bg:#f6f8fb;
+  --card:#ffffff;
+  --brand:#0b5fff;
+  --brand-dark:#0849cc;
+  --brand-soft:#e8f0ff;
+  --green:#0e9f6e;
+  --amber:#b4690e;
+  --radius:16px;
+  --radius-sm:10px;
+  --shadow-sm:0 1px 2px rgba(13,27,42,.05), 0 1px 3px rgba(13,27,42,.05);
+  --shadow-md:0 10px 30px rgba(13,27,42,.12);
+  --shadow-lg:0 24px 60px rgba(13,27,42,.20);
+  --header-h:72px;
+}
+
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;
+  font-family:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+  font-size:15px;
+  line-height:1.45;
+  color:var(--ink);
+  background:var(--bg);
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+}
+img{display:block;max-width:100%}
+button{font:inherit;color:inherit;cursor:pointer;border:0;background:none}
+input,select{font:inherit;color:inherit}
+a{color:inherit;text-decoration:none}
+::selection{background:var(--brand);color:#fff}
+
+/* scrollbars */
+.results::-webkit-scrollbar,.drawer::-webkit-scrollbar,.filters::-webkit-scrollbar{width:10px}
+.results::-webkit-scrollbar-thumb,.drawer::-webkit-scrollbar-thumb,.filters::-webkit-scrollbar-thumb{
+  background:#d3dae3;border-radius:99px;border:3px solid transparent;background-clip:content-box;
+}
+.results::-webkit-scrollbar-thumb:hover,.drawer::-webkit-scrollbar-thumb:hover{background:#b9c4d1;background-clip:content-box}
+
+/* ============================================================
+   TOP BAR
+   ============================================================ */
+.topbar{
+  position:sticky;top:0;z-index:800;
+  height:var(--header-h);
+  display:flex;align-items:center;gap:18px;
+  padding:0 22px;
+  background:rgba(255,255,255,.92);
+  backdrop-filter:saturate(180%) blur(14px);
+  -webkit-backdrop-filter:saturate(180%) blur(14px);
+  border-bottom:1px solid var(--line);
+}
+
+.brand{
+  display:flex;align-items:center;gap:10px;
+  font-size:21px;font-weight:800;letter-spacing:-.035em;
+  white-space:nowrap;flex:0 0 auto;
+}
+.brand-mark{
+  width:34px;height:34px;border-radius:10px;display:grid;place-items:center;
+  background:linear-gradient(140deg,#2f7bff,#0b5fff 55%,#0640b5);
+  box-shadow:0 4px 12px rgba(11,95,255,.32);
+}
+.brand-mark svg{width:19px;height:19px;fill:#fff}
+.brand em{font-style:normal;color:var(--brand)}
+
+.searchbar{
+  position:relative;flex:1 1 auto;max-width:560px;min-width:0;
+}
+.searchbar svg{
+  position:absolute;left:16px;top:50%;transform:translateY(-50%);
+  width:17px;height:17px;stroke:#8a97a8;fill:none;stroke-width:2;pointer-events:none;
+}
+.searchbar input{
+  width:100%;height:44px;padding:0 18px 0 44px;
+  border:1px solid transparent;border-radius:999px;
+  background:#f1f4f8;font-size:15px;font-weight:500;outline:none;
+  transition:background .18s ease, box-shadow .18s ease, border-color .18s ease;
+}
+.searchbar input::placeholder{color:#8a97a8;font-weight:500}
+.searchbar input:focus{
+  background:#fff;border-color:var(--brand);
+  box-shadow:0 0 0 4px rgba(11,95,255,.13);
+}
+
+.top-actions{display:flex;align-items:center;gap:8px;margin-left:auto}
+.nav-link{
+  padding:9px 13px;border-radius:999px;font-size:14px;font-weight:600;color:var(--ink-2);
+  transition:background .16s ease,color .16s ease;
+}
+.nav-link:hover{background:#f1f4f8;color:var(--ink)}
+.nav-link.dim{color:var(--muted)}
+
+.btn-saved{
+  display:inline-flex;align-items:center;gap:8px;
+  height:40px;padding:0 15px;border-radius:999px;
+  border:1px solid var(--line);background:#fff;
+  font-size:14px;font-weight:600;
+  transition:border-color .16s ease,background .16s ease,color .16s ease,box-shadow .16s ease;
+}
+.btn-saved svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.9;color:#96a3b3;transition:.16s}
+.btn-saved:hover{border-color:#cfd8e3;background:#fbfcfe}
+.btn-saved.active{background:var(--brand);border-color:var(--brand);color:#fff;box-shadow:0 6px 18px rgba(11,95,255,.28)}
+.btn-saved.active svg{fill:#fff;stroke:#fff;color:#fff}
+.btn-saved .count{
+  min-width:20px;height:20px;padding:0 6px;border-radius:999px;
+  display:inline-grid;place-items:center;font-size:12px;font-weight:700;
+  background:#eef1f6;color:var(--ink-2);
+}
+.btn-saved.active .count{background:rgba(255,255,255,.25);color:#fff}
+
+.btn-filter{
+  display:none;align-items:center;gap:7px;
+  height:40px;padding:0 15px;border-radius:999px;
+  border:1px solid var(--line);background:#fff;font-size:14px;font-weight:600;
+}
+.btn-filter svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2}
+
+/* ============================================================
+   APP LAYOUT
+   ============================================================ */
+.app{
+  display:grid;
+  grid-template-columns:270px minmax(0,1fr) minmax(340px,44%);
+  height:calc(100vh - var(--header-h));
+}
+
+/* ---------------- sidebar ---------------- */
+.filters{
+  padding:22px 18px 40px;
+  background:#fff;
+  border-right:1px solid var(--line);
+  overflow-y:auto;
+}
+.filters-head{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:18px;
+}
+.filters-head h2{
+  margin:0;font-size:12px;font-weight:700;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--muted);
+}
+.link-reset{
+  font-size:13px;font-weight:600;color:var(--brand);
+  padding:4px 6px;border-radius:6px;
+}
+.link-reset:hover{background:var(--brand-soft)}
+
+.field{display:block;margin-bottom:16px}
+.field > span{
+  display:block;margin-bottom:7px;font-size:12.5px;font-weight:600;
+  color:var(--ink-2);letter-spacing:.01em;
+}
+.select-wrap{position:relative}
+.select-wrap::after{
+  content:"";position:absolute;right:13px;top:50%;
+  width:8px;height:8px;margin-top:-5px;
+  border-right:2px solid #8a97a8;border-bottom:2px solid #8a97a8;
+  transform:rotate(45deg);pointer-events:none;
+}
+.field select{
+  width:100%;height:42px;padding:0 34px 0 13px;
+  border:1px solid var(--line);border-radius:var(--radius-sm);
+  background:#fff;font-size:14px;font-weight:500;outline:none;
+  appearance:none;-webkit-appearance:none;
+  transition:border-color .16s ease,box-shadow .16s ease;
+}
+.field select:hover{border-color:#d5dde7}
+.field select:focus{border-color:var(--brand);box-shadow:0 0 0 3px rgba(11,95,255,.12)}
+
+.side-card{
+  margin-top:22px;padding:16px;border-radius:var(--radius);
+  background:linear-gradient(160deg,#f4f8ff,#eef4ff);
+  border:1px solid #dde9ff;
+}
+.side-card h3{margin:0 0 4px;font-size:14px;font-weight:700}
+.side-card p{margin:0 0 12px;font-size:12.5px;color:var(--muted);line-height:1.5}
+.side-card button{
+  width:100%;height:38px;border-radius:9px;background:var(--brand);color:#fff;
+  font-size:13.5px;font-weight:600;transition:background .16s ease;
+}
+.side-card button:hover{background:var(--brand-dark)}
+
+/* ---------------- results ---------------- */
+.results{
+  overflow-y:auto;
+  padding:0 24px 70px;
+  scroll-behavior:smooth;
+}
+.results-head{
+  position:sticky;top:0;z-index:20;
+  display:flex;align-items:center;justify-content:space-between;gap:16px;
+  padding:20px 0 16px;margin-bottom:4px;
+  background:linear-gradient(to bottom,var(--bg) 72%,rgba(246,248,251,0));
+}
+.results-head h1{
+  margin:0;font-size:19px;font-weight:800;letter-spacing:-.02em;
+}
+.results-head .sub{
+  margin-top:2px;font-size:12.5px;color:var(--muted);font-weight:500;
+}
+.sort-wrap{position:relative;flex:0 0 auto}
+.sort-wrap::after{
+  content:"";position:absolute;right:12px;top:50%;
+  width:7px;height:7px;margin-top:-4px;
+  border-right:2px solid #8a97a8;border-bottom:2px solid #8a97a8;
+  transform:rotate(45deg);pointer-events:none;
+}
+.sort-wrap select{
+  height:38px;padding:0 30px 0 13px;border-radius:999px;
+  border:1px solid var(--line);background:#fff;font-size:13px;font-weight:600;
+  outline:none;appearance:none;-webkit-appearance:none;cursor:pointer;
+}
+.sort-wrap select:hover{border-color:#d5dde7}
+
+.grid{
+  display:grid;gap:20px;
+  grid-template-columns:repeat(auto-fill,minmax(262px,1fr));
+}
+
+/* ---------------- card ---------------- */
+.card{
+  position:relative;
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  overflow:hidden;
+  cursor:pointer;
+  transition:transform .18s cubic-bezier(.2,.8,.3,1), box-shadow .18s ease, border-color .18s ease;
+}
+.card:hover,.card:focus-visible{
+  transform:translateY(-3px);
+  box-shadow:var(--shadow-md);
+  border-color:#dbe3ec;
+  outline:none;
+}
+.card-media{
+  position:relative;aspect-ratio:4/3;background:#eef1f5;overflow:hidden;
+}
+.card-media img{
+  width:100%;height:100%;object-fit:cover;
+  transition:transform .5s cubic-bezier(.2,.8,.3,1);
+}
+.card:hover .card-media img{transform:scale(1.045)}
+
+.badge{
+  position:absolute;top:10px;left:10px;
+  padding:4px 9px;border-radius:7px;
+  font-size:10.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;
+  background:rgba(255,255,255,.95);
+  box-shadow:0 1px 3px rgba(13,27,42,.16);
+  backdrop-filter:blur(4px);
+}
+.badge--for_sale{color:#0a4fd6}
+.badge--pending{color:#8a5300;background:#fff4dd}
+.badge--sold{color:#4a5768;background:#eef1f6}
+.badge--new{
+  left:auto;right:10px;top:10px;
+  background:linear-gradient(135deg,#12b981,#0e9f6e);color:#fff;
+}
+
+.heart{
+  position:absolute;bottom:10px;right:10px;
+  width:36px;height:36px;border-radius:50%;
+  display:grid;place-items:center;
+  background:rgba(255,255,255,.95);
+  box-shadow:0 2px 8px rgba(13,27,42,.18);
+  transition:transform .16s ease, background .16s ease;
+  z-index:2;
+}
+.heart svg{
+  width:18px;height:18px;stroke:#5d6b7d;fill:transparent;stroke-width:1.9;
+  transition:fill .16s ease, stroke .16s ease, transform .16s ease;
+}
+.heart:hover{transform:scale(1.09);background:#fff}
+.heart:hover svg{stroke:#e8453c}
+.heart.on svg{fill:#e8453c;stroke:#e8453c}
+.heart.on{animation:pop .3s ease}
+@keyframes pop{0%{transform:scale(1)}45%{transform:scale(1.22)}100%{transform:scale(1)}}
+
+.card-body{padding:13px 15px 16px}
+.card-price{
+  display:flex;align-items:baseline;justify-content:space-between;gap:10px;
+}
+.price{font-size:20px;font-weight:800;letter-spacing:-.03em}
+.est{font-size:12px;font-weight:600;color:var(--muted);white-space:nowrap}
+.specs{
+  margin-top:3px;font-size:14px;font-weight:600;color:var(--ink-2);
+}
+.addr{
+  margin-top:5px;font-size:13px;color:var(--muted);
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+}
+.meta{
+  margin-top:8px;padding-top:9px;border-top:1px solid var(--line-2);
+  font-size:12px;color:#8a97a8;font-weight:500;
+  display:flex;justify-content:space-between;gap:8px;
+}
+
+/* ---------------- load more / empty ---------------- */
+.more-wrap{display:flex;justify-content:center;margin-top:32px}
+.more{
+  height:46px;padding:0 32px;border-radius:999px;
+  border:1.5px solid var(--brand);background:#fff;color:var(--brand);
+  font-size:14.5px;font-weight:700;
+  transition:background .16s ease,color .16s ease,box-shadow .16s ease;
+}
+.more:hover{background:var(--brand);color:#fff;box-shadow:0 10px 24px rgba(11,95,255,.26)}
+
+.empty{
+  grid-column:1/-1;
+  padding:64px 24px;text-align:center;
+  border:1.5px dashed #d9e1ea;border-radius:var(--radius);
+  background:#fff;
+}
+.empty .ico{
+  width:56px;height:56px;margin:0 auto 14px;border-radius:50%;
+  display:grid;place-items:center;background:var(--brand-soft);
+}
+.empty .ico svg{width:26px;height:26px;stroke:var(--brand);fill:none;stroke-width:1.8}
+.empty h3{margin:0 0 6px;font-size:17px;font-weight:700}
+.empty p{margin:0 auto;max-width:340px;font-size:13.5px;color:var(--muted);line-height:1.6}
+
+/* ---------------- map ---------------- */
+.mapwrap{position:relative;border-left:1px solid var(--line);background:#e9eef3}
+#map{position:absolute;inset:0}
+
+.leaflet-container{font-family:inherit;background:#e9eef3}
+.leaflet-control-attribution{
+  font-size:10.5px !important;background:rgba(255,255,255,.85) !important;
+  border-radius:6px 0 0 0;padding:2px 7px !important;
+}
+.leaflet-bar{border:0 !important;box-shadow:var(--shadow-sm) !important}
+.leaflet-bar a{
+  border-radius:9px !important;border:1px solid var(--line) !important;
+  color:var(--ink) !important;margin-bottom:5px;
+}
+
+.pin{background:none;border:0}
+.pin span{
+  position:absolute;left:0;top:0;transform:translate(-50%,-50%);
+  display:inline-block;padding:5px 10px;border-radius:999px;
+  background:#fff;color:var(--ink);
+  font-size:12px;font-weight:800;letter-spacing:-.01em;white-space:nowrap;
+  border:1.5px solid #d8e0ea;
+  box-shadow:0 3px 10px rgba(13,27,42,.16);
+  transition:background .15s ease,color .15s ease,border-color .15s ease,transform .15s ease;
+  cursor:pointer;
+}
+.pin:hover span,.pin.is-active span{
+  background:var(--ink);color:#fff;border-color:var(--ink);
+  transform:translate(-50%,-50%) scale(1.07);
+  z-index:500;
+}
+.pin.is-active{z-index:600}
+
+/* ---------------- mobile view toggle ---------------- */
+.view-toggle{
+  display:none;
+  position:fixed;left:50%;bottom:20px;transform:translateX(-50%);
+  z-index:650;
+  padding:5px;border-radius:999px;
+  background:rgba(255,255,255,.96);
+  box-shadow:0 10px 30px rgba(13,27,42,.22);
+  border:1px solid var(--line);
+  backdrop-filter:blur(10px);
+}
+.view-toggle button{
+  padding:9px 22px;border-radius:999px;
+  font-size:13.5px;font-weight:700;color:var(--muted);
+  transition:background .16s ease,color .16s ease;
+}
+.view-toggle button.active{background:var(--ink);color:#fff}
+
+/* ============================================================
+   DETAIL DRAWER
+   ============================================================ */
+.scrim{
+  position:fixed;inset:0;z-index:900;
+  background:rgba(13,27,42,.42);
+  backdrop-filter:blur(2px);
+  opacity:0;pointer-events:none;
+  transition:opacity .22s ease;
+}
+.scrim.show{opacity:1;pointer-events:auto}
+
+.drawer{
+  position:fixed;top:0;right:0;z-index:950;
+  width:min(560px,100%);height:100%;
+  background:#fff;
+  box-shadow:var(--shadow-lg);
+  transform:translateX(103%);
+  transition:transform .28s cubic-bezier(.22,.9,.3,1);
+  overflow-y:auto;
+  overscroll-behavior:contain;
+}
+.drawer.open{transform:translateX(0)}
+
+.drawer-hero{position:relative;aspect-ratio:16/10;background:#eef1f5}
+.drawer-hero img{width:100%;height:100%;object-fit:cover}
+.drawer-hero::after{
+  content:"";position:absolute;inset:0;
+  background:linear-gradient(to bottom,rgba(0,0,0,.28),transparent 34%);
+  pointer-events:none;
+}
+
+.close-btn{
+  position:absolute;top:14px;right:14px;z-index:3;
+  width:38px;height:38px;border-radius:50%;
+  display:grid;place-items:center;
+  background:rgba(255,255,255,.96);
+  box-shadow:0 3px 12px rgba(13,27,42,.2);
+  transition:transform .16s ease,background .16s ease;
+}
+.close-btn:hover{transform:scale(1.06);background:#fff}
+.close-btn svg{width:16px;height:16px;stroke:var(--ink);stroke-width:2.2;fill:none}
+
+.drawer-body{padding:22px 26px 70px}
+
+.drow{display:flex;align-items:flex-start;justify-content:space-between;gap:16px}
+.drawer .price-lg{font-size:30px;font-weight:800;letter-spacing:-.035em;line-height:1.1}
+.drawer .specs-lg{margin-top:6px;font-size:15px;font-weight:600;color:var(--ink-2)}
+.drawer .addr-lg{margin-top:4px;font-size:13.5px;color:var(--muted)}
+
+.heart-lg{
+  flex:0 0 auto;width:46px;height:46px;border-radius:50%;
+  display:grid;place-items:center;
+  border:1.5px solid var(--line);background:#fff;
+  transition:border-color .16s ease,background .16s ease,transform .16s ease;
+}
+.heart-lg svg{width:21px;height:21px;stroke:#7a8798;fill:transparent;stroke-width:1.9;transition:.16s}
+.heart-lg:hover{border-color:#f3c3c0;background:#fff8f8;transform:scale(1.05)}
+.heart-lg.on{border-color:#f6cfcc;background:#fff5f5}
+.heart-lg.on svg{fill:#e8453c;stroke:#e8453c}
+
+.pillrow{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+.pill{
+  padding:6px 12px;border-radius:999px;
+  background:#f4f6fa;border:1px solid var(--line-2);
+  font-size:12px;font-weight:600;color:var(--ink-2);
+}
+.pill.brand{background:var(--brand-soft);border-color:#d6e4ff;color:var(--brand-dark)}
+
+.section-title{
+  margin:28px 0 10px;font-size:14px;font-weight:800;
+  letter-spacing:.01em;
+}
+.drawer p.desc{
+  margin:0;font-size:14px;line-height:1.65;color:#46586c;
+}
+
+/* calculator */
+.calc{
+  display:grid;grid-template-columns:1fr auto auto;gap:14px;align-items:end;
+  padding:16px;border-radius:14px;
+  background:linear-gradient(150deg,#f7faff,#f1f6ff);
+  border:1px solid #dfeaff;
+}
+.calc-out{font-size:12px;font-weight:600;color:var(--muted);line-height:1.3}
+.calc-out strong{
+  display:block;font-size:25px;font-weight:800;letter-spacing:-.035em;color:var(--ink);
+}
+.calc label{display:block;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.calc input{
+  width:78px;height:36px;margin-top:5px;padding:0 10px;
+  border:1px solid var(--line);border-radius:9px;background:#fff;
+  font-size:14px;font-weight:600;outline:none;text-align:center;
+  transition:border-color .16s ease,box-shadow .16s ease;
+}
+.calc input:focus{border-color:var(--brand);box-shadow:0 0 0 3px rgba(11,95,255,.12)}
+.calc-note{margin:9px 0 0;font-size:11.5px;color:#8a97a8;line-height:1.55}
+
+/* agent card */
+.agent{
+  display:flex;align-items:center;gap:13px;
+  margin-top:20px;padding:14px;border-radius:14px;
+  border:1px solid var(--line);background:#fff;
+}
+.avatar{
+  width:46px;height:46px;border-radius:50%;flex:0 0 auto;
+  display:grid;place-items:center;
+  background:linear-gradient(140deg,#2f7bff,#0b5fff);
+  color:#fff;font-weight:800;font-size:15px;letter-spacing:.02em;
+}
+.agent-info{flex:1;min-width:0}
+.agent-info b{display:block;font-size:14px;font-weight:700}
+.agent-info span{font-size:12.5px;color:var(--muted)}
+.agent button{
+  height:36px;padding:0 16px;border-radius:999px;
+  background:var(--ink);color:#fff;font-size:13px;font-weight:700;
+  transition:background .16s ease;
+}
+.agent button:hover{background:#1b2f47}
+
+/* similar */
+.similar-grid{display:grid;grid-template-columns:1fr 1fr;gap:13px}
+.mini{
+  border:1px solid var(--line);border-radius:12px;overflow:hidden;
+  background:#fff;cursor:pointer;
+  transition:box-shadow .16s ease,transform .16s ease,border-color .16s ease;
+}
+.mini:hover{box-shadow:var(--shadow-md);transform:translateY(-2px);border-color:#dbe3ec}
+.mini img{width:100%;aspect-ratio:4/3;object-fit:cover}
+.mini-body{padding:9px 11px 11px}
+.mini-price{font-size:14.5px;font-weight:800;letter-spacing:-.02em}
+.mini-specs{font-size:11.5px;color:var(--muted);margin-top:1px}
+.mini-addr{
+  font-size:11.5px;color:#8a97a8;margin-top:3px;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+}
+
+/* ============================================================
+   TOAST
+   ============================================================ */
+.toast{
+  position:fixed;left:50%;bottom:26px;z-index:1000;
+  transform:translate(-50%,24px);
+  display:flex;align-items:center;gap:9px;
+  padding:12px 20px;border-radius:12px;
+  background:var(--ink);color:#fff;
+  font-size:13.5px;font-weight:600;
+  box-shadow:0 14px 34px rgba(13,27,42,.32);
+  opacity:0;pointer-events:none;
+  transition:opacity .2s ease, transform .2s ease;
+}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+.toast svg{width:16px;height:16px;stroke:#4ade80;fill:none;stroke-width:2.4}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width:1240px){
+  .app{grid-template-columns:240px minmax(0,1fr) minmax(300px,42%)}
+  .grid{grid-template-columns:repeat(auto-fill,minmax(240px,1fr))}
+}
+
+@media (max-width:1000px){
+  :root{--header-h:64px}
+  .topbar{padding:0 14px;gap:10px}
+  .nav-link.dim{display:none}
+  .btn-filter{display:inline-flex}
+
+  .app{grid-template-columns:1fr;height:auto}
+  .results{padding:0 16px 90px}
+  .mapwrap{display:none}
+
+  .filters{
+    position:fixed;top:0;left:0;bottom:0;z-index:960;
+    width:min(320px,86vw);
+    transform:translateX(-103%);
+    transition:transform .26s cubic-bezier(.22,.9,.3,1);
+    box-shadow:var(--shadow-lg);
+  }
+  .filters.open{transform:translateX(0)}
+
+  .view-toggle{display:flex}
+
+  body.show-map .results{display:none}
+  body.show-map .mapwrap{
+    display:block;position:fixed;
+    top:var(--header-h);left:0;right:0;bottom:0;z-index:400;
+    border-left:0;
+  }
+}
+
+@media (max-width:640px){
+  .brand{font-size:18px}
+  .brand-mark{width:30px;height:30px;border-radius:9px}
+  .brand-mark svg{width:17px;height:17px}
+  .topbar .brand em{display:none}
+  .btn-saved .label{display:none}
+  .searchbar input{height:40px;font-size:14px}
+  .results-head{flex-direction:column;align-items:flex-start;gap:10px}
+  .grid{grid-template-columns:1fr;gap:16px}
+  .card-media{aspect-ratio:16/10}
+  .similar-grid{grid-template-columns:1fr}
+  .drawer-body{padding:18px 18px 60px}
+  .drawer .price-lg{font-size:25px}
+  .calc{grid-template-columns:1fr 1fr;gap:12px}
+  .calc-out{grid-column:1/-1}
+  .nav-link{display:none}
+}
+
+@media (prefers-reduced-motion:reduce){
+  *{animation-duration:.001ms !important;transition-duration:.001ms !important}
+}
+</style>
+</head>
+<body>
+
+<!-- ============================ HEADER ============================ -->
+<header class="topbar">
+  <a class="brand" href="#" aria-label="NestView home">
+    <span class="brand-mark">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.1 2.6 10.5a1 1 0 0 0 .62 1.79h1.3v7.7a1 1 0 0 0 1 1h4.3v-6.2h4.36v6.2h4.3a1 1 0 0 0 1-1v-7.7h1.3a1 1 0 0 0 .62-1.79z"/></svg>
+    </span>
+    Nest<em>View</em>
+  </a>
+
+  <form class="searchbar" id="searchForm" role="search" autocomplete="off">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+    <input id="searchInput" type="search" placeholder="City, ZIP code, or address" aria-label="Search homes" />
+  </form>
+
+  <div class="top-actions">
+    <button class="btn-filter" id="filterBtn" aria-label="Open filters">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M7 12h10M10 18h4"/></svg>
+      Filters
+    </button>
+    <a class="nav-link dim" href="#">Buy</a>
+    <a class="nav-link dim" href="#">Rent</a>
+    <a class="nav-link dim" href="#">Sell</a>
+    <button class="btn-saved" id="savedBtn" aria-pressed="false">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20.5s-7.4-4.6-9.2-8.9C1.4 8.1 3.5 4.8 6.9 4.8c2 0 3.5 1 4.4 2.3.9-1.3 2.4-2.3 4.4-2.3 3.4 0 5.5 3.3 4.1 6.8-1.8 4.3-9.2 8.9-9.2 8.9z"/></svg>
+      <span class="label">Saved</span>
+      <span class="count" id="savedCount">0</span>
+    </button>
+  </div>
+</header>
+
+<!-- ============================ APP ============================ -->
+<main class="app">
+
+  <!-- ---------------- filters ---------------- -->
+  <aside class="filters" id="filters">
+    <div class="filters-head">
+      <h2>Filters</h2>
+      <button class="link-reset" id="resetBtn">Reset</button>
+    </div>
+
+    <label class="field">
+      <span>Min price</span>
+      <div class="select-wrap">
+        <select id="minPrice">
+          <option value="">No min</option>
+          <option value="200000">$200,000</option>
+          <option value="300000">$300,000</option>
+          <option value="400000">$400,000</option>
+          <option value="500000">$500,000</option>
+          <option value="750000">$750,000</option>
+          <option value="1000000">$1,000,000</option>
+        </select>
+      </div>
+    </label>
+
+    <label class="field">
+      <span>Max price</span>
+      <div class="select-wrap">
+        <select id="maxPrice">
+          <option value="">No max</option>
+          <option value="300000">$300,000</option>
+          <option value="400000">$400,000</option>
+          <option value="500000">$500,000</option>
+          <option value="750000">$750,000</option>
+          <option value="1000000">$1,000,000</option>
+          <option value="2000000">$2,000,000</option>
+        </select>
+      </div>
+    </label>
+
+    <label class="field">
+      <span>Beds</span>
+      <div class="select-wrap">
+        <select id="beds">
+          <option value="">Any</option>
+          <option value="1">1+</option>
+          <option value="2">2+</option>
+          <option value="3">3+</option>
+          <option value="4">4+</option>
+          <option value="5">5+</option>
+        </select>
+      </div>
+    </label>
+
+    <label class="field">
+      <span>Baths</span>
+      <div class="select-wrap">
+        <select id="baths">
+          <option value="">Any</option>
+          <option value="1">1+</option>
+          <option value="2">2+</option>
+          <option value="3">3+</option>
+          <option value="4">4+</option>
+        </select>
+      </div>
+    </label>
+
+    <label class="field">
+      <span>Home type</span>
+      <div class="select-wrap">
+        <select id="type">
+          <option value="">All types</option>
+          <option value="SINGLE_FAMILY">Single family</option>
+          <option value="CONDO">Condo</option>
+          <option value="TOWNHOUSE">Townhouse</option>
+          <option value="MULTI_FAMILY">Multi-family</option>
+        </select>
+      </div>
+    </label>
+
+    <label class="field">
+      <span>Status</span>
+      <div class="select-wrap">
+        <select id="status">
+          <option value="FOR_SALE">For sale</option>
+          <option value="PENDING">Pending</option>
+          <option value="SOLD">Sold</option>
+          <option value="">Any</option>
+        </select>
+      </div>
+    </label>
+
+    <div class="side-card">
+      <h3>Get price alerts</h3>
+      <p>Be the first to know when a matching home hits the market in your favorite neighborhood.</p>
+      <button id="alertBtn">Create alert</button>
+    </div>
+  </aside>
+
+  <!-- ---------------- results ---------------- -->
+  <section class="results" id="resultsPane">
+    <div class="results-head">
+      <div>
+        <h1 id="resultsTitle">Homes for sale</h1>
+        <div class="sub" id="resultsSub">Loading listings…</div>
+      </div>
+      <div class="sort-wrap">
+        <select id="sortSelect" aria-label="Sort results">
+          <option value="newest">Newest</option>
+          <option value="price_asc">Price: low to high</option>
+          <option value="price_desc">Price: high to low</option>
+          <option value="sqft_desc">Square feet</option>
+          <option value="beds_desc">Bedrooms</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="grid" id="grid"></div>
+
+    <div class="more-wrap">
+      <button class="more" id="moreBtn" hidden>Show more homes</button>
+    </div>
+  </section>
+
+  <!-- ---------------- map ---------------- -->
+  <section class="mapwrap">
+    <div id="map"></div>
+  </section>
+</main>
+
+<!-- ============================ OVERLAYS ============================ -->
+<div class="view-toggle" role="group" aria-label="View mode">
+  <button data-view="list" class="active">List</button>
+  <button data-view="map">Map</button>
+</div>
+
+<div class="scrim" id="scrim"></div>
+<aside class="drawer" id="drawer" aria-hidden="true" aria-label="Home details"></aside>
+
+<div class="toast" id="toast">
+  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m4 12.5 5 5L20 6.5"/></svg>
+  <span id="toastMsg"></span>
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+/* =====================================================================
+   NestView — a complete client-side real estate experience
+   ===================================================================== */
+(function () {
+  'use strict';
+
+  /* ==================================================================
+     1. DATA
+     ================================================================== */
+
+  const IMAGES = [
+    'https://images.unsplash.com/photo-1568605114967-8130f3a36994?auto=format&fit=crop&w=900&q=70',
+    'https://images.unsplash.com/photo-1570129477492-45c003edd2be?auto=format&fit=crop&w=900&q=70',
+    'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=900&q=70',
+    'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=900&q=70',
+    'https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&w=900&q=70',
+    'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=900&q=70',
+    'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=900&q=70',
+    'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=900&q=70',
+    'https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?auto=format&fit=crop&w=900&q=70',
+    'https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=900&q=70',
+    'https://images.unsplash.com/photo-1605276374104-dee2a0ed3cd6?auto=format&fit=crop&w=900&q=70',
+    'https://images.unsplash.com/photo-1502005229762-cf1b2da7c5d6?auto=format&fit=crop&w=900&q=70'
+  ];
+
+  const CITIES = [
+    { city:'Austin',    state:'TX', zips:['78701','78704','78745','78751'], lat:30.2672,  lng:-97.7431,  base:560000 },
+    { city:'Denver',    state:'CO', zips:['80202','80211','80218','80206'], lat:39.7392,  lng:-104.9903, base:645000 },
+    { city:'Seattle',   state:'WA', zips:['98101','98103','98115','98117'], lat:47.6062,  lng:-122.3321, base:885000 },
+    { city:'Nashville', state:'TN', zips:['37201','37206','37212','37215'], lat:36.1627,  lng:-86.7816,  base:498000 },
+    { city:'Phoenix',   state:'AZ', zips:['85003','85016','85032','85048'], lat:33.4484,  lng:-112.0740, base:445000 },
+    { city:'Columbus',  state:'OH', zips:['43201','43206','43214','43221'], lat:39.9612,  lng:-82.9988,  base:338000 },
+    { city:'Portland',  state:'OR', zips:['97201','97209','97214','97217'], lat:45.5152,  lng:-122.6784, base:612000 },
+    { city:'Charlotte', state:'NC', zips:['28202','28205','28209','28211'], lat:35.2271,  lng:-80.8431,  base:428000 },
+    { city:'San Diego', state:'CA', zips:['92101','92104','92109','92116'], lat:32.7157,  lng:-117.1611, base:940000 },
+    { city:'Chicago',   state:'IL', zips:['60610','60614','60622','60647'], lat:41.8781,  lng:-87.6298,  base:525000 }
+  ];
+
+  const STREETS = [
+    'Maple Ave','Oak St','Cedar Ln','Sunset Blvd','Riverside Dr','Elm St',
+    'Pinecrest Way','Hillcrest Rd','Magnolia Dr','Birch Ct','Willow Way',
+    'Juniper St','Aspen Trl','Lakeview Dr','Brookside Ln','Chestnut St',
+    'Sycamore Ave','Foxglove Ct','Hawthorne Rd','Meadowbrook Dr','Cypress Pt',
+    'Stonebridge Way','Quail Hollow','Wisteria Ln','Crescent Ave'
+  ];
+
+  const TYPES = ['SINGLE_FAMILY','SINGLE_FAMILY','SINGLE_FAMILY','SINGLE_FAMILY','CONDO','TOWNHOUSE','MULTI_FAMILY'];
+
+  const TYPE_LABEL = {
+    SINGLE_FAMILY:'Single family',
+    CONDO:'Condo',
+    TOWNHOUSE:'Townhouse',
+    MULTI_FAMILY:'Multi-family'
+  };
+
+  const STATUS_LABEL = { FOR_SALE:'For sale', PENDING:'Pending', SOLD:'Sold' };
+
+  const FEATURES = [
+    'hardwood floors throughout','a chef-inspired kitchen with quartz counters',
+    'a fully fenced backyard','a two-car attached garage','vaulted ceilings',
+    'a generous walk-in closet','a dedicated home office','a covered patio',
+    'energy-efficient windows','a wood-burning fireplace','a smart thermostat',
+    'a spa-style primary bath','a finished basement','mature landscaping',
+    'an open-concept living and dining area','a private balcony'
+  ];
+
+  /* deterministic RNG so the demo is stable across reloads */
+  function mulberry32(seed) {
+    return function () {
+      seed |= 0; seed = (seed + 0x6D2B79F5) | 0;
+      let t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+      t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+
+  function buildListings(count) {
+    const rnd = mulberry32(20240517);
+    const pick = arr => arr[Math.floor(rnd() * arr.length)];
+    const int = (a, b) => Math.floor(rnd() * (b - a + 1)) + a;
+    const shuffle = arr => {
+      const a = arr.slice();
+      for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(rnd() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+      }
+      return a;
+    };
+
+    const listings = [];
+
+    for (let i = 1; i <= count; i++) {
+      const loc = pick(CITIES);
+      const beds = int(1, 6);
+      const baths = Math.max(1, Math.min(beds, int(1, 4))) + (rnd() < 0.34 ? 0.5 : 0);
+      const sqft = 780 + beds * 360 + int(0, 1250);
+      const lot = Math.round(sqft * (1.4 + rnd() * 5.2));
+      const year = int(1928, 2024);
+      const type = pick(TYPES);
+
+      let price = loc.base * (0.58 + beds * 0.145) * (0.84 + rnd() * 0.5);
+      if (type === 'CONDO') price *= 0.82;
+      if (type === 'MULTI_FAMILY') price *= 1.16;
+      if (year > 2015) price *= 1.08;
+      price = Math.round(price / 1000) * 1000;
+
+      const roll = rnd();
+      const status = roll < 0.82 ? 'FOR_SALE' : roll < 0.92 ? 'PENDING' : 'SOLD';
+
+      const daysAgo = int(0, 120);
+      const listedAt = Date.now() - daysAgo * 86400000;
+
+      const feats = shuffle(FEATURES).slice(0, 4);
+      const description =
+        `Welcome home to this beautifully maintained ${beds}-bedroom, ${baths}-bathroom ` +
+        `${TYPE_LABEL[type].toLowerCase()} in the heart of ${loc.city}. Spanning ${sqft.toLocaleString()} ` +
+        `square feet and built in ${year}, the home pairs a thoughtful layout with standout details — ` +
+        `${feats[0]}, ${feats[1]}, ${feats[2]}, and ${feats[3]}. ` +
+        `Enjoy easy access to parks, neighborhood cafés, shopping, and commuter routes. ` +
+        `Schedule your private showing today.`;
+
+      listings.push({
+        id: i,
+        address: `${int(100, 9800)} ${pick(STREETS)}`,
+        city: loc.city,
+        state: loc.state,
+        zip: pick(loc.zips),
+        price,
+        beds,
+        baths,
+        sqft,
+        lot,
+        year,
+        type,
+        status,
+        lat: +(loc.lat + (rnd() - 0.5) * 0.115).toFixed(6),
+        lng: +(loc.lng + (rnd() - 0.5) * 0.135).toFixed(6),
+        listedAt,
+        description,
+        img: IMAGES[Math.floor(rnd() * IMAGES.length)],
+        agent: {
+          name: pick(['Jordan Ellis','Priya Raman','Marcus Cole','Sofia Delgado','Ava Whitfield','Noah Bennett']),
+          title: pick(['Listing Agent','Senior Agent','Associate Broker'])
+        }
+      });
+    }
+    return listings;
+  }
+
+  const LISTINGS = buildListings(240);
+
+  /* ==================================================================
+     2. UTILITIES
+     ================================================================== */
+
+  const $ = (sel, el = document) => el.querySelector(sel);
+
+  const esc = v => String(v == null ? '' : v).replace(/[&<>"']/g, c =>
+    ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c]));
+
+  const fmtUSD = n => n == null ? '—' : new Intl.NumberFormat('en-US', {
+    style:'currency', currency:'USD', maximumFractionDigits:0
+  }).format(n);
+
+  const fmtNum = n => n == null ? '—' : new Intl.NumberFormat('en-US').format(n);
+
+  function shortPrice(n) {
+    if (n >= 1000000) return '$' + (n / 1000000).toFixed(n % 1000000 === 0 ? 0 : 1).replace(/\.0$/, '') + 'M';
+    if (n >= 1000) return '$' + Math.round(n / 1000) + 'K';
+    return '$' + n;
+  }
+
+  function timeAgo(ts) {
+    const d = Math.floor((Date.now() - ts) / 86400000);
+    if (d <= 0) return 'today';
+    if (d === 1) return '1 day ago';
+    if (d < 30) return d + ' days ago';
+    const m = Math.floor(d / 30);
+    return m === 1 ? '1 month ago' : m + ' months ago';
+  }
+
+  function monthlyPayment(price, downPct, ratePct) {
+    const principal = price * (1 - downPct / 100);
+    const r = ratePct / 100 / 12;
+    const n = 360;
+    if (r <= 0) return principal / n;
+    return (principal * r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1);
+  }
+
+  function debounce(fn, ms) {
+    let t;
+    return function (...args) {
+      clearTimeout(t);
+      t = setTimeout(() => fn.apply(this, args), ms);
+    };
+  }
+
+  function initials(name) {
+    return name.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
+  }
+
+  /* ==================================================================
+     3. STATE
+     ================================================================== */
+
+  const SAVED_KEY = 'nestview_saved_v1';
+
+  const state = {
+    q: '',
+    min: '',
+    max: '',
+    beds: '',
+    baths: '',
+    type: '',
+    status: 'FOR_SALE',
+    sort: 'newest',
+    savedOnly: false,
+    shown: 12,
+    pageSize: 12
+  };
+
+  let saved = new Set();
+  try {
+    saved = new Set(JSON.parse(localStorage.getItem(SAVED_KEY) || '[]'));
+  } catch (e) { saved = new Set(); }
+
+  function persistSaved() {
+    try {
+      localStorage.setItem(SAVED_KEY, JSON.stringify([...saved]));
+    } catch (e) { /* storage unavailable */ }
+  }
+
+  /* ==================================================================
+     4. FILTER + SORT
+     ================================================================== */
+
+  function filtered() {
+    const q = state.q.trim().toLowerCase();
+
+    let out = LISTINGS.filter(l => {
+      if (q) {
+        const hit =
+          l.address.toLowerCase().includes(q) ||
+          l.city.toLowerCase().includes(q) ||
+          l.zip.includes(q) ||
+          (l.state.toLowerCase() === q) ||
+          (l.city + ', ' + l.state).toLowerCase().includes(q);
+        if (!hit) return false;
+      }
+      if (state.min && l.price < +state.min) return false;
+      if (state.max && l.price > +state.max) return false;
+      if (state.beds && l.beds < +state.beds) return false;
+      if (state.baths && l.baths < +state.baths) return false;
+      if (state.type && l.type !== state.type) return false;
+      if (state.status && l.status !== state.status) return false;
+      if (state.savedOnly && !saved.has(l.id)) return false;
+      return true;
+    });
+
+    switch (state.sort) {
+      case 'price_asc':  out.sort((a, b) => a.price - b.price); break;
+      case 'price_desc': out.sort((a, b) => b.price - a.price); break;
+      case 'sqft_desc':  out.sort((a, b) => b.sqft - a.sqft); break;
+      case 'beds_desc':  out.sort((a, b) => b.beds - a.beds); break;
+      default:           out.sort((a, b) => b.listedAt - a.listedAt);
+    }
+    return out;
+  }
+
+  /* ==================================================================
+     5. MAP
+     ================================================================== */
+
+  let map = null;
+  let pinLayer = null;
+  const pinById = new Map();
+  let activePinId = null;
+
+  function initMap() {
+    if (typeof L === 'undefined') return;
+
+    map = L.map('map', {
+      zoomControl: false,
+      attributionControl: true,
+      scrollWheelZoom: true
+    }).setView([39.5, -98.35], 4);
+
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+      maxZoom: 19,
+      subdomains: 'abcd',
+      attribution: '&copy; OpenStreetMap &copy; CARTO'
+    }).addTo(map);
+
+    L.control.zoom({ position: 'bottomright' }).addTo(map);
+
+    pinLayer = L.layerGroup().addTo(map);
+  }
+
+  function pinIcon(price) {
+    return L.divIcon({
+      className: 'pin',
+      html: '<span>' + esc(shortPrice(price)) + '</span>',
+      iconSize: [0, 0],
+      iconAnchor: [0, 0]
+    });
+  }
+
+  function renderPins(list) {
+    if (!map || !pinLayer) return;
+
+    pinLayer.clearLayers();
+    pinById.clear();
+    activePinId = null;
+
+    const bounds = [];
+
+    list.forEach(l => {
+      const marker = L.marker([l.lat, l.lng], {
+        icon: pinIcon(l.price),
+        riseOnHover: true,
+        title: l.address + ', ' + l.city
+      });
+
+      marker.on('click', () => openDetail(l.id));
+      marker.on('mouseover', () => {
+        const card = document.querySelector('.card[data-id="' + l.id + '"]');
+        if (card) card.style.borderColor = '#b9c8dc';
+      });
+      marker.on('mouseout', () => {
+        const card = document.querySelector('.card[data-id="' + l.id + '"]');
+        if (card) card.style.borderColor = '';
+      });
+
+      marker.addTo(pinLayer);
+      pinById.set(l.id, marker);
+      bounds.push([l.lat, l.lng]);
+    });
+
+    if (bounds.length === 1) {
+      map.setView(bounds[0], 12);
+    } else if (bounds.length > 1) {
+      map.fitBounds(bounds, { padding: [48, 48], maxZoom: 12 });
+    }
+  }
+
+  function highlightPin(id) {
+    if (activePinId != null && pinById.has(activePinId)) {
+      const prev = pinById.get(activePinId).getElement();
+      if (prev) prev.classList.remove('is-active');
+    }
+    activePinId = id;
+    if (id != null && pinById.has(id)) {
+      const el = pinById.get(id).getElement();
+      if (el) el.classList.add('is-active');
+    }
+  }
+
+  /* ==================================================================
+     6. RENDER — RESULTS
+     ================================================================== */
+
+  let currentResults = [];
+
+  function render() {
+    currentResults = filtered();
+    renderHead();
+    renderGrid();
+    renderPins(currentResults);
+    syncSavedUI();
+  }
+
+  function renderHead() {
+    const title = $('#resultsTitle');
+    const sub = $('#resultsSub');
+    const total = currentResults.length;
+
+    if (state.savedOnly) {
+      title.textContent = 'Saved homes';
+      sub.textContent = total === 0
+        ? 'Tap the heart on any listing to save it here.'
+        : total + (total === 1 ? ' home' : ' homes') + ' in your collection';
+      return;
+    }
+
+    const label = state.status ? STATUS_LABEL[state.status] : 'Homes';
+    title.textContent = label === 'For sale' ? 'Homes for sale' : label + ' homes';
+    sub.textContent = total.toLocaleString() + (total === 1 ? ' listing' : ' listings') +
+      (state.q ? ' matching “' + state.q + '”' : ' available right now');
+  }
+
+  function cardHTML(l) {
+    const isSaved = saved.has(l.id);
+    const isNew = Date.now() - l.listedAt < 7 * 86400000;
+    const fallback = 'https://picsum.photos/seed/nestview' + l.id + '/900/675';
+
+    return '' +
+      '<article class="card" data-id="' + l.id + '" tabindex="0" ' +
+        'aria-label="' + esc(l.address + ', ' + l.city) + ' — ' + fmtUSD(l.price) + '">' +
+        '<div class="card-media">' +
+          '<img src="' + esc(l.img) + '" alt="Photo of ' + esc(l.address) + '" loading="lazy" ' +
+               'onerror="this.onerror=null;this.src=\'' + fallback + '\'">' +
+          '<span class="badge badge--' + l.status.toLowerCase() + '">' +
+            esc(STATUS_LABEL[l.status]) + '</span>' +
+          (isNew ? '<span class="badge badge--new">New</span>' : '') +
+          '<button class="heart' + (isSaved ? ' on' : '') + '" data-fav="' + l.id + '" ' +
+                  'aria-label="' + (isSaved ? 'Remove from saved' : 'Save home') + '" ' +
+                  'aria-pressed="' + isSaved + '">' +
+            '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20.5s-7.4-4.6-9.2-8.9C1.4 8.1 3.5 4.8 6.9 4.8c2 0 3.5 1 4.4 2.3.9-1.3 2.4-2.3 4.4-2.3 3.4 0 5.5 3.3 4.1 6.8-1.8 4.3-9.2 8.9-9.2 8.9z"/></svg>' +
+          '</button>' +
+        '</div>' +
+        '<div class="card-body">' +
+          '<div class="card-price">' +
+            '<span class="price">' + fmtUSD(l.price) + '</span>' +
+            '<span class="est">' + fmtUSD(Math.round(monthlyPayment(l.price, 20, 6.5))) + '/mo</span>' +
+          '</div>' +
+          '<div class="specs">' + l.beds + ' bds · ' + l.baths + ' ba · ' + fmtNum(l.sqft) + ' sqft</div>' +
+          '<div class="addr">' + esc(l.address) + ', ' + esc(l.city) + ', ' + esc(l.state) + ' ' + esc(l.zip) + '</div>' +
+          '<div class="meta"><span>' + esc(TYPE_LABEL[l.type]) + '</span><span>' + timeAgo(l.listedAt) + '</span></div>' +
+        '</div>' +
+      '</article>';
+  }
+
+  function emptyHTML() {
+    if (state.savedOnly) {
+      return '' +
+        '<div class="empty">' +
+          '<div class="ico"><svg viewBox="0 0 24 24"><path d="M12 20.5s-7.4-4.6-9.2-8.9C1.4 8.1 3.5 4.8 6.9 4.8c2 0 3.5 1 4.4 2.3.9-1.3 2.4-2.3 4.4-2.3 3.4 0 5.5 3.3 4.1 6.8-1.8 4.3-9.2 8.9-9.2 8.9z"/></svg></div>' +
+          '<h3>No saved homes yet</h3>' +
+          '<p>Tap the heart icon on any listing and it will show up here, saved on this device.</p>' +
+        '</div>';
+    }
+    return '' +
+      '<div class="empty">' +
+        '<div class="ico"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg></div>' +
+        '<h3>No homes match those filters</h3>' +
+        '<p>Try widening your price range, removing a bedroom minimum, or searching a nearby city.</p>' +
+      '</div>';
+  }
+
+  function renderGrid() {
+    const grid = $('#grid');
+    const visible = currentResults.slice(0, state.shown);
+
+    grid.innerHTML = visible.length
+      ? visible.map(cardHTML).join('')
+      : emptyHTML();
+
+    $('#moreBtn').hidden = state.savedOnly || visible.length >= currentResults.length;
+  }
+
+  /* ==================================================================
+     7. SAVED HOMES
+     ================================================================== */
+
+  function syncSavedUI() {
+    $('#savedCount').textContent = saved.size;
+    const btn = $('#savedBtn');
+    btn.classList.toggle('active', state.savedOnly);
+    btn.setAttribute('aria-pressed', state.savedOnly);
+  }
+
+  function toggleSaved(id) {
+    const wasSaved = saved.has(id);
+
+    if (wasSaved) saved.delete(id);
+    else saved.add(id);
+
+    persistSaved();
+
+    /* update every heart on screen for this listing */
+    document.querySelectorAll('[data-fav="' + id + '"]').forEach(el => {
+      el.classList.toggle('on', !wasSaved);
+      el.setAttribute('aria-pressed', String(!wasSaved));
+      el.setAttribute('aria-label', wasSaved ? 'Save home' : 'Remove from saved');
+    });
+
+    syncSavedUI();
+
+    if (state.savedOnly) {
+      render();
+    }
+
+    toast(wasSaved ? 'Removed from saved homes' : 'Saved to your homes');
+  }
+
+  /* ==================================================================
+     8. DETAIL DRAWER
+     ================================================================== */
+
+  const drawer = $('#drawer');
+  const scrim = $('#scrim');
+  let activeDetailId = null;
+
+  function detailHTML(l) {
+    const isSaved = saved.has(l.id);
+    const est = Math.round(monthlyPayment(l.price, 20, 6.5));
+    const fallback = 'https://picsum.photos/seed/nestview' + l.id + '/1200/900';
+
+    return '' +
+      '<div class="drawer-hero">' +
+        '<img src="' + esc(l.img) + '" alt="Photo of ' + esc(l.address) + '" ' +
+             'onerror="this.onerror=null;this.src=\'' + fallback + '\'">' +
+        '<button class="close-btn" id="closeDrawer" aria-label="Close details">' +
+          '<svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg>' +
+        '</button>' +
+      '</div>' +
+
+      '<div class="drawer-body">' +
+        '<div class="drow">' +
+          '<div>' +
+            '<div class="price-lg">' + fmtUSD(l.price) + '</div>' +
+            '<div class="specs-lg">' + l.beds + ' bds · ' + l.baths + ' ba · ' + fmtNum(l.sqft) + ' sqft</div>' +
+            '<div class="addr-lg">' + esc(l.address) + ', ' + esc(l.city) + ', ' + esc(l.state) + ' ' + esc(l.zip) + '</div>' +
+          '</div>' +
+          '<button class="heart-lg' + (isSaved ? ' on' : '') + '" data-fav="' + l.id + '" ' +
+                  'aria-label="' + (isSaved ? 'Remove from saved' : 'Save home') + '">' +
+            '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20.5s-7.4-4.6-9.2-8.9C1.4 8.1 3.5 4.8 6.9 4.8c2 0 3.5 1 4.4 2.3.9-1.3 2.4-2.3 4.4-2.3 3.4 0 5.5 3.3 4.1 6.8-1.8 4.3-9.2 8.9-9.2 8.9z"/></svg>' +
+          '</button>' +
+        '</div>' +
+
+        '<div class="pillrow">' +
+          '<span class="pill brand">' + esc(STATUS_LABEL[l.status]) + '</span>' +
+          '<span class="pill">' + esc(TYPE_LABEL[l.type]) + '</span>' +
+          '<span class="pill">Built ' + l.year + '</span>' +
+          '<span class="pill">' + fmtNum(l.lot) + ' sqft lot</span>' +
+          '<span class="pill">Listed ' + timeAgo(l.listedAt) + '</span>' +
+        '</div>' +
+
+        '<h3 class="section-title">About this home</h3>' +
+        '<p class="desc">' + esc(l.description) + '</p>' +
+
+        '<h3 class="section-title">Estimated monthly payment</h3>' +
+        '<div class="calc">' +
+          '<div class="calc-out">' +
+            '<strong id="calcOut">' + fmtUSD(est) + '</strong>' +
+            'principal &amp; interest' +
+          '</div>' +
+          '<label>Down<input id="calcDown" type="number" min="0" max="90" step="5" value="20" aria-label="Down payment percent">%</label>' +
+          '<label>Rate<input id="calcRate" type="number" min="0" max="15" step="0.1" value="6.5" aria-label="Interest rate">%</label>' +
+        '</div>' +
+        '<p class="calc-note">Based on a 30-year fixed-rate loan. Property taxes, homeowners insurance, and HOA dues are not included.</p>' +
+
+        '<div class="agent">' +
+          '<div class="avatar">' + esc(initials(l.agent.name)) + '</div>' +
+          '<div class="agent-info">' +
+            '<b>' + esc(l.agent.name) + '</b>' +
+            '<span>' + esc(l.agent.title) + ' · NestView</span>' +
+          '</div>' +
+          '<button type="button" data-contact>Contact</button>' +
+        '</div>' +
+
+        '<h3 class="section-title">Similar homes nearby</h3>' +
+        '<div class="similar-grid" id="similarGrid"></div>' +
+      '</div>';
+  }
+
+  function similarFor(l) {
+    const lo = l.price * 0.72;
+    const hi = l.price * 1.28;
+
+    return LISTINGS
+      .filter(x => x.id !== l.id && x.city === l.city && x.price >= lo && x.price <= hi)
+      .sort((a, b) => Math.abs(a.price - l.price) - Math.abs(b.price - l.price))
+      .slice(0, 4);
+  }
+
+  function renderSimilar(l) {
+    const grid = $('#similarGrid');
+    if (!grid) return;
+
+    const items = similarFor(l);
+
+    if (!items.length) {
+      grid.innerHTML = '<div style="grid-column:1/-1;font-size:13px;color:#8a97a8">No similar homes found nearby.</div>';
+      return;
+    }
+
+    grid.innerHTML = items.map(x => {
+      const fb = 'https://picsum.photos/seed/nestview' + x.id + '/600/450';
+      return '' +
+        '<div class="mini" data-id="' + x.id + '" role="button" tabindex="0">' +
+          '<img src="' + esc(x.img) + '" alt="Photo of ' + esc(x.address) + '" loading="lazy" ' +
+               'onerror="this.onerror=null;this.src=\'' + fb + '\'">' +
+          '<div class="mini-body">' +
+            '<div class="mini-price">' + fmtUSD(x.price) + '</div>' +
+            '<div class="mini-specs">' + x.beds + ' bd · ' + x.baths + ' ba · ' + fmtNum(x.sqft) + ' sqft</div>' +
+            '<div class="mini-addr">' + esc(x.address) + '</div>' +
+          '</div>' +
+        '</div>';
+    }).join('');
+  }
+
+  function bindCalculator(price) {
+    const out = $('#calcOut');
+    const down = $('#calcDown');
+    const rate = $('#calcRate');
+    if (!out || !down || !rate) return;
+
+    const update = () => {
+      const d = Math.min(Math.max(parseFloat(down.value) || 0, 0), 90);
+      const r = Math.min(Math.max(parseFloat(rate.value) || 0, 0), 15);
+      out.textContent = fmtUSD(Math.round(monthlyPayment(price, d, r)));
+    };
+
+    down.addEventListener('input', update);
+    rate.addEventListener('input', update);
+  }
+
+  function openDetail(id) {
+    const listing = LISTINGS.find(x => x.id === id);
+    if (!listing) return;
+
+    activeDetailId = id;
+
+    drawer.innerHTML = detailHTML(listing);
+    drawer.classList.add('open');
+    drawer.setAttribute('aria-hidden', 'false');
+    drawer.scrollTop = 0;
+    scrim.classList.add('show');
+
+    bindCalculator(listing.price);
+    renderSimilar(listing);
+    highlightPin(id);
+
+    const marker = pinById.get(id);
+    if (marker && map) map.panTo(marker.getLatLng(), { animate: true });
+
+    /* make the drawer itself focusable for keyboard users */
+    $('#closeDrawer').focus({ preventScroll: true });
+  }
+
+  function closeDrawer() {
+    activeDetailId = null;
+    drawer.classList.remove('open');
+    drawer.setAttribute('aria-hidden', 'true');
+    scrim.classList.remove('show');
+    highlightPin(null);
+  }
+
+  /* ==================================================================
+     9. TOAST
+     ================================================================== */
+
+  let toastTimer = null;
+  function toast(msg) {
+    const el = $('#toast');
+    $('#toastMsg').textContent = msg;
+    el.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => el.classList.remove('show'), 2300);
+  }
+
+  /* ==================================================================
+     10. MOBILE PANELS
+     ================================================================== */
+
+  const filtersPanel = $('#filters');
+
+  function openFilters() {
+    filtersPanel.classList.add('open');
+    scrim.classList.add('show');
+  }
+
+  function closeFilters() {
+    filtersPanel.classList.remove('open');
+    if (!drawer.classList.contains('open')) scrim.classList.remove('show');
+  }
+
+  /* ==================================================================
+     11. EVENTS
+     ================================================================== */
+
+  function readControls() {
+    state.min = $('#minPrice').value;
+    state.max = $('#maxPrice').value;
+    state.beds = $('#beds').value;
+    state.baths = $('#baths').value;
+    state.type = $('#type').value;
+    state.status = $('#status').value;
+    state.sort = $('#sortSelect').value;
+  }
+
+  function rerenderFromControls() {
+    readControls();
+    state.shown = state.pageSize;
+    render();
+    $('#resultsPane').scrollTop = 0;
+  }
+
+  function bindEvents() {
+    /* filter selects */
+    ['#minPrice', '#maxPrice', '#beds', '#baths', '#type', '#status', '#sortSelect']
+      .forEach(sel => {
+        $(sel).addEventListener('change', () => {
+          state.savedOnly = false;
+          rerenderFromControls();
+        });
+      });
+
+    /* search */
+    $('#searchForm').addEventListener('submit', e => {
+      e.preventDefault();
+      state.q = $('#searchInput').value;
+      state.savedOnly = false;
+      state.shown = state.pageSize;
+      render();
+      $('#resultsPane').scrollTop = 0;
+      if (window.innerWidth <= 1000) document.body.classList.remove('show-map');
+    });
+
+    $('#searchInput').addEventListener('input', debounce(function () {
+      const v = this.value;
+      if (v === state.q) return;
+      state.q = v;
+      state.savedOnly = false;
+      state.shown = state.pageSize;
+      render();
+    }, 320));
+
+    /* saved toggle */
+    $('#savedBtn').addEventListener('click', () => {
+      state.savedOnly = !state.savedOnly;
+      state.shown = state.pageSize;
+      render();
+      $('#resultsPane').scrollTop = 0;
+    });
+
+    /* reset */
+    $('#resetBtn').addEventListener('click', () => {
+      ['#minPrice', '#maxPrice', '#beds', '#baths', '#type', '#searchInput']
+        .forEach(sel => { $(sel).value = ''; });
+      $('#status').value = 'FOR_SALE';
+      $('#sortSelect').value = 'newest';
+      state.q = '';
+      state.savedOnly = false;
+      rerenderFromControls();
+      toast('Filters cleared');
+    });
+
+    /* load more */
+    $('#moreBtn').addEventListener('click', () => {
+      state.shown += state.pageSize;
+      renderGrid();
+    });
+
+    /* mobile: filters + view toggle */
+    $('#filterBtn').addEventListener('click', openFilters);
+    document.querySelectorAll('.view-toggle button').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.view-toggle button').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+
+        const showMap = btn.dataset.view === 'map';
+        document.body.classList.toggle('show-map', showMap);
+
+        if (showMap && map) {
+          setTimeout(() => map.invalidateSize(), 60);
+        }
+      });
+    });
+
+    /* scrim closes whichever panel is open */
+    scrim.addEventListener('click', () => {
+      if (drawer.classList.contains('open')) closeDrawer();
+      else closeFilters();
+    });
+
+    /* global click delegation */
+    document.addEventListener('click', e => {
+      /* close drawer */
+      if (e.target.closest('#closeDrawer')) {
+        closeDrawer();
+        return;
+      }
+
+      /* favorite toggles (cards + drawer) */
+      const favBtn = e.target.closest('[data-fav]');
+      if (favBtn) {
+        e.preventDefault();
+        e.stopPropagation();
+        toggleSaved(Number(favBtn.dataset.fav));
+        return;
+      }
+
+      /* contact agent */
+      if (e.target.closest('[data-contact]')) {
+        toast('An agent will reach out shortly');
+        return;
+      }
+
+      /* price alert */
+      if (e.target.closest('#alertBtn')) {
+        toast('Price alert created for this search');
+        return;
+      }
+
+      /* open a listing from a card or a similar-home tile */
+      const target = e.target.closest('.card[data-id], .mini[data-id]');
+      if (target) {
+        openDetail(Number(target.dataset.id));
+      }
+    });
+
+    /* keyboard activation of cards */
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') {
+        if (drawer.classList.contains('open')) closeDrawer();
+        else closeFilters();
+        return;
+      }
+
+      if ((e.key === 'Enter' || e.key === ' ') && e.target.matches('.card[data-id], .mini[data-id]')) {
+        e.preventDefault();
+        openDetail(Number(e.target.dataset.id));
+      }
+    });
+
+    /* card hover -> highlight pin */
+    const grid = $('#grid');
+    grid.addEventListener('mouseover', e => {
+      const card = e.target.closest('.card[data-id]');
+      if (card) highlightPin(Number(card.dataset.id));
+    });
+    grid.addEventListener('mouseout', e => {
+      const card = e.target.closest('.card[data-id]');
+      if (card && activeDetailId == null) highlightPin(null);
+    });
+
+    /* keep the map sized correctly */
+    window.addEventListener('resize', debounce(() => {
+      if (map) map.invalidateSize();
+    }, 180));
+  }
+
+  /* ==================================================================
+     12. BOOT
+     ================================================================== */
+
+  function boot() {
+    initMap();
+    bindEvents();
+    render();
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', boot);
+  } else {
+    boot();
+  }
+})();
+</script>
+</body>
+</html>
