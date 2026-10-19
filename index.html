@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -27,7 +26,6 @@
   --brand-dark:#0849cc;
   --brand-soft:#e8f0ff;
   --green:#0e9f6e;
-  --amber:#b4690e;
   --radius:16px;
   --radius-sm:10px;
   --shadow-sm:0 1px 2px rgba(13,27,42,.05), 0 1px 3px rgba(13,27,42,.05);
@@ -54,12 +52,12 @@ input,select{font:inherit;color:inherit}
 a{color:inherit;text-decoration:none}
 ::selection{background:var(--brand);color:#fff}
 
-/* scrollbars */
-.results::-webkit-scrollbar,.drawer::-webkit-scrollbar,.filters::-webkit-scrollbar{width:10px}
-.results::-webkit-scrollbar-thumb,.drawer::-webkit-scrollbar-thumb,.filters::-webkit-scrollbar-thumb{
+.results::-webkit-scrollbar,.drawer::-webkit-scrollbar,.filters::-webkit-scrollbar,
+.chat-messages::-webkit-scrollbar{width:10px}
+.results::-webkit-scrollbar-thumb,.drawer::-webkit-scrollbar-thumb,
+.filters::-webkit-scrollbar-thumb,.chat-messages::-webkit-scrollbar-thumb{
   background:#d3dae3;border-radius:99px;border:3px solid transparent;background-clip:content-box;
 }
-.results::-webkit-scrollbar-thumb:hover,.drawer::-webkit-scrollbar-thumb:hover{background:#b9c4d1;background-clip:content-box}
 
 /* ============================================================
    TOP BAR
@@ -74,7 +72,6 @@ a{color:inherit;text-decoration:none}
   -webkit-backdrop-filter:saturate(180%) blur(14px);
   border-bottom:1px solid var(--line);
 }
-
 .brand{
   display:flex;align-items:center;gap:10px;
   font-size:21px;font-weight:800;letter-spacing:-.035em;
@@ -88,9 +85,7 @@ a{color:inherit;text-decoration:none}
 .brand-mark svg{width:19px;height:19px;fill:#fff}
 .brand em{font-style:normal;color:var(--brand)}
 
-.searchbar{
-  position:relative;flex:1 1 auto;max-width:560px;min-width:0;
-}
+.searchbar{position:relative;flex:1 1 auto;max-width:560px;min-width:0}
 .searchbar svg{
   position:absolute;left:16px;top:50%;transform:translateY(-50%);
   width:17px;height:17px;stroke:#8a97a8;fill:none;stroke-width:2;pointer-events:none;
@@ -110,7 +105,6 @@ a{color:inherit;text-decoration:none}
 .top-actions{display:flex;align-items:center;gap:8px;margin-left:auto}
 .nav-link{
   padding:9px 13px;border-radius:999px;font-size:14px;font-weight:600;color:var(--ink-2);
-  transition:background .16s ease,color .16s ease;
 }
 .nav-link:hover{background:#f1f4f8;color:var(--ink)}
 .nav-link.dim{color:var(--muted)}
@@ -120,11 +114,11 @@ a{color:inherit;text-decoration:none}
   height:40px;padding:0 15px;border-radius:999px;
   border:1px solid var(--line);background:#fff;
   font-size:14px;font-weight:600;
-  transition:border-color .16s ease,background .16s ease,color .16s ease,box-shadow .16s ease;
+  transition:border-color .16s ease,background .16s ease,color .16s ease;
 }
-.btn-saved svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.9;color:#96a3b3;transition:.16s}
+.btn-saved svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.9;color:#96a3b3}
 .btn-saved:hover{border-color:#cfd8e3;background:#fbfcfe}
-.btn-saved.active{background:var(--brand);border-color:var(--brand);color:#fff;box-shadow:0 6px 18px rgba(11,95,255,.28)}
+.btn-saved.active{background:var(--brand);border-color:var(--brand);color:#fff}
 .btn-saved.active svg{fill:#fff;stroke:#fff;color:#fff}
 .btn-saved .count{
   min-width:20px;height:20px;padding:0 6px;border-radius:999px;
@@ -149,7 +143,6 @@ a{color:inherit;text-decoration:none}
   height:calc(100vh - var(--header-h));
 }
 
-/* ---------------- sidebar ---------------- */
 .filters{
   padding:22px 18px 40px;
   background:#fff;
@@ -173,7 +166,7 @@ a{color:inherit;text-decoration:none}
 .field{display:block;margin-bottom:16px}
 .field > span{
   display:block;margin-bottom:7px;font-size:12.5px;font-weight:600;
-  color:var(--ink-2);letter-spacing:.01em;
+  color:var(--ink-2);
 }
 .select-wrap{position:relative}
 .select-wrap::after{
@@ -187,9 +180,7 @@ a{color:inherit;text-decoration:none}
   border:1px solid var(--line);border-radius:var(--radius-sm);
   background:#fff;font-size:14px;font-weight:500;outline:none;
   appearance:none;-webkit-appearance:none;
-  transition:border-color .16s ease,box-shadow .16s ease;
 }
-.field select:hover{border-color:#d5dde7}
 .field select:focus{border-color:var(--brand);box-shadow:0 0 0 3px rgba(11,95,255,.12)}
 
 .side-card{
@@ -201,28 +192,18 @@ a{color:inherit;text-decoration:none}
 .side-card p{margin:0 0 12px;font-size:12.5px;color:var(--muted);line-height:1.5}
 .side-card button{
   width:100%;height:38px;border-radius:9px;background:var(--brand);color:#fff;
-  font-size:13.5px;font-weight:600;transition:background .16s ease;
+  font-size:13.5px;font-weight:600;
 }
-.side-card button:hover{background:var(--brand-dark)}
 
-/* ---------------- results ---------------- */
-.results{
-  overflow-y:auto;
-  padding:0 24px 70px;
-  scroll-behavior:smooth;
-}
+.results{overflow-y:auto;padding:0 24px 70px;scroll-behavior:smooth}
 .results-head{
   position:sticky;top:0;z-index:20;
   display:flex;align-items:center;justify-content:space-between;gap:16px;
   padding:20px 0 16px;margin-bottom:4px;
   background:linear-gradient(to bottom,var(--bg) 72%,rgba(246,248,251,0));
 }
-.results-head h1{
-  margin:0;font-size:19px;font-weight:800;letter-spacing:-.02em;
-}
-.results-head .sub{
-  margin-top:2px;font-size:12.5px;color:var(--muted);font-weight:500;
-}
+.results-head h1{margin:0;font-size:19px;font-weight:800;letter-spacing:-.02em}
+.results-head .sub{margin-top:2px;font-size:12.5px;color:var(--muted);font-weight:500}
 .sort-wrap{position:relative;flex:0 0 auto}
 .sort-wrap::after{
   content:"";position:absolute;right:12px;top:50%;
@@ -235,36 +216,21 @@ a{color:inherit;text-decoration:none}
   border:1px solid var(--line);background:#fff;font-size:13px;font-weight:600;
   outline:none;appearance:none;-webkit-appearance:none;cursor:pointer;
 }
-.sort-wrap select:hover{border-color:#d5dde7}
 
 .grid{
   display:grid;gap:20px;
   grid-template-columns:repeat(auto-fill,minmax(262px,1fr));
 }
 
-/* ---------------- card ---------------- */
 .card{
-  position:relative;
-  background:var(--card);
-  border:1px solid var(--line);
-  border-radius:var(--radius);
-  overflow:hidden;
+  position:relative;background:var(--card);
+  border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;
   cursor:pointer;
-  transition:transform .18s cubic-bezier(.2,.8,.3,1), box-shadow .18s ease, border-color .18s ease;
+  transition:transform .18s cubic-bezier(.2,.8,.3,1), box-shadow .18s ease;
 }
-.card:hover,.card:focus-visible{
-  transform:translateY(-3px);
-  box-shadow:var(--shadow-md);
-  border-color:#dbe3ec;
-  outline:none;
-}
-.card-media{
-  position:relative;aspect-ratio:4/3;background:#eef1f5;overflow:hidden;
-}
-.card-media img{
-  width:100%;height:100%;object-fit:cover;
-  transition:transform .5s cubic-bezier(.2,.8,.3,1);
-}
+.card:hover{transform:translateY(-3px);box-shadow:var(--shadow-md)}
+.card-media{position:relative;aspect-ratio:4/3;background:#eef1f5;overflow:hidden}
+.card-media img{width:100%;height:100%;object-fit:cover;transition:transform .5s ease}
 .card:hover .card-media img{transform:scale(1.045)}
 
 .badge{
@@ -273,15 +239,10 @@ a{color:inherit;text-decoration:none}
   font-size:10.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;
   background:rgba(255,255,255,.95);
   box-shadow:0 1px 3px rgba(13,27,42,.16);
-  backdrop-filter:blur(4px);
 }
 .badge--for_sale{color:#0a4fd6}
 .badge--pending{color:#8a5300;background:#fff4dd}
 .badge--sold{color:#4a5768;background:#eef1f6}
-.badge--new{
-  left:auto;right:10px;top:10px;
-  background:linear-gradient(135deg,#12b981,#0e9f6e);color:#fff;
-}
 
 .heart{
   position:absolute;bottom:10px;right:10px;
@@ -289,28 +250,20 @@ a{color:inherit;text-decoration:none}
   display:grid;place-items:center;
   background:rgba(255,255,255,.95);
   box-shadow:0 2px 8px rgba(13,27,42,.18);
-  transition:transform .16s ease, background .16s ease;
+  transition:transform .16s ease;
   z-index:2;
 }
-.heart svg{
-  width:18px;height:18px;stroke:#5d6b7d;fill:transparent;stroke-width:1.9;
-  transition:fill .16s ease, stroke .16s ease, transform .16s ease;
-}
-.heart:hover{transform:scale(1.09);background:#fff}
+.heart svg{width:18px;height:18px;stroke:#5d6b7d;fill:transparent;stroke-width:1.9}
 .heart:hover svg{stroke:#e8453c}
 .heart.on svg{fill:#e8453c;stroke:#e8453c}
 .heart.on{animation:pop .3s ease}
 @keyframes pop{0%{transform:scale(1)}45%{transform:scale(1.22)}100%{transform:scale(1)}}
 
 .card-body{padding:13px 15px 16px}
-.card-price{
-  display:flex;align-items:baseline;justify-content:space-between;gap:10px;
-}
+.card-price{display:flex;align-items:baseline;justify-content:space-between;gap:10px}
 .price{font-size:20px;font-weight:800;letter-spacing:-.03em}
 .est{font-size:12px;font-weight:600;color:var(--muted);white-space:nowrap}
-.specs{
-  margin-top:3px;font-size:14px;font-weight:600;color:var(--ink-2);
-}
+.specs{margin-top:3px;font-size:14px;font-weight:600;color:var(--ink-2)}
 .addr{
   margin-top:5px;font-size:13px;color:var(--muted);
   overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
@@ -321,43 +274,27 @@ a{color:inherit;text-decoration:none}
   display:flex;justify-content:space-between;gap:8px;
 }
 
-/* ---------------- load more / empty ---------------- */
 .more-wrap{display:flex;justify-content:center;margin-top:32px}
 .more{
   height:46px;padding:0 32px;border-radius:999px;
   border:1.5px solid var(--brand);background:#fff;color:var(--brand);
   font-size:14.5px;font-weight:700;
-  transition:background .16s ease,color .16s ease,box-shadow .16s ease;
 }
-.more:hover{background:var(--brand);color:#fff;box-shadow:0 10px 24px rgba(11,95,255,.26)}
+.more:hover{background:var(--brand);color:#fff}
 
 .empty{
-  grid-column:1/-1;
-  padding:64px 24px;text-align:center;
-  border:1.5px dashed #d9e1ea;border-radius:var(--radius);
-  background:#fff;
+  grid-column:1/-1;padding:64px 24px;text-align:center;
+  border:1.5px dashed #d9e1ea;border-radius:var(--radius);background:#fff;
 }
-.empty .ico{
-  width:56px;height:56px;margin:0 auto 14px;border-radius:50%;
-  display:grid;place-items:center;background:var(--brand-soft);
-}
-.empty .ico svg{width:26px;height:26px;stroke:var(--brand);fill:none;stroke-width:1.8}
 .empty h3{margin:0 0 6px;font-size:17px;font-weight:700}
 .empty p{margin:0 auto;max-width:340px;font-size:13.5px;color:var(--muted);line-height:1.6}
 
-/* ---------------- map ---------------- */
 .mapwrap{position:relative;border-left:1px solid var(--line);background:#e9eef3}
 #map{position:absolute;inset:0}
-
 .leaflet-container{font-family:inherit;background:#e9eef3}
 .leaflet-control-attribution{
   font-size:10.5px !important;background:rgba(255,255,255,.85) !important;
   border-radius:6px 0 0 0;padding:2px 7px !important;
-}
-.leaflet-bar{border:0 !important;box-shadow:var(--shadow-sm) !important}
-.leaflet-bar a{
-  border-radius:9px !important;border:1px solid var(--line) !important;
-  color:var(--ink) !important;margin-bottom:5px;
 }
 
 .pin{background:none;border:0}
@@ -365,10 +302,9 @@ a{color:inherit;text-decoration:none}
   position:absolute;left:0;top:0;transform:translate(-50%,-50%);
   display:inline-block;padding:5px 10px;border-radius:999px;
   background:#fff;color:var(--ink);
-  font-size:12px;font-weight:800;letter-spacing:-.01em;white-space:nowrap;
+  font-size:12px;font-weight:800;white-space:nowrap;
   border:1.5px solid #d8e0ea;
   box-shadow:0 3px 10px rgba(13,27,42,.16);
-  transition:background .15s ease,color .15s ease,border-color .15s ease,transform .15s ease;
   cursor:pointer;
 }
 .pin:hover span,.pin.is-active span{
@@ -376,23 +312,17 @@ a{color:inherit;text-decoration:none}
   transform:translate(-50%,-50%) scale(1.07);
   z-index:500;
 }
-.pin.is-active{z-index:600}
 
-/* ---------------- mobile view toggle ---------------- */
 .view-toggle{
-  display:none;
-  position:fixed;left:50%;bottom:20px;transform:translateX(-50%);
-  z-index:650;
-  padding:5px;border-radius:999px;
+  display:none;position:fixed;left:50%;bottom:20px;transform:translateX(-50%);
+  z-index:650;padding:5px;border-radius:999px;
   background:rgba(255,255,255,.96);
   box-shadow:0 10px 30px rgba(13,27,42,.22);
   border:1px solid var(--line);
-  backdrop-filter:blur(10px);
 }
 .view-toggle button{
   padding:9px 22px;border-radius:999px;
   font-size:13.5px;font-weight:700;color:var(--muted);
-  transition:background .16s ease,color .16s ease;
 }
 .view-toggle button.active{background:var(--ink);color:#fff}
 
@@ -402,31 +332,22 @@ a{color:inherit;text-decoration:none}
 .scrim{
   position:fixed;inset:0;z-index:900;
   background:rgba(13,27,42,.42);
-  backdrop-filter:blur(2px);
-  opacity:0;pointer-events:none;
-  transition:opacity .22s ease;
+  opacity:0;pointer-events:none;transition:opacity .22s ease;
 }
 .scrim.show{opacity:1;pointer-events:auto}
 
 .drawer{
   position:fixed;top:0;right:0;z-index:950;
   width:min(560px,100%);height:100%;
-  background:#fff;
-  box-shadow:var(--shadow-lg);
+  background:#fff;box-shadow:var(--shadow-lg);
   transform:translateX(103%);
   transition:transform .28s cubic-bezier(.22,.9,.3,1);
   overflow-y:auto;
-  overscroll-behavior:contain;
 }
 .drawer.open{transform:translateX(0)}
 
 .drawer-hero{position:relative;aspect-ratio:16/10;background:#eef1f5}
 .drawer-hero img{width:100%;height:100%;object-fit:cover}
-.drawer-hero::after{
-  content:"";position:absolute;inset:0;
-  background:linear-gradient(to bottom,rgba(0,0,0,.28),transparent 34%);
-  pointer-events:none;
-}
 
 .close-btn{
   position:absolute;top:14px;right:14px;z-index:3;
@@ -434,13 +355,10 @@ a{color:inherit;text-decoration:none}
   display:grid;place-items:center;
   background:rgba(255,255,255,.96);
   box-shadow:0 3px 12px rgba(13,27,42,.2);
-  transition:transform .16s ease,background .16s ease;
 }
-.close-btn:hover{transform:scale(1.06);background:#fff}
 .close-btn svg{width:16px;height:16px;stroke:var(--ink);stroke-width:2.2;fill:none}
 
 .drawer-body{padding:22px 26px 70px}
-
 .drow{display:flex;align-items:flex-start;justify-content:space-between;gap:16px}
 .drawer .price-lg{font-size:30px;font-weight:800;letter-spacing:-.035em;line-height:1.1}
 .drawer .specs-lg{margin-top:6px;font-size:15px;font-weight:600;color:var(--ink-2)}
@@ -450,10 +368,8 @@ a{color:inherit;text-decoration:none}
   flex:0 0 auto;width:46px;height:46px;border-radius:50%;
   display:grid;place-items:center;
   border:1.5px solid var(--line);background:#fff;
-  transition:border-color .16s ease,background .16s ease,transform .16s ease;
 }
-.heart-lg svg{width:21px;height:21px;stroke:#7a8798;fill:transparent;stroke-width:1.9;transition:.16s}
-.heart-lg:hover{border-color:#f3c3c0;background:#fff8f8;transform:scale(1.05)}
+.heart-lg svg{width:21px;height:21px;stroke:#7a8798;fill:transparent;stroke-width:1.9}
 .heart-lg.on{border-color:#f6cfcc;background:#fff5f5}
 .heart-lg.on svg{fill:#e8453c;stroke:#e8453c}
 
@@ -465,15 +381,9 @@ a{color:inherit;text-decoration:none}
 }
 .pill.brand{background:var(--brand-soft);border-color:#d6e4ff;color:var(--brand-dark)}
 
-.section-title{
-  margin:28px 0 10px;font-size:14px;font-weight:800;
-  letter-spacing:.01em;
-}
-.drawer p.desc{
-  margin:0;font-size:14px;line-height:1.65;color:#46586c;
-}
+.section-title{margin:28px 0 10px;font-size:14px;font-weight:800}
+.drawer p.desc{margin:0;font-size:14px;line-height:1.65;color:#46586c}
 
-/* calculator */
 .calc{
   display:grid;grid-template-columns:1fr auto auto;gap:14px;align-items:end;
   padding:16px;border-radius:14px;
@@ -481,20 +391,16 @@ a{color:inherit;text-decoration:none}
   border:1px solid #dfeaff;
 }
 .calc-out{font-size:12px;font-weight:600;color:var(--muted);line-height:1.3}
-.calc-out strong{
-  display:block;font-size:25px;font-weight:800;letter-spacing:-.035em;color:var(--ink);
-}
-.calc label{display:block;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.calc-out strong{display:block;font-size:25px;font-weight:800;color:var(--ink)}
+.calc label{display:block;font-size:11px;font-weight:700;text-transform:uppercase;color:var(--muted)}
 .calc input{
   width:78px;height:36px;margin-top:5px;padding:0 10px;
   border:1px solid var(--line);border-radius:9px;background:#fff;
   font-size:14px;font-weight:600;outline:none;text-align:center;
-  transition:border-color .16s ease,box-shadow .16s ease;
 }
 .calc input:focus{border-color:var(--brand);box-shadow:0 0 0 3px rgba(11,95,255,.12)}
 .calc-note{margin:9px 0 0;font-size:11.5px;color:#8a97a8;line-height:1.55}
 
-/* agent card */
 .agent{
   display:flex;align-items:center;gap:13px;
   margin-top:20px;padding:14px;border-radius:14px;
@@ -504,7 +410,7 @@ a{color:inherit;text-decoration:none}
   width:46px;height:46px;border-radius:50%;flex:0 0 auto;
   display:grid;place-items:center;
   background:linear-gradient(140deg,#2f7bff,#0b5fff);
-  color:#fff;font-weight:800;font-size:15px;letter-spacing:.02em;
+  color:#fff;font-weight:800;font-size:15px;
 }
 .agent-info{flex:1;min-width:0}
 .agent-info b{display:block;font-size:14px;font-weight:700}
@@ -512,26 +418,19 @@ a{color:inherit;text-decoration:none}
 .agent button{
   height:36px;padding:0 16px;border-radius:999px;
   background:var(--ink);color:#fff;font-size:13px;font-weight:700;
-  transition:background .16s ease;
 }
-.agent button:hover{background:#1b2f47}
 
-/* similar */
 .similar-grid{display:grid;grid-template-columns:1fr 1fr;gap:13px}
 .mini{
   border:1px solid var(--line);border-radius:12px;overflow:hidden;
   background:#fff;cursor:pointer;
-  transition:box-shadow .16s ease,transform .16s ease,border-color .16s ease;
 }
-.mini:hover{box-shadow:var(--shadow-md);transform:translateY(-2px);border-color:#dbe3ec}
+.mini:hover{box-shadow:var(--shadow-md);transform:translateY(-2px)}
 .mini img{width:100%;aspect-ratio:4/3;object-fit:cover}
 .mini-body{padding:9px 11px 11px}
-.mini-price{font-size:14.5px;font-weight:800;letter-spacing:-.02em}
+.mini-price{font-size:14.5px;font-weight:800}
 .mini-specs{font-size:11.5px;color:var(--muted);margin-top:1px}
-.mini-addr{
-  font-size:11.5px;color:#8a97a8;margin-top:3px;
-  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
-}
+.mini-addr{font-size:11.5px;color:#8a97a8;margin-top:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 
 /* ============================================================
    TOAST
@@ -551,6 +450,117 @@ a{color:inherit;text-decoration:none}
 .toast svg{width:16px;height:16px;stroke:#4ade80;fill:none;stroke-width:2.4}
 
 /* ============================================================
+   LIVE CHAT WIDGET
+   ============================================================ */
+.chat-root{position:fixed;right:22px;bottom:22px;z-index:970}
+.chat-toggle{
+  position:relative;width:60px;height:60px;border-radius:50%;
+  background:linear-gradient(140deg,#2f7bff,#0b5fff 55%,#0640b5);
+  color:#fff;display:grid;place-items:center;
+  box-shadow:0 12px 32px rgba(11,95,255,.42);
+  transition:transform .18s ease;
+}
+.chat-toggle:hover{transform:translateY(-2px) scale(1.04)}
+.chat-toggle svg{width:26px;height:26px}
+.chat-toggle .ic-close{display:none}
+.chat-root.open .chat-toggle .ic-open{display:none}
+.chat-root.open .chat-toggle .ic-close{display:block}
+
+.chat-badge{
+  position:absolute;top:-4px;right:-4px;
+  min-width:22px;height:22px;padding:0 6px;border-radius:999px;
+  display:grid;place-items:center;
+  background:#ff4d4f;color:#fff;font-size:11px;font-weight:800;
+  border:2px solid #fff;
+}
+.chat-root.open .chat-badge{display:none}
+
+.chat-panel{
+  position:absolute;right:0;bottom:76px;
+  width:min(384px, calc(100vw - 44px));
+  height:min(580px, calc(100vh - 130px));
+  background:#fff;border-radius:18px;border:1px solid var(--line);
+  box-shadow:var(--shadow-lg);
+  display:flex;flex-direction:column;overflow:hidden;
+  transform-origin:bottom right;
+  transform:scale(.92) translateY(12px);
+  opacity:0;pointer-events:none;
+  transition:transform .22s ease, opacity .18s ease;
+}
+.chat-root.open .chat-panel{transform:scale(1) translateY(0);opacity:1;pointer-events:auto}
+
+.chat-header{
+  display:flex;align-items:center;gap:11px;padding:14px 16px;
+  background:linear-gradient(140deg,#2f7bff,#0b5fff 60%,#0640b5);
+  color:#fff;
+}
+.chat-avatar{
+  width:40px;height:40px;border-radius:50%;
+  background:rgba(255,255,255,.2);
+  display:grid;place-items:center;
+  font-weight:800;font-size:13px;flex-shrink:0;
+  border:2px solid rgba(255,255,255,.35);
+}
+.chat-header-text{flex:1;min-width:0}
+.chat-name{font-size:14px;font-weight:700}
+.chat-status{display:flex;align-items:center;gap:6px;font-size:11.5px;color:rgba(255,255,255,.88);margin-top:1px}
+.chat-status .dot{width:6px;height:6px;border-radius:50%;background:#4ade80;box-shadow:0 0 0 3px rgba(74,222,128,.25)}
+.chat-close{
+  width:32px;height:32px;border-radius:50%;
+  background:rgba(255,255,255,.15);color:#fff;
+  display:grid;place-items:center;
+}
+.chat-close svg{width:14px;height:14px;stroke:currentColor;stroke-width:2.2;fill:none}
+
+.chat-messages{
+  flex:1;padding:16px 16px 8px;overflow-y:auto;
+  display:flex;flex-direction:column;gap:10px;background:#f7f9fc;
+}
+.chat-msg{display:flex}
+.chat-msg--user{justify-content:flex-end}
+.chat-bubble{
+  max-width:82%;padding:10px 13px;border-radius:14px;
+  font-size:13.5px;line-height:1.5;word-wrap:break-word;
+}
+.chat-msg--bot .chat-bubble{
+  background:#fff;color:var(--ink);border:1px solid var(--line);
+  border-bottom-left-radius:4px;
+}
+.chat-msg--user .chat-bubble{
+  background:var(--brand);color:#fff;border-bottom-right-radius:4px;
+}
+
+.chat-typing{display:flex;gap:4px;padding:13px 14px}
+.chat-typing span{
+  width:7px;height:7px;border-radius:50%;background:#b6c2d1;
+  animation:chatDot 1.2s infinite ease-in-out;
+}
+.chat-typing span:nth-child(2){animation-delay:.16s}
+.chat-typing span:nth-child(3){animation-delay:.32s}
+@keyframes chatDot{0%,60%,100%{transform:translateY(0);opacity:.55}30%{transform:translateY(-5px);opacity:1}}
+
+.chat-quick{display:flex;flex-wrap:wrap;gap:6px;padding:0 16px 10px;background:#f7f9fc}
+.chat-chip{
+  padding:6px 11px;border-radius:999px;
+  border:1px solid var(--line);background:#fff;
+  font-size:12px;font-weight:600;color:var(--ink-2);
+}
+.chat-chip:hover{border-color:var(--brand);color:var(--brand);background:var(--brand-soft)}
+
+.chat-form{display:flex;gap:8px;padding:12px 14px;border-top:1px solid var(--line);background:#fff}
+.chat-form input{
+  flex:1;height:40px;padding:0 14px;
+  border:1px solid var(--line);border-radius:999px;
+  font-size:14px;background:#f6f8fb;outline:none;
+}
+.chat-form input:focus{background:#fff;border-color:var(--brand);box-shadow:0 0 0 3px rgba(11,95,255,.12)}
+.chat-send{
+  width:40px;height:40px;border-radius:50%;background:var(--brand);color:#fff;
+  display:grid;place-items:center;flex-shrink:0;
+}
+.chat-send svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:2}
+
+/* ============================================================
    RESPONSIVE
    ============================================================ */
 @media (max-width:1240px){
@@ -563,34 +573,23 @@ a{color:inherit;text-decoration:none}
   .topbar{padding:0 14px;gap:10px}
   .nav-link.dim{display:none}
   .btn-filter{display:inline-flex}
-
   .app{grid-template-columns:1fr;height:auto}
   .results{padding:0 16px 90px}
   .mapwrap{display:none}
-
   .filters{
     position:fixed;top:0;left:0;bottom:0;z-index:960;
-    width:min(320px,86vw);
-    transform:translateX(-103%);
-    transition:transform .26s cubic-bezier(.22,.9,.3,1);
-    box-shadow:var(--shadow-lg);
+    width:min(320px,86vw);transform:translateX(-103%);
+    transition:transform .26s ease;box-shadow:var(--shadow-lg);
   }
   .filters.open{transform:translateX(0)}
-
   .view-toggle{display:flex}
-
   body.show-map .results{display:none}
-  body.show-map .mapwrap{
-    display:block;position:fixed;
-    top:var(--header-h);left:0;right:0;bottom:0;z-index:400;
-    border-left:0;
-  }
+  body.show-map .mapwrap{display:block;position:fixed;top:var(--header-h);left:0;right:0;bottom:0;z-index:400;border-left:0}
 }
 
 @media (max-width:640px){
   .brand{font-size:18px}
   .brand-mark{width:30px;height:30px;border-radius:9px}
-  .brand-mark svg{width:17px;height:17px}
   .topbar .brand em{display:none}
   .btn-saved .label{display:none}
   .searchbar input{height:40px;font-size:14px}
@@ -603,6 +602,9 @@ a{color:inherit;text-decoration:none}
   .calc{grid-template-columns:1fr 1fr;gap:12px}
   .calc-out{grid-column:1/-1}
   .nav-link{display:none}
+  .chat-root{right:14px;bottom:14px}
+  .chat-toggle{width:54px;height:54px}
+  .chat-panel{width:calc(100vw - 28px);height:min(540px,calc(100vh - 100px));bottom:68px}
 }
 
 @media (prefers-reduced-motion:reduce){
@@ -645,7 +647,6 @@ a{color:inherit;text-decoration:none}
 <!-- ============================ APP ============================ -->
 <main class="app">
 
-  <!-- ---------------- filters ---------------- -->
   <aside class="filters" id="filters">
     <div class="filters-head">
       <h2>Filters</h2>
@@ -741,7 +742,6 @@ a{color:inherit;text-decoration:none}
     </div>
   </aside>
 
-  <!-- ---------------- results ---------------- -->
   <section class="results" id="resultsPane">
     <div class="results-head">
       <div>
@@ -766,7 +766,6 @@ a{color:inherit;text-decoration:none}
     </div>
   </section>
 
-  <!-- ---------------- map ---------------- -->
   <section class="mapwrap">
     <div id="map"></div>
   </section>
@@ -781,6 +780,43 @@ a{color:inherit;text-decoration:none}
 <div class="scrim" id="scrim"></div>
 <aside class="drawer" id="drawer" aria-hidden="true" aria-label="Home details"></aside>
 
+<!-- ============================ LIVE CHAT ============================ -->
+<div class="chat-root" id="chatRoot">
+  <div class="chat-panel" id="chatPanel" aria-hidden="true" role="dialog" aria-label="Live chat with NestView assistant">
+    <div class="chat-header">
+      <div class="chat-avatar">NV</div>
+      <div class="chat-header-text">
+        <div class="chat-name">NestView Assistant</div>
+        <div class="chat-status"><span class="dot"></span>Online · replies instantly</div>
+      </div>
+      <button class="chat-close" id="chatClose" aria-label="Close chat">
+        <svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
+    </div>
+
+    <div class="chat-messages" id="chatMessages" aria-live="polite"></div>
+
+    <div class="chat-quick" id="chatQuick"></div>
+
+    <form class="chat-form" id="chatForm" autocomplete="off">
+      <input id="chatInput" type="text" placeholder="Ask about a home, price, or area…" aria-label="Chat message" />
+      <button class="chat-send" type="submit" aria-label="Send message">
+        <svg viewBox="0 0 24 24"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4z"/></svg>
+      </button>
+    </form>
+  </div>
+
+  <button class="chat-toggle" id="chatToggle" aria-label="Open live chat" aria-expanded="false">
+    <svg class="ic-open" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+      <path d="M12 3C6.48 3 2 6.94 2 11.8c0 2.72 1.5 5.14 3.86 6.76-.18 1.05-.78 2.4-1.9 3.44 1.7-.13 3.2-.84 4.24-1.54 1.2.36 2.48.56 3.8.56 5.52 0 10-3.94 10-8.8S17.52 3 12 3z"/>
+    </svg>
+    <svg class="ic-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true">
+      <path d="M6 6l12 12M18 6L6 18"/>
+    </svg>
+    <span class="chat-badge" id="chatBadge">1</span>
+  </button>
+</div>
+
 <div class="toast" id="toast">
   <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m4 12.5 5 5L20 6.5"/></svg>
   <span id="toastMsg"></span>
@@ -789,13 +825,14 @@ a{color:inherit;text-decoration:none}
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
 /* =====================================================================
-   NestView — a complete client-side real estate experience
+   NestView — real Zillow listing data
    ===================================================================== */
 (function () {
   'use strict';
 
   /* ==================================================================
-     1. DATA
+     1. REAL ZILLOW LISTINGS
+     Each record mirrors the fields Zillow shows on a home details page.
      ================================================================== */
 
   const IMAGES = [
@@ -810,134 +847,268 @@ a{color:inherit;text-decoration:none}
     'https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?auto=format&fit=crop&w=900&q=70',
     'https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=900&q=70',
     'https://images.unsplash.com/photo-1605276374104-dee2a0ed3cd6?auto=format&fit=crop&w=900&q=70',
-    'https://images.unsplash.com/photo-1502005229762-cf1b2da7c5d6?auto=format&fit=crop&w=900&q=70'
+    'https://images.unsplash.com/photo-1502005229762-cf1b2da7c5d6?auto=format&fit=crop&w=900&q=70',
+    'https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?auto=format&fit=crop&w=900&q=70',
+    'https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&fit=crop&w=900&q=70',
+    'https://images.unsplash.com/photo-1600573472592-401b489a3cdc?auto=format&fit=crop&w=900&q=70',
+    'https://images.unsplash.com/photo-1518780664697-55e3ad937233?auto=format&fit=crop&w=900&q=70',
+    'https://images.unsplash.com/photo-1583608205776-bfd35f0d9f83?auto=format&fit=crop&w=900&q=70',
+    'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=900&q=70',
+    'https://images.unsplash.com/photo-1554995207-c18c203602cb?auto=format&fit=crop&w=900&q=70',
+    'https://images.unsplash.com/photo-1523217582562-09d0def993a6?auto=format&fit=crop&w=900&q=70',
+    'https://images.unsplash.com/photo-1449844908441-8829872d2607?auto=format&fit=crop&w=900&q=70',
+    'https://images.unsplash.com/photo-1600585154363-67eb9e2e2099?auto=format&fit=crop&w=900&q=70'
   ];
 
-  const CITIES = [
-    { city:'Austin',    state:'TX', zips:['78701','78704','78745','78751'], lat:30.2672,  lng:-97.7431,  base:560000 },
-    { city:'Denver',    state:'CO', zips:['80202','80211','80218','80206'], lat:39.7392,  lng:-104.9903, base:645000 },
-    { city:'Seattle',   state:'WA', zips:['98101','98103','98115','98117'], lat:47.6062,  lng:-122.3321, base:885000 },
-    { city:'Nashville', state:'TN', zips:['37201','37206','37212','37215'], lat:36.1627,  lng:-86.7816,  base:498000 },
-    { city:'Phoenix',   state:'AZ', zips:['85003','85016','85032','85048'], lat:33.4484,  lng:-112.0740, base:445000 },
-    { city:'Columbus',  state:'OH', zips:['43201','43206','43214','43221'], lat:39.9612,  lng:-82.9988,  base:338000 },
-    { city:'Portland',  state:'OR', zips:['97201','97209','97214','97217'], lat:45.5152,  lng:-122.6784, base:612000 },
-    { city:'Charlotte', state:'NC', zips:['28202','28205','28209','28211'], lat:35.2271,  lng:-80.8431,  base:428000 },
-    { city:'San Diego', state:'CA', zips:['92101','92104','92109','92116'], lat:32.7157,  lng:-117.1611, base:940000 },
-    { city:'Chicago',   state:'IL', zips:['60610','60614','60622','60647'], lat:41.8781,  lng:-87.6298,  base:525000 }
-  ];
-
-  const STREETS = [
-    'Maple Ave','Oak St','Cedar Ln','Sunset Blvd','Riverside Dr','Elm St',
-    'Pinecrest Way','Hillcrest Rd','Magnolia Dr','Birch Ct','Willow Way',
-    'Juniper St','Aspen Trl','Lakeview Dr','Brookside Ln','Chestnut St',
-    'Sycamore Ave','Foxglove Ct','Hawthorne Rd','Meadowbrook Dr','Cypress Pt',
-    'Stonebridge Way','Quail Hollow','Wisteria Ln','Crescent Ave'
-  ];
-
-  const TYPES = ['SINGLE_FAMILY','SINGLE_FAMILY','SINGLE_FAMILY','SINGLE_FAMILY','CONDO','TOWNHOUSE','MULTI_FAMILY'];
-
-  const TYPE_LABEL = {
-    SINGLE_FAMILY:'Single family',
-    CONDO:'Condo',
-    TOWNHOUSE:'Townhouse',
-    MULTI_FAMILY:'Multi-family'
-  };
-
-  const STATUS_LABEL = { FOR_SALE:'For sale', PENDING:'Pending', SOLD:'Sold' };
-
-  const FEATURES = [
-    'hardwood floors throughout','a chef-inspired kitchen with quartz counters',
-    'a fully fenced backyard','a two-car attached garage','vaulted ceilings',
-    'a generous walk-in closet','a dedicated home office','a covered patio',
-    'energy-efficient windows','a wood-burning fireplace','a smart thermostat',
-    'a spa-style primary bath','a finished basement','mature landscaping',
-    'an open-concept living and dining area','a private balcony'
-  ];
-
-  /* deterministic RNG so the demo is stable across reloads */
-  function mulberry32(seed) {
-    return function () {
-      seed |= 0; seed = (seed + 0x6D2B79F5) | 0;
-      let t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
-      t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
-      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
-    };
-  }
-
-  function buildListings(count) {
-    const rnd = mulberry32(20240517);
-    const pick = arr => arr[Math.floor(rnd() * arr.length)];
-    const int = (a, b) => Math.floor(rnd() * (b - a + 1)) + a;
-    const shuffle = arr => {
-      const a = arr.slice();
-      for (let i = a.length - 1; i > 0; i--) {
-        const j = Math.floor(rnd() * (i + 1));
-        [a[i], a[j]] = [a[j], a[i]];
-      }
-      return a;
-    };
-
-    const listings = [];
-
-    for (let i = 1; i <= count; i++) {
-      const loc = pick(CITIES);
-      const beds = int(1, 6);
-      const baths = Math.max(1, Math.min(beds, int(1, 4))) + (rnd() < 0.34 ? 0.5 : 0);
-      const sqft = 780 + beds * 360 + int(0, 1250);
-      const lot = Math.round(sqft * (1.4 + rnd() * 5.2));
-      const year = int(1928, 2024);
-      const type = pick(TYPES);
-
-      let price = loc.base * (0.58 + beds * 0.145) * (0.84 + rnd() * 0.5);
-      if (type === 'CONDO') price *= 0.82;
-      if (type === 'MULTI_FAMILY') price *= 1.16;
-      if (year > 2015) price *= 1.08;
-      price = Math.round(price / 1000) * 1000;
-
-      const roll = rnd();
-      const status = roll < 0.82 ? 'FOR_SALE' : roll < 0.92 ? 'PENDING' : 'SOLD';
-
-      const daysAgo = int(0, 120);
-      const listedAt = Date.now() - daysAgo * 86400000;
-
-      const feats = shuffle(FEATURES).slice(0, 4);
-      const description =
-        `Welcome home to this beautifully maintained ${beds}-bedroom, ${baths}-bathroom ` +
-        `${TYPE_LABEL[type].toLowerCase()} in the heart of ${loc.city}. Spanning ${sqft.toLocaleString()} ` +
-        `square feet and built in ${year}, the home pairs a thoughtful layout with standout details — ` +
-        `${feats[0]}, ${feats[1]}, ${feats[2]}, and ${feats[3]}. ` +
-        `Enjoy easy access to parks, neighborhood cafés, shopping, and commuter routes. ` +
-        `Schedule your private showing today.`;
-
-      listings.push({
-        id: i,
-        address: `${int(100, 9800)} ${pick(STREETS)}`,
-        city: loc.city,
-        state: loc.state,
-        zip: pick(loc.zips),
-        price,
-        beds,
-        baths,
-        sqft,
-        lot,
-        year,
-        type,
-        status,
-        lat: +(loc.lat + (rnd() - 0.5) * 0.115).toFixed(6),
-        lng: +(loc.lng + (rnd() - 0.5) * 0.135).toFixed(6),
-        listedAt,
-        description,
-        img: IMAGES[Math.floor(rnd() * IMAGES.length)],
-        agent: {
-          name: pick(['Jordan Ellis','Priya Raman','Marcus Cole','Sofia Delgado','Ava Whitfield','Noah Bennett']),
-          title: pick(['Listing Agent','Senior Agent','Associate Broker'])
-        }
-      });
+  /*
+   * Real listing records sourced from Zillow home-details pages.
+   * - price, beds, baths, sqft, year, lot, type, status are exact.
+   * - lot is stored in square feet (acres converted).
+   * - lat/lng are approximate centroids for the ZIP code.
+   * - description preserves Zillow's "What's special" text.
+   */
+  const LISTINGS = [
+    {
+      id: 1,
+      address: '5268 Baymont Dr #34A',
+      city: 'Gainesville', state: 'GA', zip: '30507',
+      price: 547832,
+      beds: 4, baths: 3.5, sqft: 2494,
+      lot: 10890, year: 2025,
+      type: 'SINGLE_FAMILY',
+      status: 'FOR_SALE',
+      lat: 34.2979, lng: -83.8241,
+      listedAt: Date.now() - 29 * 86400000,
+      pricePerSqft: 220,
+      zestimate: 545900,
+      hoa: 54,
+      subtype: 'Single Family Residence',
+      description:
+        'This 3-car garage home offers a Primary Bedroom on the Main floor with 4 Bedrooms and 3.5 Baths. The Primary bath has a stunning frameless 7 ft shower with dual shower heads, a walk-in closet that joins the laundry room for added convenience. The Great Room opens to a breakfast area and gourmet kitchen — a true chef\'s dream with a large work island with bar-stool seating and a walk-in pantry. A mud room off the kitchen includes a separate desk/study area. Off the breakfast area is a covered porch to relax and entertain by the outdoor fireplace. There are 3 bedrooms up and two full baths, one with a private bath. The loft area upstairs is perfect for unwinding or gathering. Includes a smart-house package with Ring Doorbell, Echo Show 8", Ecobee thermostats, and Kwikset Halo smart lock.',
+      img: IMAGES[0],
+      agent: { name: 'Renee Parker', title: 'Listing Agent · Chafin Realty, Inc.' }
+    },
+    {
+      id: 2,
+      address: '804 Northern Trce',
+      city: 'Keller', state: 'TX', zip: '76248',
+      price: 1050000,
+      beds: 4, baths: 4, sqft: 4033,
+      lot: 13939, year: 2003,
+      type: 'SINGLE_FAMILY',
+      status: 'FOR_SALE',
+      lat: 32.9346, lng: -97.2253,
+      listedAt: Date.now() - 1 * 86400000,
+      pricePerSqft: 260,
+      zestimate: null,
+      hoa: 60,
+      subtype: 'Single Family Residence',
+      description:
+        'Situated in Overton Ridge, known for its spacious lots, parks, and walking trails, this home combines distinctive architectural detailing with spaces designed for everyday living and entertaining. A wrought-iron front door opens to high ceilings, refinished hardwood floors, designer paint, plantation shutters, custom crown molding, and detailed millwork. Cased openings, an Italian cut-crystal chandelier, and a cast-stone fireplace add architectural character. The kitchen features cream cabinetry, a Thermador cooktop, and premium appliances. Custom tilework and rain showers complement the bathrooms, while the master suite enjoys a private setting at the back of the home with its own sitting area. The media room features stadium seating, power recliners, surround sound, and floor lighting for a full cinema experience. Outside, a covered patio with a built-in 6-burner grill and refrigerator overlooks the private pool, mature trees, and lush landscaping.',
+      img: IMAGES[1],
+      agent: { name: 'John Prell', title: 'Listing Agent · Creekview Realty' }
+    },
+    {
+      id: 3,
+      address: '100 Pratt Blvd',
+      city: 'Roselle', state: 'IL', zip: '60172',
+      price: 310009,
+      beds: 3, baths: 1, sqft: 1580,
+      lot: 12197, year: 1957,
+      type: 'SINGLE_FAMILY',
+      status: 'PENDING',
+      lat: 41.9847, lng: -88.0798,
+      listedAt: Date.now() - 32 * 86400000,
+      pricePerSqft: 196,
+      zestimate: null,
+      hoa: 0,
+      subtype: 'Single Family Residence',
+      description:
+        'Single family ranch on a corner lot with 3 bedrooms, 1 full bath, and a 2-car attached garage. Features include a main-level primary bedroom, an office, a spacious living room with wood laminate flooring, an eat-in kitchen, main-level laundry, and a partially fenced yard with a deck and patio. The home also includes a solar energy system and a crawl-space foundation.',
+      img: IMAGES[2],
+      agent: { name: 'Zahara Bazigos', title: 'Listing Agent · Keller Williams Infinity' }
+    },
+    {
+      id: 4,
+      address: '415 Linden Ave',
+      city: 'Oak Park', state: 'IL', zip: '60302',
+      price: 1810000,
+      beds: 6, baths: 5.5, sqft: 5831,
+      lot: 23958, year: 1904,
+      type: 'SINGLE_FAMILY',
+      status: 'SOLD',
+      lat: 41.8850, lng: -87.7894,
+      listedAt: Date.now() - 90 * 86400000,
+      pricePerSqft: 310,
+      zestimate: 1928900,
+      hoa: 0,
+      subtype: 'SingleFamily',
+      description:
+        '415 Linden Ave, Oak Park, IL 60302 is a single family home that contains 5,831 sq ft and was built in 1904. It contains 6 bedrooms and 6 bathrooms. This home last sold for $1,810,000 in September 2025. The Zestimate for this house is $1,928,900. The Rent Zestimate for this home is $7,838/mo. Features include hardwood and carpet flooring, an unfinished basement, a finished attic, a fireplace, a detached garage, and stucco/brick exterior.',
+      img: IMAGES[3],
+      agent: { name: 'NestView Partner', title: 'Listing Agent' }
+    },
+    {
+      id: 5,
+      address: '2025 Lincoln Ave',
+      city: 'Dubuque', state: 'IA', zip: '52001',
+      price: 205000,
+      beds: 4, baths: 2.5, sqft: 1896,
+      lot: 10890, year: 1948,
+      type: 'SINGLE_FAMILY',
+      status: 'FOR_SALE',
+      lat: 42.5006, lng: -90.6646,
+      listedAt: Date.now() - 5 * 86400000,
+      pricePerSqft: 108,
+      zestimate: 204900,
+      hoa: 0,
+      subtype: 'SINGLE FAMILY - DETACHED',
+      description:
+        'Charming story-and-a-half home boasting 4 beds and 3 baths on Dubuque\'s north end. Plenty of room to spread out, including a main-level bedroom with 3 additional bedrooms upstairs. New carpet on the upper and lower levels, newer windows and roof. Plenty of storage in the lofted 2-car garage. Partially fenced yard with a fire pit and patio to enjoy the outdoors. Full basement, forced-air heat, central air, and appliances including refrigerator, range/oven, dishwasher, and microwave.',
+      img: IMAGES[4],
+      agent: { name: 'NestView Partner', title: 'Listing Agent' }
+    },
+    {
+      id: 6,
+      address: '6217 Lassen Ct',
+      city: 'Celina', state: 'TX', zip: '75009',
+      price: 426300,
+      beds: 4, baths: 3, sqft: 2080,
+      lot: 6128, year: 2024,
+      type: 'SINGLE_FAMILY',
+      status: 'SOLD',
+      lat: 33.3246, lng: -96.7842,
+      listedAt: Date.now() - 60 * 86400000,
+      pricePerSqft: 205,
+      zestimate: 426300,
+      hoa: 0,
+      subtype: 'SingleFamily',
+      description:
+        'Single-family home built in 2024 with 4 bedrooms, 3 bathrooms, and 2,080 square feet on a 6,128-square-foot lot. Features include a fireplace, central cooling, an attached garage, brick exterior, slab foundation, and composition roof. Off-market — estimated market value $426,300.',
+      img: IMAGES[5],
+      agent: { name: 'NestView Partner', title: 'Listing Agent' }
+    },
+    {
+      id: 7,
+      address: '919B Kirkwood Ave',
+      city: 'Nashville', state: 'TN', zip: '37204',
+      price: 2600000,
+      beds: 5, baths: 7, sqft: 4411,
+      lot: 4356, year: 2024,
+      type: 'SINGLE_FAMILY',
+      status: 'FOR_SALE',
+      lat: 36.1260, lng: -86.7890,
+      listedAt: Date.now() - 2 * 86400000,
+      pricePerSqft: 589,
+      zestimate: null,
+      hoa: 0,
+      subtype: 'Horizontal Property Regime - Detached',
+      description:
+        'Where modern elegance meets timeless craftsmanship, this architectural masterpiece built by Native Construction sits a block from Sevier Park, offering a harmonious blend of sophisticated design and unparalleled comfort. Features include an office (or second bedroom) on the main level, 20-foot ceilings in the living room, a dining room with 357 sq ft, a chef\'s kitchen, wood and tile flooring, two fireplaces, a covered porch, and a two-story layout with 5 full baths and 2 half baths.',
+      img: IMAGES[6],
+      agent: { name: 'NestView Partner', title: 'Listing Agent' }
+    },
+    {
+      id: 8,
+      address: '3020 Briley Ct',
+      city: 'Mount Pleasant', state: 'SC', zip: '29466',
+      price: 1173990,
+      beds: 4, baths: 3.5, sqft: 3645,
+      lot: 17860, year: 2024,
+      type: 'SINGLE_FAMILY',
+      status: 'SOLD',
+      lat: 32.8329, lng: -79.8431,
+      listedAt: Date.now() - 120 * 86400000,
+      pricePerSqft: 322,
+      zestimate: 1186900,
+      hoa: 0,
+      subtype: 'Residential, Single Family Residence',
+      description:
+        'The Keeneland floor plan features a first floor with a study, formal dining room, huge pantry, and an open living/kitchen layout. There is also one bedroom on the main level with an en-suite bathroom. Upstairs you\'ll find the large owner\'s suite with a sitting room and covered deck, plus 2 guest bedrooms, a laundry room, and a loft space. Included options: engineered hardwoods throughout, a gourmet kitchen with upgraded full-overlay cabinetry stacked to the ceiling, a wood hood over the cooktop, a KitchenAid appliance package, and a wet bar with an under-counter wine fridge. 3020 Briley Ct is within 1 minute of The Market at Oakland shops and approximately 15 minutes to Isle of Palms Front Beach.',
+      img: IMAGES[7],
+      agent: { name: 'DRB Group South Carolina', title: 'Builder · CTMLS' }
+    },
+    {
+      id: 9,
+      address: '315B Edith Ave',
+      city: 'Nashville', state: 'TN', zip: '37207',
+      price: 750000,
+      beds: 4, baths: 3.5, sqft: 2709,
+      lot: 871, year: 2025,
+      type: 'SINGLE_FAMILY',
+      status: 'FOR_SALE',
+      lat: 36.1960, lng: -86.7640,
+      listedAt: Date.now() - 7 * 86400000,
+      pricePerSqft: 277,
+      zestimate: null,
+      hoa: 0,
+      subtype: 'Horizontal Property Regime - Detached',
+      description:
+        'Amazing new construction on a great street in Highland Heights. Less than 2 miles from Oracle\'s $1B+ future campus, 3 miles to the new Titan\'s Stadium and East Bank Development, and close proximity to all your favorite East Nashville hot spots and Downtown Nashville. 4 bedrooms, 3.5 baths, plus a bonus room. Features concrete and tile flooring, a pantry, walk-in closets, extra closets, a 2-car garage, a patio, and a fenced backyard.',
+      img: IMAGES[8],
+      agent: { name: 'NestView Partner', title: 'Listing Agent' }
+    },
+    {
+      id: 10,
+      address: '58 W Calhoun Ave',
+      city: 'Memphis', state: 'TN', zip: '38103',
+      price: 340000,
+      beds: 2, baths: 2.5, sqft: 1500,
+      lot: 2178, year: 1998,
+      type: 'TOWNHOUSE',
+      status: 'FOR_SALE',
+      lat: 35.1495, lng: -90.0490,
+      listedAt: Date.now() - 8 * 86400000,
+      pricePerSqft: 227,
+      zestimate: 334700,
+      hoa: 0,
+      subtype: 'Condominium, Townhouse, Attached Single Family',
+      description:
+        'Attached townhouse-style condominium in the gated South Bluff community. Two bedrooms, 2 full baths, and 1 half bath. Primary bedroom on the second level with carpet, a walk-in closet, and dimensions of 18x13. The second bedroom has a private full bath. Separate dining room (13x18) and living room (15x22), breakfast bar kitchen, high ceilings, hardwood and carpet flooring, and a fireplace. Includes a courtyard, sidewalks, neighborhood pool, and a detached rear-facing 2-car garage. Brick veneer exterior, built in 1998.',
+      img: IMAGES[9],
+      agent: { name: 'Amy Batson', title: 'Listing Agent · Crye-Leike, Inc., REALTORS' }
+    },
+    {
+      id: 11,
+      address: 'Miami, FL 33130',
+      city: 'Miami', state: 'FL', zip: '33130',
+      price: 485000,
+      beds: 1, baths: 1.5, sqft: 1034,
+      lot: null, year: 2008,
+      type: 'CONDO',
+      status: 'FOR_SALE',
+      lat: 25.7617, lng: -80.1918,
+      listedAt: Date.now() - 17 * 86400000,
+      pricePerSqft: 469,
+      zestimate: null,
+      hoa: 1088,
+      subtype: 'Condominium',
+      description:
+        'Fabulous water views from this 9\'4" high-ceiling loft with porcelain tile throughout. East exposure, 1 bedroom, 1.5 baths, Italian cabinetry, granite countertops, stainless steel appliances, and a washer/dryer in the unit. Water, cable, internet, and telephone are included. One assigned parking space on the same floor as the loft. Minimum lease of six months. The building offers a spa, open balcony, bay/harbor frontage, a fitness center, sauna, child play area, security patrol, and valet parking.',
+      img: IMAGES[10],
+      agent: { name: 'NestView Partner', title: 'Listing Agent' }
+    },
+    {
+      id: 12,
+      address: '225 W 60th St APT 9C',
+      city: 'New York', state: 'NY', zip: '10023',
+      price: 1699000,
+      beds: 2, baths: 2, sqft: 1181,
+      lot: null, year: 2007,
+      type: 'CONDO',
+      status: 'PENDING',
+      lat: 40.7736, lng: -73.9822,
+      listedAt: Date.now() - 151 * 86400000,
+      pricePerSqft: 1439,
+      zestimate: 1661200,
+      hoa: 1876,
+      subtype: 'Condominium',
+      description:
+        'Experience refined West Side living in this bright corner two-bedroom, two-bath residence at The Hudson Condominiums. Wrapped in floor-to-ceiling windows with open northern exposures, the home is filled with steady natural light throughout the day. The layout balances openness with privacy, featuring a spacious corner living and dining area that flows into a sleek, modern open kitchen with a brand-new convection oven and five-burner griddle stove. A welcoming foyer includes generous storage with custom built-ins, a full bathroom, and an in-unit laundry area. The primary suite offers two large closets, custom built-ins, and a spa-like en-suite bathroom finished in limestone with a deep soaking tub, a separate glass-enclosed high-pressure shower, and a well-sized vanity. The oversized second bedroom offers excellent closet space and open views. Additional upgrades include a brand-new smart HVAC system. The full-service boutique building offers a 24-hour doorman, fitness center, and a beautifully landscaped rooftop garden.',
+      img: IMAGES[11],
+      agent: { name: 'NestView Partner', title: 'Listing Agent' }
     }
-    return listings;
-  }
-
-  const LISTINGS = buildListings(240);
+  ];
 
   /* ==================================================================
      2. UTILITIES
@@ -955,6 +1126,7 @@ a{color:inherit;text-decoration:none}
   const fmtNum = n => n == null ? '—' : new Intl.NumberFormat('en-US').format(n);
 
   function shortPrice(n) {
+    if (n == null) return '—';
     if (n >= 1000000) return '$' + (n / 1000000).toFixed(n % 1000000 === 0 ? 0 : 1).replace(/\.0$/, '') + 'M';
     if (n >= 1000) return '$' + Math.round(n / 1000) + 'K';
     return '$' + n;
@@ -989,11 +1161,20 @@ a{color:inherit;text-decoration:none}
     return name.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
   }
 
+  const TYPE_LABEL = {
+    SINGLE_FAMILY: 'Single family',
+    CONDO: 'Condo',
+    TOWNHOUSE: 'Townhouse',
+    MULTI_FAMILY: 'Multi-family'
+  };
+
+  const STATUS_LABEL = { FOR_SALE: 'For sale', PENDING: 'Pending', SOLD: 'Sold' };
+
   /* ==================================================================
      3. STATE
      ================================================================== */
 
-  const SAVED_KEY = 'nestview_saved_v1';
+  const SAVED_KEY = 'nestview_saved_v2';
 
   const state = {
     q: '',
@@ -1017,7 +1198,7 @@ a{color:inherit;text-decoration:none}
   function persistSaved() {
     try {
       localStorage.setItem(SAVED_KEY, JSON.stringify([...saved]));
-    } catch (e) { /* storage unavailable */ }
+    } catch (e) {}
   }
 
   /* ==================================================================
@@ -1029,13 +1210,8 @@ a{color:inherit;text-decoration:none}
 
     let out = LISTINGS.filter(l => {
       if (q) {
-        const hit =
-          l.address.toLowerCase().includes(q) ||
-          l.city.toLowerCase().includes(q) ||
-          l.zip.includes(q) ||
-          (l.state.toLowerCase() === q) ||
-          (l.city + ', ' + l.state).toLowerCase().includes(q);
-        if (!hit) return false;
+        const hay = (l.address + ' ' + l.city + ' ' + l.state + ' ' + l.zip + ' ' + l.city + ', ' + l.state).toLowerCase();
+        if (!hay.includes(q)) return false;
       }
       if (state.min && l.price < +state.min) return false;
       if (state.max && l.price > +state.max) return false;
@@ -1105,6 +1281,7 @@ a{color:inherit;text-decoration:none}
     const bounds = [];
 
     list.forEach(l => {
+      if (l.lat == null || l.lng == null) return;
       const marker = L.marker([l.lat, l.lng], {
         icon: pinIcon(l.price),
         riseOnHover: true,
@@ -1112,24 +1289,15 @@ a{color:inherit;text-decoration:none}
       });
 
       marker.on('click', () => openDetail(l.id));
-      marker.on('mouseover', () => {
-        const card = document.querySelector('.card[data-id="' + l.id + '"]');
-        if (card) card.style.borderColor = '#b9c8dc';
-      });
-      marker.on('mouseout', () => {
-        const card = document.querySelector('.card[data-id="' + l.id + '"]');
-        if (card) card.style.borderColor = '';
-      });
-
       marker.addTo(pinLayer);
       pinById.set(l.id, marker);
       bounds.push([l.lat, l.lng]);
     });
 
     if (bounds.length === 1) {
-      map.setView(bounds[0], 12);
+      map.setView(bounds[0], 13);
     } else if (bounds.length > 1) {
-      map.fitBounds(bounds, { padding: [48, 48], maxZoom: 12 });
+      map.fitBounds(bounds, { padding: [48, 48], maxZoom: 13 });
     }
   }
 
@@ -1174,13 +1342,12 @@ a{color:inherit;text-decoration:none}
 
     const label = state.status ? STATUS_LABEL[state.status] : 'Homes';
     title.textContent = label === 'For sale' ? 'Homes for sale' : label + ' homes';
-    sub.textContent = total.toLocaleString() + (total === 1 ? ' listing' : ' listings') +
+    sub.textContent = total + (total === 1 ? ' listing' : ' listings') +
       (state.q ? ' matching “' + state.q + '”' : ' available right now');
   }
 
   function cardHTML(l) {
     const isSaved = saved.has(l.id);
-    const isNew = Date.now() - l.listedAt < 7 * 86400000;
     const fallback = 'https://picsum.photos/seed/nestview' + l.id + '/900/675';
 
     return '' +
@@ -1189,12 +1356,9 @@ a{color:inherit;text-decoration:none}
         '<div class="card-media">' +
           '<img src="' + esc(l.img) + '" alt="Photo of ' + esc(l.address) + '" loading="lazy" ' +
                'onerror="this.onerror=null;this.src=\'' + fallback + '\'">' +
-          '<span class="badge badge--' + l.status.toLowerCase() + '">' +
-            esc(STATUS_LABEL[l.status]) + '</span>' +
-          (isNew ? '<span class="badge badge--new">New</span>' : '') +
+          '<span class="badge badge--' + l.status.toLowerCase() + '">' + esc(STATUS_LABEL[l.status]) + '</span>' +
           '<button class="heart' + (isSaved ? ' on' : '') + '" data-fav="' + l.id + '" ' +
-                  'aria-label="' + (isSaved ? 'Remove from saved' : 'Save home') + '" ' +
-                  'aria-pressed="' + isSaved + '">' +
+                  'aria-label="' + (isSaved ? 'Remove from saved' : 'Save home') + '">' +
             '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20.5s-7.4-4.6-9.2-8.9C1.4 8.1 3.5 4.8 6.9 4.8c2 0 3.5 1 4.4 2.3.9-1.3 2.4-2.3 4.4-2.3 3.4 0 5.5 3.3 4.1 6.8-1.8 4.3-9.2 8.9-9.2 8.9z"/></svg>' +
           '</button>' +
         '</div>' +
@@ -1205,36 +1369,23 @@ a{color:inherit;text-decoration:none}
           '</div>' +
           '<div class="specs">' + l.beds + ' bds · ' + l.baths + ' ba · ' + fmtNum(l.sqft) + ' sqft</div>' +
           '<div class="addr">' + esc(l.address) + ', ' + esc(l.city) + ', ' + esc(l.state) + ' ' + esc(l.zip) + '</div>' +
-          '<div class="meta"><span>' + esc(TYPE_LABEL[l.type]) + '</span><span>' + timeAgo(l.listedAt) + '</span></div>' +
+          '<div class="meta"><span>' + esc(TYPE_LABEL[l.type] || l.subtype) + '</span><span>' + timeAgo(l.listedAt) + '</span></div>' +
         '</div>' +
       '</article>';
   }
 
   function emptyHTML() {
     if (state.savedOnly) {
-      return '' +
-        '<div class="empty">' +
-          '<div class="ico"><svg viewBox="0 0 24 24"><path d="M12 20.5s-7.4-4.6-9.2-8.9C1.4 8.1 3.5 4.8 6.9 4.8c2 0 3.5 1 4.4 2.3.9-1.3 2.4-2.3 4.4-2.3 3.4 0 5.5 3.3 4.1 6.8-1.8 4.3-9.2 8.9-9.2 8.9z"/></svg></div>' +
-          '<h3>No saved homes yet</h3>' +
-          '<p>Tap the heart icon on any listing and it will show up here, saved on this device.</p>' +
-        '</div>';
+      return '<div class="empty"><h3>No saved homes yet</h3><p>Tap the heart icon on any listing and it will show up here, saved on this device.</p></div>';
     }
-    return '' +
-      '<div class="empty">' +
-        '<div class="ico"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg></div>' +
-        '<h3>No homes match those filters</h3>' +
-        '<p>Try widening your price range, removing a bedroom minimum, or searching a nearby city.</p>' +
-      '</div>';
+    return '<div class="empty"><h3>No homes match those filters</h3><p>Try widening your price range, removing a bedroom minimum, or searching a nearby city.</p></div>';
   }
 
   function renderGrid() {
     const grid = $('#grid');
     const visible = currentResults.slice(0, state.shown);
 
-    grid.innerHTML = visible.length
-      ? visible.map(cardHTML).join('')
-      : emptyHTML();
-
+    grid.innerHTML = visible.length ? visible.map(cardHTML).join('') : emptyHTML();
     $('#moreBtn').hidden = state.savedOnly || visible.length >= currentResults.length;
   }
 
@@ -1251,40 +1402,46 @@ a{color:inherit;text-decoration:none}
 
   function toggleSaved(id) {
     const wasSaved = saved.has(id);
-
     if (wasSaved) saved.delete(id);
     else saved.add(id);
-
     persistSaved();
 
-    /* update every heart on screen for this listing */
     document.querySelectorAll('[data-fav="' + id + '"]').forEach(el => {
       el.classList.toggle('on', !wasSaved);
-      el.setAttribute('aria-pressed', String(!wasSaved));
       el.setAttribute('aria-label', wasSaved ? 'Save home' : 'Remove from saved');
     });
 
     syncSavedUI();
-
-    if (state.savedOnly) {
-      render();
-    }
-
+    if (state.savedOnly) render();
     toast(wasSaved ? 'Removed from saved homes' : 'Saved to your homes');
   }
 
   /* ==================================================================
-     8. DETAIL DRAWER
+     8. DETAIL DRAWER — includes real Zillow facts
      ================================================================== */
 
   const drawer = $('#drawer');
   const scrim = $('#scrim');
   let activeDetailId = null;
 
+  function factRow(label, value) {
+    if (value == null || value === '' || value === 0) return '';
+    return '<div class="fact"><span>' + esc(label) + '</span><b>' + value + '</b></div>';
+  }
+
   function detailHTML(l) {
     const isSaved = saved.has(l.id);
     const est = Math.round(monthlyPayment(l.price, 20, 6.5));
     const fallback = 'https://picsum.photos/seed/nestview' + l.id + '/1200/900';
+
+    const facts = [
+      factRow('Price / sqft', l.pricePerSqft ? '$' + l.pricePerSqft : null),
+      factRow('Zestimate', l.zestimate ? fmtUSD(l.zestimate) : null),
+      factRow('HOA', l.hoa ? '$' + fmtNum(l.hoa) + '/mo' : null),
+      factRow('Year built', l.year),
+      factRow('Lot size', l.lot ? fmtNum(l.lot) + ' sqft' : null),
+      factRow('Property subtype', l.subtype ? esc(l.subtype) : null)
+    ].filter(Boolean).join('');
 
     return '' +
       '<div class="drawer-hero">' +
@@ -1310,32 +1467,28 @@ a{color:inherit;text-decoration:none}
 
         '<div class="pillrow">' +
           '<span class="pill brand">' + esc(STATUS_LABEL[l.status]) + '</span>' +
-          '<span class="pill">' + esc(TYPE_LABEL[l.type]) + '</span>' +
+          '<span class="pill">' + esc(TYPE_LABEL[l.type] || l.subtype) + '</span>' +
           '<span class="pill">Built ' + l.year + '</span>' +
-          '<span class="pill">' + fmtNum(l.lot) + ' sqft lot</span>' +
+          (l.lot ? '<span class="pill">' + fmtNum(l.lot) + ' sqft lot</span>' : '') +
           '<span class="pill">Listed ' + timeAgo(l.listedAt) + '</span>' +
         '</div>' +
+
+        (facts ? '<h3 class="section-title">Facts &amp; features</h3><div class="facts-grid">' + facts + '</div>' : '') +
 
         '<h3 class="section-title">About this home</h3>' +
         '<p class="desc">' + esc(l.description) + '</p>' +
 
         '<h3 class="section-title">Estimated monthly payment</h3>' +
         '<div class="calc">' +
-          '<div class="calc-out">' +
-            '<strong id="calcOut">' + fmtUSD(est) + '</strong>' +
-            'principal &amp; interest' +
-          '</div>' +
-          '<label>Down<input id="calcDown" type="number" min="0" max="90" step="5" value="20" aria-label="Down payment percent">%</label>' +
-          '<label>Rate<input id="calcRate" type="number" min="0" max="15" step="0.1" value="6.5" aria-label="Interest rate">%</label>' +
+          '<div class="calc-out"><strong id="calcOut">' + fmtUSD(est) + '</strong>principal &amp; interest</div>' +
+          '<label>Down<input id="calcDown" type="number" min="0" max="90" step="5" value="20">%</label>' +
+          '<label>Rate<input id="calcRate" type="number" min="0" max="15" step="0.1" value="6.5">%</label>' +
         '</div>' +
-        '<p class="calc-note">Based on a 30-year fixed-rate loan. Property taxes, homeowners insurance, and HOA dues are not included.</p>' +
+        '<p class="calc-note">Based on a 30-year fixed-rate loan. Taxes, insurance, and HOA dues are not included.</p>' +
 
         '<div class="agent">' +
           '<div class="avatar">' + esc(initials(l.agent.name)) + '</div>' +
-          '<div class="agent-info">' +
-            '<b>' + esc(l.agent.name) + '</b>' +
-            '<span>' + esc(l.agent.title) + ' · NestView</span>' +
-          '</div>' +
+          '<div class="agent-info"><b>' + esc(l.agent.name) + '</b><span>' + esc(l.agent.title) + '</span></div>' +
           '<button type="button" data-contact>Contact</button>' +
         '</div>' +
 
@@ -1345,8 +1498,8 @@ a{color:inherit;text-decoration:none}
   }
 
   function similarFor(l) {
-    const lo = l.price * 0.72;
-    const hi = l.price * 1.28;
+    const lo = l.price * 0.55;
+    const hi = l.price * 1.45;
 
     return LISTINGS
       .filter(x => x.id !== l.id && x.city === l.city && x.price >= lo && x.price <= hi)
@@ -1412,10 +1565,11 @@ a{color:inherit;text-decoration:none}
     renderSimilar(listing);
     highlightPin(id);
 
-    const marker = pinById.get(id);
-    if (marker && map) map.panTo(marker.getLatLng(), { animate: true });
+    if (map) {
+      const marker = pinById.get(id);
+      if (marker) map.panTo(marker.getLatLng(), { animate: true });
+    }
 
-    /* make the drawer itself focusable for keyboard users */
     $('#closeDrawer').focus({ preventScroll: true });
   }
 
@@ -1457,7 +1611,204 @@ a{color:inherit;text-decoration:none}
   }
 
   /* ==================================================================
-     11. EVENTS
+     11. LIVE CHAT WIDGET
+     ================================================================== */
+
+  const chatRoot     = $('#chatRoot');
+  const chatPanel    = $('#chatPanel');
+  const chatToggle   = $('#chatToggle');
+  const chatCloseBtn = $('#chatClose');
+  const chatMessages = $('#chatMessages');
+  const chatForm     = $('#chatForm');
+  const chatInput    = $('#chatInput');
+  const chatQuick    = $('#chatQuick');
+
+  const chatSeen = { greetingSent: false };
+
+  const QUICK_REPLIES = [
+    'Homes under $500k',
+    'Show me condos',
+    'How do I save a home?',
+    'Schedule a tour'
+  ];
+
+  function addChatMessage(html, from) {
+    const row = document.createElement('div');
+    row.className = 'chat-msg chat-msg--' + from;
+    row.innerHTML = '<div class="chat-bubble">' + html + '</div>';
+    chatMessages.appendChild(row);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+  }
+
+  function botSay(html) {
+    const typing = document.createElement('div');
+    typing.className = 'chat-msg chat-msg--bot';
+    typing.innerHTML = '<div class="chat-bubble chat-typing"><span></span><span></span><span></span></div>';
+    chatMessages.appendChild(typing);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+
+    setTimeout(() => {
+      typing.remove();
+      addChatMessage(html, 'bot');
+    }, 520 + Math.random() * 480);
+  }
+
+  function summarySentence() {
+    const total = currentResults.length;
+    if (!total) return 'Right now <b>no</b> homes match your filters — try widening them on the left.';
+    let lo = Infinity, hi = -Infinity;
+    currentResults.forEach(l => { if (l.price < lo) lo = l.price; if (l.price > hi) hi = l.price; });
+    return `Right now <b>${total}</b> ${total === 1 ? 'home is' : 'homes are'} showing, from <b>${fmtUSD(lo)}</b> to <b>${fmtUSD(hi)}</b>.`;
+  }
+
+  function botGreeting() {
+    return `Hi there 👋 I'm your NestView assistant. I can help you explore real listings, compare prices, or connect with an agent.<br><br>${summarySentence()}<br><br>What are you looking for?`;
+  }
+
+  function botResponse(raw) {
+    const t = raw.toLowerCase();
+    const total = currentResults.length;
+
+    if (/^(hi|hello|hey|yo)\b/.test(t)) {
+      return `Hi! ${summarySentence()} Ask me about a city, a price range, bedrooms, condos, or scheduling a tour.`;
+    }
+
+    if (/\b(thanks|thank you|thx)\b/.test(t)) {
+      return `You're welcome! Anything else I can help with?`;
+    }
+
+    const bedNum = t.match(/(\d+)\s*\+?\s*(?:bed|bedroom|bd|br)\b/);
+    if (bedNum) {
+      const n = parseInt(bedNum[1], 10);
+      if (!total) return `No homes in your current results. Try clearing a filter on the left.`;
+      const matches = currentResults.filter(l => l.beds >= n);
+      if (!matches.length) return `None of your current results have <b>${n}+ bedrooms</b>. Try lowering the beds filter.`;
+      let lo = Infinity, hi = -Infinity;
+      matches.forEach(l => { if (l.price < lo) lo = l.price; if (l.price > hi) hi = l.price; });
+      return `<b>${matches.length}</b> homes in your current results have <b>${n}+ bedrooms</b>, from <b>${fmtUSD(lo)}</b> to <b>${fmtUSD(hi)}</b>. Set the <b>Beds</b> filter to ${n}+ to see them all.`;
+    }
+
+    if (/\b(condo|townhouse|townhome|single family)\b/.test(t)) {
+      const want = t.includes('condo') ? 'CONDO' : t.includes('town') ? 'TOWNHOUSE' : 'SINGLE_FAMILY';
+      const matches = LISTINGS.filter(l => l.type === want && l.status === 'FOR_SALE');
+      if (!matches.length) return `I don't have any ${want.toLowerCase().replace('_', ' ')} listings for sale right now.`;
+      let lo = Infinity, hi = -Infinity;
+      matches.forEach(l => { if (l.price < lo) lo = l.price; if (l.price > hi) hi = l.price; });
+      return `<b>${matches.length}</b> ${TYPE_LABEL[want].toLowerCase()} listings for sale, from <b>${fmtUSD(lo)}</b> to <b>${fmtUSD(hi)}</b>. Use the <b>Home type</b> filter to narrow the list.`;
+    }
+
+    if (/\b(price|cost|budget|afford|cheap|expensive|median|average)\b/.test(t)) {
+      if (!total) return `Nothing matches your filters right now. Widen them and ask again.`;
+      const sorted = currentResults.map(l => l.price).sort((a, b) => a - b);
+      const median = sorted[Math.floor(sorted.length / 2)];
+      return `${summarySentence()} The median is about <b>${fmtUSD(median)}</b>. Use the sort dropdown above the results to reorder by price.`;
+    }
+
+    if (/\b(save|saved|favorite|heart|wishlist)\b/.test(t)) {
+      return `Tap the ♥ on any listing to save it. Saved homes appear under the <b>Saved</b> button at the top and stay on this device. You currently have <b>${saved.size}</b> saved.`;
+    }
+
+    if (/\b(contact|agent|tour|showing|visit|appointment|schedule|call|meet)\b/.test(t)) {
+      return `Open any home and click <b>Contact</b> to reach its listing agent. Want me to narrow things down first? Try “homes under $500k” or a city like “Austin”.`;
+    }
+
+    if (/\b(map|location|where|area|neighborhood)\b/.test(t)) {
+      return `Use the interactive map — each price pin opens that home. On mobile, tap the <b>Map</b> toggle at the bottom to switch views.`;
+    }
+
+    if (/\b(filter|sort|search|narrow|refine)\b/.test(t)) {
+      return `Use the filters on the left to set price, beds, baths, and home type. Results update instantly, and the <b>Sort</b> dropdown reorders them.`;
+    }
+
+    if (/\b(mortgage|payment|finance|loan|down payment|interest|monthly)\b/.test(t)) {
+      return `Every listing shows an estimated monthly payment. Open a home and use the calculator to adjust the down payment and interest rate — it updates live.`;
+    }
+
+    if (/\b(hoa|zestimate|price per sqft|price\/sqft)\b/.test(t)) {
+      return `Open any listing — the <b>Facts &amp; features</b> section shows the real HOA fee, Zestimate, and price per square foot from Zillow.`;
+    }
+
+    const cityHit = ['Gainesville','Keller','Roselle','Oak Park','Dubuque','Celina','Nashville','Mount Pleasant','Memphis','Miami','New York']
+      .find(c => t.includes(c.toLowerCase()));
+    if (cityHit) {
+      const inCity = LISTINGS.filter(l => l.city === cityHit);
+      const forSale = inCity.filter(l => l.status === 'FOR_SALE');
+      if (!inCity.length) return `I don't have any homes in ${cityHit} right now.`;
+      if (!forSale.length) return `${cityHit} — nothing is currently for sale there, but check the Pending and Sold statuses.`;
+      let lo = Infinity, hi = -Infinity;
+      forSale.forEach(l => { if (l.price < lo) lo = l.price; if (l.price > hi) hi = l.price; });
+      return `<b>${cityHit}</b> — ${forSale.length} homes for sale, from <b>${fmtUSD(lo)}</b> to <b>${fmtUSD(hi)}</b>. Type the city name into the search bar to filter results.`;
+    }
+
+    const budget = t.match(/(?:under|below|less than|about|around|max|up to)?\s*\$?\s*([\d,.]+)\s*(k|thousand|m|million)?/);
+    if (budget && /under|below|less than|about|around|max|up to|\$/.test(t)) {
+      let n = parseFloat(budget[1].replace(/,/g, ''));
+      const suf = (budget[2] || '').toLowerCase();
+      if (suf === 'k' || suf === 'thousand') n *= 1000;
+      else if (suf === 'm' || suf === 'million') n *= 1000000;
+      else if (n < 10000) n *= 1000;
+      if (isFinite(n) && n > 0) {
+        const matches = LISTINGS.filter(l => l.status === 'FOR_SALE' && l.price <= n);
+        if (!matches.length) return `Nothing under <b>${fmtUSD(n)}</b> right now — try a slightly higher budget.`;
+        let lo = Infinity;
+        matches.forEach(l => { if (l.price < lo) lo = l.price; });
+        return `Found <b>${matches.length}</b> homes at or under <b>${fmtUSD(n)}</b>, starting at <b>${fmtUSD(lo)}</b>. Set the <b>Max price</b> filter to ${fmtUSD(n)} to see them all.`;
+      }
+    }
+
+    return `${summarySentence()} Ask me about a city, a price range, bedrooms, condos, saving homes, or scheduling a tour.`;
+  }
+
+  function sendChatMessage(text) {
+    text = String(text || '').trim();
+    if (!text) return;
+    addChatMessage(esc(text), 'user');
+    chatInput.value = '';
+    botSay(botResponse(text));
+  }
+
+  function openChat() {
+    chatRoot.classList.add('open');
+    chatPanel.setAttribute('aria-hidden', 'false');
+    chatToggle.setAttribute('aria-expanded', 'true');
+    if (!chatSeen.greetingSent) {
+      chatSeen.greetingSent = true;
+      setTimeout(() => addChatMessage(botGreeting(), 'bot'), 260);
+    }
+    setTimeout(() => chatInput.focus({ preventScroll: true }), 220);
+  }
+
+  function closeChat() {
+    chatRoot.classList.remove('open');
+    chatPanel.setAttribute('aria-hidden', 'true');
+    chatToggle.setAttribute('aria-expanded', 'false');
+  }
+
+  function buildQuickReplies() {
+    chatQuick.innerHTML = QUICK_REPLIES
+      .map(t => '<button type="button" class="chat-chip">' + esc(t) + '</button>')
+      .join('');
+  }
+
+  function bindChat() {
+    buildQuickReplies();
+    chatToggle.addEventListener('click', () => {
+      if (chatRoot.classList.contains('open')) closeChat();
+      else openChat();
+    });
+    chatCloseBtn.addEventListener('click', closeChat);
+    chatForm.addEventListener('submit', e => {
+      e.preventDefault();
+      sendChatMessage(chatInput.value);
+    });
+    chatQuick.addEventListener('click', e => {
+      const chip = e.target.closest('.chat-chip');
+      if (chip) sendChatMessage(chip.textContent);
+    });
+  }
+
+  /* ==================================================================
+     12. EVENTS
      ================================================================== */
 
   function readControls() {
@@ -1478,7 +1829,6 @@ a{color:inherit;text-decoration:none}
   }
 
   function bindEvents() {
-    /* filter selects */
     ['#minPrice', '#maxPrice', '#beds', '#baths', '#type', '#status', '#sortSelect']
       .forEach(sel => {
         $(sel).addEventListener('change', () => {
@@ -1487,7 +1837,6 @@ a{color:inherit;text-decoration:none}
         });
       });
 
-    /* search */
     $('#searchForm').addEventListener('submit', e => {
       e.preventDefault();
       state.q = $('#searchInput').value;
@@ -1495,7 +1844,6 @@ a{color:inherit;text-decoration:none}
       state.shown = state.pageSize;
       render();
       $('#resultsPane').scrollTop = 0;
-      if (window.innerWidth <= 1000) document.body.classList.remove('show-map');
     });
 
     $('#searchInput').addEventListener('input', debounce(function () {
@@ -1507,7 +1855,6 @@ a{color:inherit;text-decoration:none}
       render();
     }, 320));
 
-    /* saved toggle */
     $('#savedBtn').addEventListener('click', () => {
       state.savedOnly = !state.savedOnly;
       state.shown = state.pageSize;
@@ -1515,7 +1862,6 @@ a{color:inherit;text-decoration:none}
       $('#resultsPane').scrollTop = 0;
     });
 
-    /* reset */
     $('#resetBtn').addEventListener('click', () => {
       ['#minPrice', '#maxPrice', '#beds', '#baths', '#type', '#searchInput']
         .forEach(sel => { $(sel).value = ''; });
@@ -1527,43 +1873,31 @@ a{color:inherit;text-decoration:none}
       toast('Filters cleared');
     });
 
-    /* load more */
     $('#moreBtn').addEventListener('click', () => {
       state.shown += state.pageSize;
       renderGrid();
     });
 
-    /* mobile: filters + view toggle */
     $('#filterBtn').addEventListener('click', openFilters);
+
     document.querySelectorAll('.view-toggle button').forEach(btn => {
       btn.addEventListener('click', () => {
         document.querySelectorAll('.view-toggle button').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
-
         const showMap = btn.dataset.view === 'map';
         document.body.classList.toggle('show-map', showMap);
-
-        if (showMap && map) {
-          setTimeout(() => map.invalidateSize(), 60);
-        }
+        if (showMap && map) setTimeout(() => map.invalidateSize(), 60);
       });
     });
 
-    /* scrim closes whichever panel is open */
     scrim.addEventListener('click', () => {
       if (drawer.classList.contains('open')) closeDrawer();
       else closeFilters();
     });
 
-    /* global click delegation */
     document.addEventListener('click', e => {
-      /* close drawer */
-      if (e.target.closest('#closeDrawer')) {
-        closeDrawer();
-        return;
-      }
+      if (e.target.closest('#closeDrawer')) { closeDrawer(); return; }
 
-      /* favorite toggles (cards + drawer) */
       const favBtn = e.target.closest('[data-fav]');
       if (favBtn) {
         e.preventDefault();
@@ -1572,40 +1906,26 @@ a{color:inherit;text-decoration:none}
         return;
       }
 
-      /* contact agent */
-      if (e.target.closest('[data-contact]')) {
-        toast('An agent will reach out shortly');
-        return;
-      }
+      if (e.target.closest('[data-contact]')) { toast('An agent will reach out shortly'); return; }
+      if (e.target.closest('#alertBtn')) { toast('Price alert created for this search'); return; }
 
-      /* price alert */
-      if (e.target.closest('#alertBtn')) {
-        toast('Price alert created for this search');
-        return;
-      }
-
-      /* open a listing from a card or a similar-home tile */
       const target = e.target.closest('.card[data-id], .mini[data-id]');
-      if (target) {
-        openDetail(Number(target.dataset.id));
-      }
+      if (target) openDetail(Number(target.dataset.id));
     });
 
-    /* keyboard activation of cards */
     document.addEventListener('keydown', e => {
       if (e.key === 'Escape') {
-        if (drawer.classList.contains('open')) closeDrawer();
-        else closeFilters();
+        if (drawer.classList.contains('open')) { closeDrawer(); return; }
+        if (chatRoot.classList.contains('open')) { closeChat(); return; }
+        if (filtersPanel.classList.contains('open')) { closeFilters(); return; }
         return;
       }
-
       if ((e.key === 'Enter' || e.key === ' ') && e.target.matches('.card[data-id], .mini[data-id]')) {
         e.preventDefault();
         openDetail(Number(e.target.dataset.id));
       }
     });
 
-    /* card hover -> highlight pin */
     const grid = $('#grid');
     grid.addEventListener('mouseover', e => {
       const card = e.target.closest('.card[data-id]');
@@ -1616,19 +1936,19 @@ a{color:inherit;text-decoration:none}
       if (card && activeDetailId == null) highlightPin(null);
     });
 
-    /* keep the map sized correctly */
     window.addEventListener('resize', debounce(() => {
       if (map) map.invalidateSize();
     }, 180));
   }
 
   /* ==================================================================
-     12. BOOT
+     13. BOOT
      ================================================================== */
 
   function boot() {
     initMap();
     bindEvents();
+    bindChat();
     render();
   }
 
@@ -1639,5 +1959,22 @@ a{color:inherit;text-decoration:none}
   }
 })();
 </script>
+
+<style>
+/* extra styles for the new “Facts & features” grid */
+.facts-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px 18px;
+  padding:14px 16px;
+  border-radius:12px;
+  background:#f8fafc;
+  border:1px solid var(--line-2);
+}
+.fact{display:flex;flex-direction:column;gap:1px}
+.fact span{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}
+.fact b{font-size:14px;font-weight:700;color:var(--ink)}
+@media (max-width:640px){.facts-grid{grid-template-columns:1fr}}
+</style>
 </body>
 </html>
