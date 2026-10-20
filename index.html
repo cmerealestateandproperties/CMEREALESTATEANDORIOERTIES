@@ -4,47 +4,110 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <meta name="theme-color" content="#0b5fff" />
-<title>CME Real Estate and Properties — USA & Ecuador</title>
+<title>CME Real Estate — USA · Ecuador · Puerto Rico</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap" rel="stylesheet">
-<link href="https://api.mapbox.com/mapbox-gl-js/v3.5.1/mapbox-gl.css" rel="stylesheet" />
-<script src="https://api.mapbox.com/mapbox-gl-js/v3.5.1/mapbox-gl.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 
 <style>
 /* ============================================================
    DESIGN TOKENS
    ============================================================ */
 :root{
-  --ink:#0a1628;
-  --ink-2:#2b3a4f;
-  --muted:#65748a;
-  --line:#e7ecf3;
-  --line-2:#eff3f8;
-  --bg:#f5f7fb;
-  --card:#ffffff;
-  --brand:#0b5fff;
-  --brand-2:#3b82f6;
-  --brand-dark:#0846d4;
-  --brand-soft:#eaf1ff;
-  --brand-glow:rgba(11,95,255,.24);
-  --accent:#0e9f6e;
-  --accent-soft:#e6f7ef;
-  --whatsapp:#25D366;
-  --danger:#e8453c;
-  --radius-xl:22px;
-  --radius-lg:16px;
-  --radius-md:12px;
+  --ink:#0a1628; --ink-2:#2b3a4f; --muted:#65748a;
+  --line:#e7ecf3; --line-2:#eff3f8;
+  --bg:#f5f7fb; --card:#ffffff;
+  --brand:#0b5fff; --brand-2:#3b82f6; --brand-dark:#0846d4;
+  --brand-soft:#eaf1ff; --brand-glow:rgba(11,95,255,.24);
+  --accent:#0e9f6e; --accent-soft:#e6f7ef;
+  --whatsapp:#25D366; --danger:#e8453c;
+  --radius-xl:22px; --radius-lg:16px; --radius-md:12px;
   --shadow-xs:0 1px 2px rgba(10,22,40,.04),0 1px 3px rgba(10,22,40,.06);
   --shadow-sm:0 2px 6px rgba(10,22,40,.05),0 4px 14px rgba(10,22,40,.04);
   --shadow-md:0 6px 20px rgba(10,22,40,.09),0 2px 6px rgba(10,22,40,.05);
   --shadow-lg:0 24px 60px rgba(10,22,40,.16),0 6px 20px rgba(10,22,40,.08);
   --shadow-xl:0 32px 80px rgba(10,22,40,.22);
   --shadow-brand:0 12px 32px rgba(11,95,255,.32);
-  --header-h:76px;
-  --serif:'Fraunces',Georgia,serif;
+  --header-h:76px; --serif:'Fraunces',Georgia,serif;
 }
+body.dark-mode{
+  --ink:#e9eef7; --ink-2:#c7d0df; --muted:#8a97a8;
+  --line:#1f2937; --line-2:#161e2b;
+  --bg:#0b111c; --card:#111a29;
+  --brand-soft:#152036; --brand-glow:rgba(59,130,246,.35);
+  --shadow-xs:0 1px 2px rgba(0,0,0,.3); --shadow-sm:0 2px 6px rgba(0,0,0,.4);
+  --shadow-md:0 6px 20px rgba(0,0,0,.5); --shadow-lg:0 24px 60px rgba(0,0,0,.6);
+  --shadow-xl:0 32px 80px rgba(0,0,0,.7);
+}
+body.dark-mode .topbar{background:rgba(11,17,28,.85);border-bottom-color:var(--line)}
+body.dark-mode .filters{background:var(--card);border-right-color:var(--line)}
+body.dark-mode .searchbar input{background:#0f1724;color:var(--ink);border-color:var(--line)}
+body.dark-mode .mode-toggle{background:#0f1724}
+body.dark-mode .mode-toggle::before{background:#1f2937;box-shadow:0 2px 8px rgba(0,0,0,.4)}
+body.dark-mode .mode-toggle button.active{color:#fff}
+body.dark-mode .region-toggle button{background:#0f1724;border-color:var(--line);color:var(--muted)}
+body.dark-mode .region-toggle button.active{background:#1f2937;color:#fff;border-color:#1f2937}
+body.dark-mode .nav-link:hover{background:#1f2937}
+body.dark-mode .btn-saved{background:#0f1724;border-color:var(--line)}
+body.dark-mode .btn-saved:hover{background:#1f2937}
+body.dark-mode .btn-filter{background:#0f1724;border-color:var(--line)}
+body.dark-mode .chip{background:#0f1724;border-color:var(--line);color:var(--ink-2)}
+body.dark-mode .chip:hover{background:#1f2937}
+body.dark-mode .chip.active{background:var(--brand);border-color:var(--brand);color:#fff}
+body.dark-mode .sort-wrap select{background:var(--card);border-color:var(--line);color:var(--ink)}
+body.dark-mode .card{background:var(--card);border-color:var(--line)}
+body.dark-mode .card-body{border-color:var(--line)}
+body.dark-mode .meta-tag{background:#0f1724;border-color:var(--line);color:var(--ink-2)}
+body.dark-mode .drawer{background:var(--card)}
+body.dark-mode .drawer-body{background:var(--card)}
+body.dark-mode .facts-grid{background:var(--line);border-color:var(--line)}
+body.dark-mode .fact{background:var(--card)}
+body.dark-mode .fact b{color:var(--ink)}
+body.dark-mode .calc{background:linear-gradient(155deg,#0f1724,#152036);border-color:#1f2937}
+body.dark-mode .calc input{background:#0b111c;border-color:#1f2937;color:var(--ink)}
+body.dark-mode .calc-out strong{color:var(--ink)}
+body.dark-mode .agent{background:#0f1724;border-color:var(--line)}
+body.dark-mode .mini{background:#0f1724;border-color:var(--line)}
+body.dark-mode .mini-price{color:var(--ink)}
+body.dark-mode .empty{background:var(--card);border-color:var(--line)}
+body.dark-mode .empty h3{color:var(--ink)}
+body.dark-mode .pill{background:#0f1724;border-color:var(--line);color:var(--ink-2)}
+body.dark-mode .side-card{background:linear-gradient(155deg,#152036,#1f2937);border-color:#1f2937}
+body.dark-mode .side-card h3{color:var(--ink)}
+body.dark-mode .side-card p{color:var(--muted)}
+body.dark-mode .more{background:var(--card);border-color:var(--brand)}
+body.dark-mode .bottom-nav{background:rgba(17,26,41,.94);border-color:rgba(31,41,55,.6)}
+body.dark-mode .toast{background:#1f2937}
+body.dark-mode .view-toggle{background:#0f1724;border-color:var(--line)}
+body.dark-mode .compare-bar{background:var(--card);border-color:var(--line)}
+body.dark-mode .compare-chip{background:#0f1724;border-color:var(--line);color:var(--ink-2)}
+body.dark-mode .section-title{color:var(--ink)}
+body.dark-mode .drawer p.desc{color:var(--ink-2)}
+body.dark-mode .addr-lg{color:var(--muted)}
+body.dark-mode .price-lg{color:var(--ink)}
+body.dark-mode .specs-lg{color:var(--ink-2)}
+body.dark-mode .filter-section h3{color:var(--ink)}
+body.dark-mode .price-display{color:var(--ink-2)}
+body.dark-mode .price-display .val{background:#152036;color:var(--brand-2)}
+body.dark-mode .range-track{background:#1f2937}
+body.dark-mode .filters-head h2{color:var(--muted)}
+body.dark-mode .results-head{background:linear-gradient(to bottom,var(--bg) 78%,rgba(11,17,28,0))}
+body.dark-mode .results-head h1{color:var(--ink)}
+body.dark-mode .results-head .sub{color:var(--muted)}
+body.dark-mode .results-head .sub b{color:var(--ink)}
+body.dark-mode .empty-ico{background:linear-gradient(135deg,#152036,#1f2937)}
+body.dark-mode .empty-ico svg{stroke:var(--brand-2)}
+body.dark-mode .agent-info b{color:var(--ink)}
+body.dark-mode .heart-lg{background:#0f1724;border-color:var(--line)}
+body.dark-mode .heart-lg svg{stroke:var(--muted)}
+body.dark-mode .bottom-nav button{color:var(--muted)}
+body.dark-mode .bottom-nav button.active{color:var(--brand-2)}
+body.dark-mode .bottom-nav button.active svg{stroke:var(--brand-2)}
+body.dark-mode .fact span{color:var(--muted)}
+body.dark-mode .drawer .specs-lg .dot{background:#374151}
+body.dark-mode .badge{background:rgba(17,26,41,.9)}
 
 *{box-sizing:border-box}
 html,body{height:100%}
@@ -52,6 +115,7 @@ body{
   margin:0;font-family:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
   font-size:15px;line-height:1.5;color:var(--ink);background:var(--bg);
   -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;text-rendering:optimizeLegibility;
+  transition:background .3s ease,color .3s ease;
 }
 img{display:block;max-width:100%}
 button{font:inherit;color:inherit;cursor:pointer;border:0;background:none;padding:0}
@@ -64,22 +128,10 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{ou
 .results::-webkit-scrollbar,.drawer::-webkit-scrollbar,.filters::-webkit-scrollbar{width:10px}
 .results::-webkit-scrollbar-thumb,.drawer::-webkit-scrollbar-thumb,.filters::-webkit-scrollbar-thumb{background:#d3dae3;border-radius:99px;border:3px solid transparent;background-clip:content-box}
 
-/* ============================================================
-   HEADER
-   ============================================================ */
-.topbar{
-  position:sticky;top:0;z-index:800;height:var(--header-h);
-  display:flex;align-items:center;gap:20px;padding:0 28px;
-  background:rgba(255,255,255,.82);backdrop-filter:saturate(180%) blur(20px);
-  -webkit-backdrop-filter:saturate(180%) blur(20px);border-bottom:1px solid var(--line);
-}
+/* HEADER */
+.topbar{position:sticky;top:0;z-index:800;height:var(--header-h);display:flex;align-items:center;gap:20px;padding:0 28px;background:rgba(255,255,255,.82);backdrop-filter:saturate(180%) blur(20px);-webkit-backdrop-filter:saturate(180%) blur(20px);border-bottom:1px solid var(--line)}
 .brand{display:flex;align-items:center;gap:11px;flex:0 0 auto}
-.brand-mark{
-  width:38px;height:38px;border-radius:12px;display:grid;place-items:center;
-  background:linear-gradient(135deg,#3b82f6 0%,#0b5fff 55%,#0846d4 100%);
-  box-shadow:0 8px 20px rgba(11,95,255,.30),inset 0 1px 0 rgba(255,255,255,.25);
-  position:relative;overflow:hidden;flex:0 0 auto;
-}
+.brand-mark{width:38px;height:38px;border-radius:12px;display:grid;place-items:center;background:linear-gradient(135deg,#3b82f6 0%,#0b5fff 55%,#0846d4 100%);box-shadow:0 8px 20px rgba(11,95,255,.30),inset 0 1px 0 rgba(255,255,255,.25);position:relative;overflow:hidden;flex:0 0 auto}
 .brand-mark::after{content:"";position:absolute;inset:0;background:linear-gradient(160deg,transparent 40%,rgba(255,255,255,.16));pointer-events:none}
 .brand-mark svg{width:20px;height:20px;fill:#fff;position:relative;z-index:1}
 .brand-text{display:flex;flex-direction:column;line-height:1.1;min-width:0}
@@ -106,6 +158,9 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{ou
 .nav-link{padding:9px 14px;border-radius:999px;font-size:13.5px;font-weight:600;color:var(--ink-2);transition:background .16s ease,color .16s ease}
 .nav-link:hover{background:#eff3f8;color:var(--ink)}
 .nav-link.dim{color:var(--muted)}
+.btn-theme{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;border:1.5px solid var(--line);background:#fff;transition:all .18s ease}
+.btn-theme:hover{border-color:var(--brand);background:var(--brand-soft)}
+.btn-theme svg{width:17px;height:17px;stroke:var(--brand);fill:none;stroke-width:2}
 
 .btn-saved{display:inline-flex;align-items:center;gap:9px;height:42px;padding:0 16px 0 14px;border-radius:999px;border:1.5px solid var(--line);background:#fff;font-size:13.5px;font-weight:700;transition:border-color .18s ease,background .18s ease,color .18s ease,box-shadow .18s ease}
 .btn-saved svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2;color:#94a3b5;transition:.18s}
@@ -120,17 +175,13 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{ou
 .btn-filter .badge{position:absolute;top:-6px;right:-6px;min-width:20px;height:20px;padding:0 6px;border-radius:999px;display:grid;place-items:center;font-size:11px;font-weight:800;background:var(--brand);color:#fff;box-shadow:0 2px 6px var(--brand-glow);transform:scale(0);transition:transform .2s cubic-bezier(.34,1.56,.64,1)}
 .btn-filter .badge.show{transform:scale(1)}
 
-/* ============================================================
-   APP LAYOUT
-   ============================================================ */
-.app{display:grid;grid-template-columns:296px minmax(0,1fr) minmax(380px,42%);height:calc(100vh - var(--header-h))}
-
-.filters{padding:26px 22px 100px;background:#fff;border-right:1px solid var(--line);overflow-y:auto}
+/* APP LAYOUT */
+.app{display:grid;grid-template-columns:320px minmax(0,1fr);height:calc(100vh - var(--header-h));max-width:1600px;margin:0 auto}
+.filters{padding:26px 22px 100px;background:#fff;border-right:1px solid var(--line);overflow-y:auto;transition:background .3s ease,border-color .3s ease}
 .filters-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:22px}
 .filters-head h2{margin:0;font-size:11.5px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
 .link-reset{font-size:12.5px;font-weight:700;color:var(--brand);padding:6px 10px;border-radius:8px;transition:background .16s ease}
 .link-reset:hover{background:var(--brand-soft)}
-
 .filter-section{padding:20px 0;border-bottom:1px solid var(--line-2)}
 .filter-section:first-of-type{padding-top:0}
 .filter-section:last-of-type{border-bottom:0}
@@ -160,27 +211,35 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{ou
 .side-card button:hover{transform:translateY(-1px);box-shadow:0 8px 20px var(--brand-glow)}
 
 .results{overflow-y:auto;padding:0 32px 100px;scroll-behavior:smooth;position:relative}
-.results-head{position:sticky;top:0;z-index:20;display:flex;align-items:flex-end;justify-content:space-between;gap:20px;padding:26px 0 20px;margin-bottom:6px;background:linear-gradient(to bottom,var(--bg) 78%,rgba(245,247,251,0))}
+.results-head{position:sticky;top:0;z-index:20;display:flex;align-items:flex-end;justify-content:space-between;gap:20px;padding:26px 0 20px;margin-bottom:6px;background:linear-gradient(to bottom,var(--bg) 78%,rgba(245,247,251,0));transition:background .3s ease}
 .results-head h1{margin:0;font-family:var(--serif);font-size:26px;font-weight:700;letter-spacing:-.02em;color:var(--ink);line-height:1.15}
 .results-head .sub{margin-top:5px;font-size:13px;color:var(--muted);font-weight:500}
 .results-head .sub b{color:var(--ink);font-weight:700}
+.head-right{display:flex;align-items:center;gap:10px;flex:0 0 auto}
+.view-toggle{display:flex;gap:2px;padding:3px;background:#eef2f8;border-radius:999px;border:1.5px solid var(--line)}
+.view-toggle button{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;transition:all .18s ease}
+.view-toggle button.active{background:#fff;box-shadow:0 2px 6px rgba(10,22,40,.1)}
+.view-toggle button svg{width:16px;height:16px;stroke:var(--muted);fill:none;stroke-width:2.2}
+.view-toggle button.active svg{stroke:var(--brand)}
 
 .sort-wrap{position:relative;flex:0 0 auto}
 .sort-wrap>svg{position:absolute;left:13px;top:50%;transform:translateY(-50%);width:14px;height:14px;stroke:#8a97a8;fill:none;stroke-width:2;pointer-events:none}
 .sort-wrap select{height:40px;padding:0 32px 0 34px;border-radius:999px;border:1.5px solid var(--line);background:#fff;font-size:13px;font-weight:700;color:var(--ink);outline:none;appearance:none;-webkit-appearance:none;cursor:pointer}
 .sort-wrap::after{content:"";position:absolute;right:14px;top:50%;width:7px;height:7px;margin-top:-5px;border-right:2px solid #8a97a8;border-bottom:2px solid #8a97a8;transform:rotate(45deg);pointer-events:none}
 
-.grid{display:grid;gap:26px;grid-template-columns:repeat(auto-fill,minmax(288px,1fr))}
+/* GRID */
+.grid{display:grid;gap:28px;grid-template-columns:repeat(auto-fill,minmax(320px,1fr))}
+.map-container{display:none;height:calc(100vh - 280px);min-height:500px;border-radius:var(--radius-lg);overflow:hidden;border:1px solid var(--line)}
+.map-container.active{display:block}
+#map{width:100%;height:100%}
 
-/* ============================================================
-   CARD with SLIDESHOW
-   ============================================================ */
+/* CARD */
 .card{position:relative;background:var(--card);border-radius:var(--radius-lg);overflow:hidden;cursor:pointer;box-shadow:0 1px 2px rgba(10,22,40,.05),0 2px 8px rgba(10,22,40,.04);transition:transform .32s cubic-bezier(.2,.8,.3,1),box-shadow .32s ease;animation:cardIn .4s ease backwards}
 @keyframes cardIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
 .card:hover{transform:translateY(-6px);box-shadow:0 24px 48px rgba(10,22,40,.14),0 8px 20px rgba(10,22,40,.08)}
 
 .card-media{position:relative;aspect-ratio:4/3;background:#eef1f5;overflow:hidden}
-.card-media img{width:100%;height:100%;object-fit:cover;transition:transform .6s cubic-bezier(.2,.8,.3,1);position:absolute;inset:0;opacity:0;transition:opacity .4s ease,transform .6s cubic-bezier(.2,.8,.3,1)}
+.card-media img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0;opacity:0;transition:opacity .4s ease,transform .6s cubic-bezier(.2,.8,.3,1)}
 .card-media img.active{opacity:1}
 .card:hover .card-media img.active{transform:scale(1.06)}
 
@@ -189,13 +248,12 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{ou
 .slideshow-dots span{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.45);transition:background .2s ease,transform .2s ease;cursor:pointer}
 .slideshow-dots span.active{background:#fff;transform:scale(1.3)}
 
-.slide-arrow{position:absolute;top:50%;transform:translateY(-50%);z-index:3;width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:rgba(255,255,255,.92);backdrop-filter:blur(8px);box-shadow:0 2px 10px rgba(10,22,40,.18);opacity:0;transition:opacity .22s ease,transform .18s ease;pointer-events:none}
+.slide-arrow{position:absolute;top:50%;transform:translateY(-50%);z-index:3;width:36px;height:36px;border-radius:50%;display:grid;place-items:center;background:rgba(255,255,255,.92);backdrop-filter:blur(8px);box-shadow:0 2px 10px rgba(10,22,40,.18);opacity:0;transition:opacity .22s ease,transform .18s ease;pointer-events:none}
 .card:hover .slide-arrow{opacity:1;pointer-events:auto}
 .slide-arrow:hover{transform:translateY(-50%) scale(1.1);background:#fff}
-.slide-arrow.prev{left:10px}
-.slide-arrow.next{right:10px}
-.slide-arrow svg{width:16px;height:16px;stroke:var(--ink);fill:none;stroke-width:2.4}
-
+.slide-arrow.prev{left:12px}
+.slide-arrow.next{right:12px}
+.slide-arrow svg{width:18px;height:18px;stroke:var(--ink);fill:none;stroke-width:2.4}
 .card-media::after{content:"";position:absolute;inset:0;background:linear-gradient(to bottom,transparent 50%,rgba(10,22,40,.6) 100%);pointer-events:none;z-index:1}
 
 .card-badges{position:absolute;top:12px;left:12px;z-index:4;display:flex;gap:6px;flex-wrap:wrap}
@@ -214,20 +272,22 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{ou
 .card-heart.on{animation:heartPop .45s cubic-bezier(.34,1.56,.64,1)}
 @keyframes heartPop{0%{transform:scale(1)}40%{transform:scale(1.28)}70%{transform:scale(.94)}100%{transform:scale(1)}}
 
-.card-price-overlay{position:absolute;bottom:12px;left:14px;right:14px;z-index:3;display:flex;align-items:baseline;justify-content:space-between;gap:10px}
-.card-price-overlay .price{font-size:22px;font-weight:800;color:#fff;letter-spacing:-.03em;text-shadow:0 2px 8px rgba(0,0,0,.35);font-variant-numeric:tabular-nums}
-.card-price-overlay .price .suffix{font-size:13px;font-weight:700;color:rgba(255,255,255,.9)}
-.card-price-overlay .est{font-size:12px;font-weight:700;color:rgba(255,255,255,.94);padding:4px 9px;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.28);border-radius:7px;backdrop-filter:blur(6px);text-shadow:0 1px 2px rgba(0,0,0,.15)}
+.card-compare{position:absolute;top:12px;right:58px;z-index:5;width:38px;height:38px;border-radius:50%;display:grid;place-items:center;background:rgba(255,255,255,.95);backdrop-filter:blur(8px);box-shadow:0 3px 12px rgba(10,22,40,.2);transition:transform .18s ease,background .18s ease;font-size:14px;font-weight:800;color:#5d6b7d}
+.card-compare:hover{transform:scale(1.08);background:#fff;color:var(--brand)}
+.card-compare.on{background:var(--brand);color:#fff}
 
-.card-body{padding:15px 16px 17px}
-.specs{display:flex;align-items:center;gap:10px;font-size:13.5px;font-weight:600;color:var(--ink-2)}
+.card-price-overlay{position:absolute;bottom:12px;left:16px;right:16px;z-index:3;display:flex;align-items:baseline;justify-content:space-between;gap:10px}
+.card-price-overlay .price{font-size:24px;font-weight:800;color:#fff;letter-spacing:-.03em;text-shadow:0 2px 8px rgba(0,0,0,.35);font-variant-numeric:tabular-nums}
+.card-price-overlay .price .suffix{font-size:14px;font-weight:700;color:rgba(255,255,255,.9)}
+.card-price-overlay .est{font-size:12.5px;font-weight:700;color:rgba(255,255,255,.94);padding:5px 10px;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.28);border-radius:7px;backdrop-filter:blur(6px);text-shadow:0 1px 2px rgba(0,0,0,.15)}
+
+.card-body{padding:16px 18px 18px}
+.specs{display:flex;align-items:center;gap:10px;font-size:14px;font-weight:600;color:var(--ink-2)}
 .specs span{display:inline-flex;align-items:center;gap:5px}
-.specs svg{width:13px;height:13px;stroke:#8a97a8;fill:none;stroke-width:2}
 .specs .dot{width:3px;height:3px;border-radius:50%;background:#c5d1e0}
-.addr{margin-top:8px;font-size:13px;color:var(--muted);font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.meta-row{margin-top:12px;padding-top:12px;border-top:1px solid var(--line-2);display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:12px;color:#8a97a8;font-weight:600}
-.meta-tag{display:inline-flex;align-items:center;gap:5px;padding:3px 9px;background:#f5f7fb;border-radius:6px;font-size:11.5px;color:var(--ink-2);font-weight:600}
-.meta-tag svg{width:11px;height:11px;stroke:#8a97a8;fill:none;stroke-width:2}
+.addr{margin-top:8px;font-size:13.5px;color:var(--muted);font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.meta-row{margin-top:14px;padding-top:14px;border-top:1px solid var(--line-2);display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:12px;color:#8a97a8;font-weight:600}
+.meta-tag{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;background:#f5f7fb;border-radius:6px;font-size:11.5px;color:var(--ink-2);font-weight:600}
 
 .empty{grid-column:1/-1;padding:80px 24px;text-align:center;background:#fff;border-radius:var(--radius-lg);border:1.5px dashed #d9e1ea}
 .empty-ico{width:80px;height:80px;margin:0 auto 20px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,var(--brand-soft),#dbe7ff);position:relative}
@@ -240,26 +300,18 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{ou
 .more{height:48px;padding:0 36px;border-radius:999px;border:1.5px solid var(--brand);background:#fff;color:var(--brand);font-size:14px;font-weight:700;transition:all .18s ease}
 .more:hover{background:var(--brand);color:#fff;box-shadow:var(--shadow-brand)}
 
-/* ============================================================
-   MAPBOX MAP
-   ============================================================ */
-.mapwrap{position:relative;background:#e9eef3;overflow:hidden}
-#map{position:absolute;inset:0}
-.mapboxgl-map{font-family:inherit}
-.mapboxgl-ctrl-attrib{font-size:10.5px !important;background:rgba(255,255,255,.9) !important;border-radius:8px 0 0 0;padding:3px 8px !important}
-.mapboxgl-ctrl-group{border-radius:12px !important;box-shadow:var(--shadow-sm) !important;border:0 !important;overflow:hidden}
-.mapboxgl-ctrl-group button{width:38px !important;height:38px !important}
-.mapboxgl-ctrl-group button:hover{background:#f5f7fb !important}
+/* COMPARE BAR */
+.compare-bar{position:fixed;bottom:20px;left:50%;transform:translate(-50%,200%);z-index:850;display:flex;align-items:center;gap:12px;padding:10px 14px 10px 18px;background:#fff;border:1.5px solid var(--line);border-radius:16px;box-shadow:var(--shadow-lg);transition:transform .35s cubic-bezier(.22,.9,.3,1);max-width:calc(100vw - 40px);flex-wrap:wrap}
+.compare-bar.show{transform:translate(-50%,0)}
+.compare-bar .label{font-size:12.5px;font-weight:700;color:var(--muted)}
+.compare-chip{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;background:#f5f7fb;border:1px solid var(--line);border-radius:999px;font-size:12px;font-weight:600;color:var(--ink-2);max-width:180px}
+.compare-chip span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.compare-chip button{width:16px;height:16px;border-radius:50%;display:grid;place-items:center;background:var(--danger);color:#fff;font-size:9px;font-weight:800;flex:0 0 auto}
+.btn-compare{height:38px;padding:0 18px;border-radius:999px;background:var(--brand);color:#fff;font-size:12.5px;font-weight:800;transition:all .16s ease}
+.btn-compare:hover{background:var(--brand-dark);box-shadow:var(--shadow-brand)}
+.btn-compare:disabled{opacity:.4;cursor:not-allowed}
 
-.pin{cursor:pointer;transition:transform .18s cubic-bezier(.2,.8,.3,1)}
-.pin:hover{transform:scale(1.12);z-index:10}
-.pin span{display:inline-block;padding:6px 11px;border-radius:999px;background:#fff;color:var(--ink);font-size:12px;font-weight:800;letter-spacing:-.01em;white-space:nowrap;border:2px solid #fff;box-shadow:0 4px 14px rgba(10,22,40,.2),0 1px 3px rgba(10,22,40,.15);font-variant-numeric:tabular-nums}
-.pin.sale span{color:#0a4fd6}
-.pin.rent span{color:#0e7a4a}
-
-/* ============================================================
-   DETAIL DRAWER
-   ============================================================ */
+/* DRAWER */
 .scrim{position:fixed;inset:0;z-index:900;background:rgba(10,22,40,.5);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);opacity:0;pointer-events:none;transition:opacity .26s ease}
 .scrim.show{opacity:1;pointer-events:auto}
 
@@ -343,75 +395,46 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{ou
 .toast.show{opacity:1;transform:translate(-50%,0)}
 .toast svg{width:18px;height:18px;stroke:#4ade80;fill:none;stroke-width:2.6;flex:0 0 auto}
 
-/* ============================================================
-   WHATSAPP & TRANSLATE WIDGETS
-   ============================================================ */
-.whatsapp-float {
-  position: fixed;
-  bottom: 96px;
-  right: 22px;
-  z-index: 960;
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
-  background-color: var(--whatsapp);
-  color: #fff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 12px 32px rgba(37, 211, 102, 0.4);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-  animation: pulse-whatsapp 2s infinite;
-}
-.whatsapp-float:hover {
-  transform: scale(1.08);
-  box-shadow: 0 16px 40px rgba(37, 211, 102, 0.5);
-}
-.whatsapp-float svg {
-  width: 32px;
-  height: 32px;
-  fill: currentColor;
-}
-@keyframes pulse-whatsapp {
-  0% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.5); }
-  70% { box-shadow: 0 0 0 16px rgba(37, 211, 102, 0); }
-  100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); }
-}
+/* WIDGETS */
+.whatsapp-float{position:fixed;bottom:96px;right:22px;z-index:960;width:60px;height:60px;border-radius:50%;background-color:var(--whatsapp);color:#fff;display:flex;align-items:center;justify-content:center;box-shadow:0 12px 32px rgba(37,211,102,.4);transition:transform .2s ease,box-shadow .2s ease;animation:pulse-whatsapp 2s infinite}
+.whatsapp-float:hover{transform:scale(1.08);box-shadow:0 16px 40px rgba(37,211,102,.5)}
+.whatsapp-float svg{width:32px;height:32px;fill:currentColor}
+@keyframes pulse-whatsapp{0%{box-shadow:0 0 0 0 rgba(37,211,102,.5)}70%{box-shadow:0 0 0 16px rgba(37,211,102,0)}100%{box-shadow:0 0 0 0 rgba(37,211,102,0)}}
 
-.gtranslate_wrapper {
-  position: fixed;
-  bottom: 24px;
-  left: 24px;
-  z-index: 940;
-}
-@media (max-width: 1000px) {
-  .gtranslate_wrapper {
-    bottom: 100px;
-    left: 14px;
-  }
-}
+.gtranslate_wrapper{position:fixed;bottom:24px;left:24px;z-index:940}
+@media (max-width:1000px){.gtranslate_wrapper{bottom:100px;left:14px}}
 
-/* ============================================================
-   MOBILE BOTTOM NAV
-   ============================================================ */
+/* BOTTOM NAV */
 .bottom-nav{display:none;position:fixed;left:14px;right:88px;bottom:calc(14px + env(safe-area-inset-bottom,0px));z-index:700;padding:6px;background:rgba(255,255,255,.94);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-radius:999px;box-shadow:0 14px 40px rgba(10,22,40,.2);border:1px solid rgba(255,255,255,.6);grid-template-columns:repeat(3,1fr);gap:4px}
 .bottom-nav button{display:flex;flex-direction:column;align-items:center;gap:3px;padding:9px 6px;border-radius:999px;font-size:10.5px;font-weight:700;color:var(--muted);transition:color .16s ease,background .16s ease;position:relative}
 .bottom-nav button svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:2}
 .bottom-nav button.active{color:var(--brand)}
-.bottom-nav button.active svg{stroke:var(--brand)}
 .bottom-nav button .nav-count{position:absolute;top:4px;right:14px;min-width:16px;height:16px;padding:0 4px;border-radius:999px;background:var(--brand);color:#fff;font-size:9.5px;font-weight:800;display:grid;place-items:center;box-shadow:0 2px 6px var(--brand-glow);transform:scale(0);transition:transform .2s cubic-bezier(.34,1.56,.64,1)}
 .bottom-nav button .nav-count.show{transform:scale(1)}
 
-.view-toggle{display:none;position:fixed;left:50%;bottom:calc(88px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:660;padding:5px;background:rgba(255,255,255,.96);backdrop-filter:blur(20px);border-radius:999px;box-shadow:0 14px 40px rgba(10,22,40,.22);border:1px solid rgba(255,255,255,.6);gap:2px}
-.view-toggle button{padding:9px 22px;border-radius:999px;font-size:13px;font-weight:700;color:var(--muted);transition:background .16s ease,color .16s ease}
-.view-toggle button.active{background:var(--ink);color:#fff}
+/* COMPARE MODAL */
+.compare-modal{position:fixed;inset:0;z-index:1000;display:none;align-items:center;justify-content:center;padding:20px}
+.compare-modal.show{display:flex}
+.compare-modal .cm-scrim{position:absolute;inset:0;background:rgba(10,22,40,.6);backdrop-filter:blur(6px)}
+.compare-modal .cm-body{position:relative;background:#fff;border-radius:20px;max-width:1000px;width:100%;max-height:85vh;overflow:auto;padding:30px;box-shadow:var(--shadow-xl)}
+.compare-modal h2{font-family:var(--serif);font-size:24px;margin:0 0 20px}
+.compare-modal .close-cm{position:absolute;top:16px;right:16px;width:38px;height:38px;border-radius:50%;display:grid;place-items:center;background:#f0f3f8}
+.compare-modal .close-cm svg{width:18px;height:18px;stroke:var(--ink);fill:none;stroke-width:2.4}
+.compare-table{width:100%;border-collapse:collapse;font-size:13.5px}
+.compare-table th,.compare-table td{padding:12px 14px;text-align:left;border-bottom:1px solid var(--line)}
+.compare-table th{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);background:#f8fafc}
+.compare-table td:first-child{font-weight:700;color:var(--muted);width:140px}
+.compare-table td{font-weight:600;color:var(--ink-2)}
+body.dark-mode .compare-modal .cm-body{background:var(--card);color:var(--ink)}
+body.dark-mode .compare-table th{background:#0f1724;color:var(--muted)}
+body.dark-mode .compare-table td{border-color:var(--line);color:var(--ink-2)}
+body.dark-mode .compare-modal h2{color:var(--ink)}
+body.dark-mode .close-cm{background:#1f2937}
 
-/* ============================================================
-   RESPONSIVE
-   ============================================================ */
-@media (max-width:1240px){
-  .app{grid-template-columns:264px minmax(0,1fr) minmax(320px,40%)}
-  .grid{grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:22px}
+/* RESPONSIVE */
+@media (max-width:1100px){
+  .app{grid-template-columns:280px minmax(0,1fr)}
+  .grid{grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:22px}
   .results{padding:0 24px 100px}
   .topbar{padding:0 20px;gap:14px}
 }
@@ -427,6 +450,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{ou
   .region-toggle button{padding:6px 8px;font-size:11.5px}
   .searchbar{display:none}
   .nav-link{display:none}
+  .btn-theme{width:38px;height:38px}
   .btn-filter{display:inline-flex;height:38px;padding:0 14px;font-size:12.5px;gap:6px}
   .btn-saved{height:38px;padding:0 12px;font-size:12.5px}
   .btn-saved .label{display:none}
@@ -436,21 +460,16 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{ou
   .results-head{padding:20px 0 16px;align-items:flex-start;flex-direction:column;gap:14px}
   .results-head h1{font-size:22px}
   .results-head .sub{font-size:12.5px;margin-top:4px}
+  .head-right{width:100%}
   .sort-wrap{width:100%}
   .sort-wrap select{width:100%;height:42px;padding:0 34px;text-align:left}
   .grid{grid-template-columns:1fr;gap:18px}
   .card{border-radius:18px}
   .card-media{aspect-ratio:16/10}
   .card-price-overlay .price{font-size:24px}
-  .card-price-overlay .price .suffix{font-size:14px}
   .card-body{padding:16px 16px 18px}
-  .specs{font-size:14px}
-  .addr{font-size:13.5px}
   .slideshow-dots{opacity:1}
-  .slide-arrow{opacity:1;pointer-events:auto;width:32px;height:32px}
-  .mapwrap{display:none;position:fixed;top:64px;left:0;right:0;bottom:0;z-index:400}
-  body.show-map .results{display:none}
-  body.show-map .mapwrap{display:block}
+  .slide-arrow{opacity:1;pointer-events:auto;width:34px;height:34px}
   .filters{position:fixed;top:auto;bottom:0;left:0;right:0;max-height:88vh;padding:8px 20px calc(120px + env(safe-area-inset-bottom,0px));border-radius:24px 24px 0 0;border-right:0;box-shadow:0 -24px 60px rgba(10,22,40,.24);transform:translateY(100%);transition:transform .34s cubic-bezier(.22,.9,.3,1);z-index:960;overflow-y:auto;overscroll-behavior:contain}
   .filters.open{transform:translateY(0)}
   .filters::before{content:"";display:block;width:40px;height:4px;margin:10px auto 18px;border-radius:2px;background:#d9e1ea}
@@ -459,10 +478,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{ou
   .filter-section{padding:18px 0}
   .filter-section h3{font-size:14px;margin-bottom:14px}
   .chip{padding:10px 16px;font-size:14px}
-  .range-slider{height:44px}
-  .range-slider input[type=range]::-webkit-slider-thumb{width:26px;height:26px}
   .bottom-nav{display:grid}
-  .view-toggle{display:flex}
   .drawer{width:100%;max-width:none;border-radius:0}
   .drawer-hero{aspect-ratio:5/4}
   .drawer-body{padding:22px 22px 120px}
@@ -474,9 +490,11 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{ou
   .facts-grid{grid-template-columns:1fr}
   .similar-grid{grid-template-columns:1fr}
   .toast{bottom:calc(100px + env(safe-area-inset-bottom,0px));font-size:13px;padding:12px 18px;max-width:calc(100vw - 32px)}
-  
-  .whatsapp-float { bottom: 90px; right: 16px; width: 50px; height: 50px; }
-  .whatsapp-float svg { width: 26px; height: 26px; }
+  .whatsapp-float{bottom:90px;right:16px;width:50px;height:50px}
+  .whatsapp-float svg{width:26px;height:26px}
+  .compare-bar{left:14px;right:14px;transform:translate(0,200%);max-width:none}
+  .compare-bar.show{transform:translate(0,0)}
+  .map-container{height:500px}
 }
 @media (max-width:400px){
   .brand-name{font-size:16px}
@@ -485,15 +503,13 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{ou
   .results-head h1{font-size:20px}
   .bottom-nav{right:80px}
 }
-@media (prefers-reduced-motion:reduce){
-  *,*::before,*::after{animation-duration:.001ms !important;transition-duration:.001ms !important}
-}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.001ms !important;transition-duration:.001ms !important}}
 </style>
 </head>
 <body>
 
 <header class="topbar">
-  <a class="brand" href="#" aria-label="CME Real Estate and Properties home">
+  <a class="brand" href="#" aria-label="CME Real Estate home">
     <span class="brand-mark"><svg viewBox="0 0 24 24"><path d="M12 3.1 2.6 10.5a1 1 0 0 0 .62 1.79h1.3v7.7a1 1 0 0 0 1 1h4.3v-6.2h4.36v6.2h4.3a1 1 0 0 0 1-1v-7.7h1.3a1 1 0 0 0 .62-1.79z"/></svg></span>
     <span class="brand-text"><span class="brand-name">CME</span><span class="brand-sub">Real Estate &amp; Properties</span></span>
   </a>
@@ -506,6 +522,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{ou
   <div class="region-toggle" role="group" aria-label="Region">
     <button type="button" data-region="usa" class="active">USA</button>
     <button type="button" data-region="ecuador">Ecuador</button>
+    <button type="button" data-region="puerto_rico">Puerto Rico</button>
   </div>
 
   <form class="searchbar" id="searchForm" role="search" autocomplete="off">
@@ -514,13 +531,13 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{ou
   </form>
 
   <div class="top-actions">
+    <button class="btn-theme" id="themeBtn" aria-label="Toggle dark mode">
+      <svg viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+    </button>
     <button class="btn-filter" id="filterBtn" aria-label="Open filters">
       <svg viewBox="0 0 24 24"><path d="M4 6h16M7 12h10M10 18h4"/></svg>
       Filters <span class="badge" id="filterBadge">0</span>
     </button>
-    <a class="nav-link dim" href="#">Buy</a>
-    <a class="nav-link dim" href="#">Rent</a>
-    <a class="nav-link dim" href="#">Sell</a>
     <button class="btn-saved" id="savedBtn" aria-pressed="false">
       <svg viewBox="0 0 24 24"><path d="M12 20.5s-7.4-4.6-9.2-8.9C1.4 8.1 3.5 4.8 6.9 4.8c2 0 3.5 1 4.4 2.3.9-1.3 2.4-2.3 4.4-2.3 3.4 0 5.5 3.3 4.1 6.8-1.8 4.3-9.2 8.9-9.2 8.9z"/></svg>
       <span class="label">Saved</span><span class="count" id="savedCount">0</span>
@@ -529,17 +546,16 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{ou
 </header>
 
 <main class="app">
-
   <aside class="filters" id="filters" aria-label="Filters">
     <div class="filters-head"><h2>Refine results</h2><button class="link-reset" id="resetBtn">Reset all</button></div>
 
     <section class="filter-section">
       <h3>Price range</h3>
-      <div class="price-display"><span class="val" id="priceMinDisplay">$0</span><span class="val" id="priceMaxDisplay">$2M+</span></div>
+      <div class="price-display"><span class="val" id="priceMinDisplay">$0</span><span class="val" id="priceMaxDisplay">$10M+</span></div>
       <div class="range-slider">
         <div class="range-track"><div class="range-fill" id="rangeFill"></div></div>
-        <input type="range" id="priceMin" min="0" max="2000000" step="25000" value="0" aria-label="Minimum price">
-        <input type="range" id="priceMax" min="0" max="2000000" step="25000" value="2000000" aria-label="Maximum price">
+        <input type="range" id="priceMin" min="0" max="10000000" step="50000" value="0" aria-label="Minimum price">
+        <input type="range" id="priceMax" min="0" max="10000000" step="50000" value="10000000" aria-label="Maximum price">
       </div>
     </section>
 
@@ -568,6 +584,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{ou
         <button class="chip" data-val="SINGLE_FAMILY">Single family</button>
         <button class="chip" data-val="CONDO">Condo</button>
         <button class="chip" data-val="TOWNHOUSE">Townhouse</button>
+        <button class="chip" data-val="LAND">Land</button>
       </div>
     </section>
 
@@ -590,35 +607,51 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{ou
   <section class="results" id="resultsPane">
     <div class="results-head">
       <div><h1 id="resultsTitle">Homes for sale</h1><div class="sub" id="resultsSub">Loading listings…</div></div>
-      <div class="sort-wrap">
-        <svg viewBox="0 0 24 24"><path d="M3 6h18M6 12h12M10 18h4"/></svg>
-        <select id="sortSelect" aria-label="Sort results">
-          <option value="newest">Newest first</option><option value="price_asc">Price: low to high</option>
-          <option value="price_desc">Price: high to low</option><option value="sqft_desc">Largest first</option>
-        </select>
+      <div class="head-right">
+        <div class="view-toggle" role="group" aria-label="View mode">
+          <button id="gridViewBtn" class="active" aria-label="Grid view"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></button>
+          <button id="mapViewBtn" aria-label="Map view"><svg viewBox="0 0 24 24"><path d="M1 6v16l7-4 8 4 7-4V2l-7 4-8-4-7 4z"/><path d="M8 2v16M16 6v16"/></svg></button>
+        </div>
+        <div class="sort-wrap">
+          <svg viewBox="0 0 24 24"><path d="M3 6h18M6 12h12M10 18h4"/></svg>
+          <select id="sortSelect" aria-label="Sort results">
+            <option value="newest">Newest first</option><option value="price_asc">Price: low to high</option>
+            <option value="price_desc">Price: high to low</option><option value="sqft_desc">Largest first</option>
+          </select>
+        </div>
       </div>
     </div>
     <div class="grid" id="grid"></div>
+    <div class="map-container" id="mapContainer"><div id="map"></div></div>
     <div class="more-wrap"><button class="more" id="moreBtn" hidden>Show more homes</button></div>
   </section>
-
-  <section class="mapwrap"><div id="map"></div></section>
 </main>
+
+<div class="compare-bar" id="compareBar">
+  <span class="label">Compare:</span>
+  <div id="compareChips" style="display:flex;gap:8px;flex-wrap:wrap;flex:1"></div>
+  <button class="btn-compare" id="compareNowBtn" disabled>Compare</button>
+</div>
 
 <nav class="bottom-nav" aria-label="Quick actions">
   <button type="button" id="navFilters"><svg viewBox="0 0 24 24"><path d="M4 6h16M7 12h10M10 18h4"/></svg>Filters<span class="nav-count" id="navFilterCount">0</span></button>
   <button type="button" id="navSaved"><svg viewBox="0 0 24 24"><path d="M12 20.5s-7.4-4.6-9.2-8.9C1.4 8.1 3.5 4.8 6.9 4.8c2 0 3.5 1 4.4 2.3.9-1.3 2.4-2.3 4.4-2.3 3.4 0 5.5 3.3 4.1 6.8-1.8 4.3-9.2 8.9-9.2 8.9z"/></svg>Saved<span class="nav-count" id="navSavedCount">0</span></button>
-  <button type="button" id="navMap"><svg viewBox="0 0 24 24"><path d="m9 3-6 3v15l6-3 6 3 6-3V3l-6 3-6-3z"/><path d="M9 3v15M15 6v15"/></svg>Map</button>
+  <button type="button" id="navCompare"><svg viewBox="0 0 24 24"><path d="M3 6h18M7 12h10M10 18h4"/><path d="M3 6l-2 6h4zM21 6l-2 6h4z"/></svg>Compare<span class="nav-count" id="navCompCount">0</span></button>
 </nav>
-
-<div class="view-toggle" role="group" aria-label="View mode">
-  <button data-view="list" class="active">List</button><button data-view="map">Map</button>
-</div>
 
 <div class="scrim" id="scrim"></div>
 <aside class="drawer" id="drawer" aria-hidden="true" aria-label="Home details"></aside>
 
 <div class="toast" id="toast"><svg viewBox="0 0 24 24"><path d="m4 12.5 5 5L20 6.5"/></svg><span id="toastMsg"></span></div>
+
+<div class="compare-modal" id="compareModal" role="dialog" aria-hidden="true">
+  <div class="cm-scrim" data-close-cm></div>
+  <div class="cm-body">
+    <button class="close-cm" data-close-cm aria-label="Close"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    <h2>Compare homes</h2>
+    <div id="compareTableWrap"></div>
+  </div>
+</div>
 
 <div class="gtranslate_wrapper"></div>
 <script>window.gtranslateSettings = {"default_language":"en","detect_browser_language":true,"wrapper_selector":".gtranslate_wrapper"}</script>
@@ -630,82 +663,95 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{ou
   </svg>
 </a>
 
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
 (function () {
   'use strict';
 
-  const CONFIG = {
-    MAPBOX_TOKEN: 'pk.eyJ1IjoiZ2xpYXdGMkRqMUlCQ2hJjoiY2lJjoiY2lJZ2VjZ2VjZ2VjZ2VjIn0...' // ← Paste your Mapbox token here
+  /* ============================================================
+     IMAGES — real estate photography (Pexels CDN)
+     Swap for MLS/Zillow URLs if licensed.
+     ============================================================ */
+  const IMG = {
+    house1:'https://images.pexels.com/photos/106399/pexels-photo-106399.jpeg?auto=compress&cs=tinysrgb&w=1200',
+    house2:'https://images.pexels.com/photos/259588/pexels-photo-259588.jpeg?auto=compress&cs=tinysrgb&w=1200',
+    house3:'https://images.pexels.com/photos/2102587/pexels-photo-2102587.jpeg?auto=compress&cs=tinysrgb&w=1200',
+    house4:'https://images.pexels.com/photos/1029599/pexels-photo-1029599.jpeg?auto=compress&cs=tinysrgb&w=1200',
+    condo1:'https://images.pexels.com/photos/1643383/pexels-photo-1643383.jpeg?auto=compress&cs=tinysrgb&w=1200',
+    condo2:'https://images.pexels.com/photos/1571460/pexels-photo-1571460.jpeg?auto=compress&cs=tinysrgb&w=1200',
+    condo3:'https://images.pexels.com/photos/276724/pexels-photo-276724.jpeg?auto=compress&cs=tinysrgb&w=1200',
+    villa1:'https://images.pexels.com/photos/261102/pexels-photo-261102.jpeg?auto=compress&cs=tinysrgb&w=1200',
+    villa2:'https://images.pexels.com/photos/323780/pexels-photo-323780.jpeg?auto=compress&cs=tinysrgb&w=1200',
+    villa3:'https://images.pexels.com/photos/53610/large-home-residential-house-architecture-53610.jpeg?auto=compress&cs=tinysrgb&w=1200',
+    land1:'https://images.pexels.com/photos/440731/pexels-photo-440731.jpeg?auto=compress&cs=tinysrgb&w=1200',
+    beach1:'https://images.pexels.com/photos/261102/pexels-photo-261102.jpeg?auto=compress&cs=tinysrgb&w=1200',
+    colonial:'https://images.pexels.com/photos/259588/pexels-photo-259588.jpeg?auto=compress&cs=tinysrgb&w=1200',
+    interior1:'https://images.pexels.com/photos/1643383/pexels-photo-1643383.jpeg?auto=compress&cs=tinysrgb&w=1200',
+    interior2:'https://images.pexels.com/photos/1571460/pexels-photo-1571460.jpeg?auto=compress&cs=tinysrgb&w=1200'
   };
 
-  /* ============ USA FOR SALE ============ */
-  const USA_LISTINGS = [
-    { id: 's1', address: '11725 Timber Heights Dr', city: 'Austin', state: 'TX', zip: '78754', price: 390000, beds: 4, baths: 3, sqft: 2099, lot: 5893, year: 2006, type: 'SINGLE_FAMILY', status: 'FOR_SALE', lat: 30.3550, lng: -97.6700, listedAt: Date.now() - 9 * 86400000, pricePerSqft: 186, zestimate: null, hoa: 39, subtype: 'Single Family Residence', description: 'Come see this beautiful and spacious home with 4 bedrooms and 3 bathrooms, offering about 2,099 square feet of living space...', photos: ['https://images.unsplash.com/photo-1568605114967-8130f3a36994?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1570129477492-45c003edd2be?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=900&q=70'], agent: { name: 'Thinh Le', title: 'Listing Agent' } },
-    { id: 's2', address: '5718 25th Ave NE', city: 'Seattle', state: 'WA', zip: '98105', price: 888249, beds: 4, baths: 2, sqft: 1780, lot: 3750, year: 1925, type: 'SINGLE_FAMILY', status: 'FOR_SALE', lat: 47.6710, lng: -122.3000, listedAt: Date.now() - 15 * 86400000, pricePerSqft: 499, zestimate: 901000, hoa: 0, subtype: 'Single Family Residence', description: 'Welcome to beautiful Ravenna! This well-cared for Northwest craftsman home is perfect as either a turn-key rental property...', photos: ['https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?auto=format&fit=crop&w=900&q=70'], agent: { name: 'Redfin', title: 'Listing Agent' } },
-    { id: 's3', address: '15575 SW 9th Ln', city: 'Miami', state: 'FL', zip: '33194', price: 819900, beds: 3, baths: 2.5, sqft: 2254, lot: 5000, year: 2003, type: 'SINGLE_FAMILY', status: 'FOR_SALE', lat: 25.7350, lng: -80.3350, listedAt: Date.now() - 148 * 86400000, pricePerSqft: 364, zestimate: null, hoa: 0, subtype: 'Single Family Residence', description: 'Step into this well maintained home, designed for comfort and entertaining—both indoors and out...', photos: ['https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1605276374104-dee2a0ed3cd6?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1502005229762-cf1b2da7c5d6?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?auto=format&fit=crop&w=900&q=70'], agent: { name: 'Michelle del Valle', title: 'Listing Agent' } },
-    { id: 's4', address: '8613 Aracari Cv', city: 'Austin', state: 'TX', zip: '78744', price: 706526, beds: 5, baths: 5.5, sqft: 2829, lot: null, year: 2025, type: 'SINGLE_FAMILY', status: 'FOR_SALE', lat: 30.1950, lng: -97.7350, listedAt: Date.now() - 5 * 86400000, pricePerSqft: 250, zestimate: null, hoa: 60, subtype: 'Single Family Residence', description: 'New construction in a thriving community...', photos: ['https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1600573472592-401b489a3cdc?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1518780664697-55e3ad937233?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1583608205776-bfd35f0d9f83?auto=format&fit=crop&w=900&q=70'], agent: { name: 'CME Partner', title: 'Listing Agent' } },
-    { id: 's5', address: '8511 Dongan Dr', city: 'Austin', state: 'TX', zip: '78744', price: 624990, beds: 5, baths: 4, sqft: 2709, lot: 9239, year: 2025, type: 'SINGLE_FAMILY', status: 'FOR_SALE', lat: 30.1950, lng: -97.7350, listedAt: Date.now() - 36 * 86400000, pricePerSqft: 231, zestimate: null, hoa: 76, subtype: 'Single Family Residence', description: 'Newmark Homes Grace floorplan...', photos: ['https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1554995207-c18c203602cb?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1523217582562-09d0def993a6?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1449844908441-8829872d2607?auto=format&fit=crop&w=900&q=70'], agent: { name: 'Sarah', title: 'Listing Agent' } },
-    { id: 's6', address: '15326 SW 58th Ter', city: 'Miami', state: 'FL', zip: '33193', price: 599000, beds: 3, baths: 2, sqft: 1264, lot: 4826, year: 2000, type: 'SINGLE_FAMILY', status: 'FOR_SALE', lat: 25.7550, lng: -80.2200, listedAt: Date.now() - 10 * 86400000, pricePerSqft: 474, zestimate: null, hoa: 0, subtype: 'Single Family Residence', description: 'Well-maintained 3-bedroom, 2-bath home...', photos: ['https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=900&q=70'], agent: { name: 'CME Partner', title: 'Listing Agent' } },
-    { id: 's7', address: '1245 NE 154th St', city: 'North Miami Beach', state: 'FL', zip: '33162', price: 680000, beds: 4, baths: 3, sqft: 1515, lot: 7722, year: 1960, type: 'SINGLE_FAMILY', status: 'FOR_SALE', lat: 25.9250, lng: -80.1700, listedAt: Date.now() - 7 * 86400000, pricePerSqft: 449, zestimate: null, hoa: 0, subtype: 'Single Family Residence', description: 'Charming 4-bedroom, 3-bath home...', photos: ['https://images.unsplash.com/photo-1568605114967-8130f3a36994?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1570129477492-45c003edd2be?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=900&q=70'], agent: { name: 'CME Partner', title: 'Listing Agent' } },
-    { id: 's8', address: '2505 Baxter Dr', city: 'Austin', state: 'TX', zip: '78745', price: 540000, beds: 3, baths: 2, sqft: 1306, lot: 7945, year: 1965, type: 'SINGLE_FAMILY', status: 'FOR_SALE', lat: 30.2200, lng: -97.7900, listedAt: Date.now() - 20 * 86400000, pricePerSqft: 413, zestimate: null, hoa: 0, subtype: 'Single Family Residence', description: 'Well-located 3-bedroom, 2-bath home...', photos: ['https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1600573472592-401b489a3cdc?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1518780664697-55e3ad937233?auto=format&fit=crop&w=900&q=70'], agent: { name: 'CME Partner', title: 'Listing Agent' } },
-    { id: 's9', address: '7745 SW 54th Ave', city: 'Miami', state: 'FL', zip: '33143', price: 5275000, beds: 7, baths: 6.5, sqft: 5797, lot: null, year: 2010, type: 'SINGLE_FAMILY', status: 'FOR_SALE', lat: 25.7200, lng: -80.2800, listedAt: Date.now() - 30 * 86400000, pricePerSqft: 910, zestimate: null, hoa: 0, subtype: 'Single Family Residence', description: 'Magnificent estate in the heart of Miami...', photos: ['https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=900&q=70'], agent: { name: 'CME Partner', title: 'Listing Agent' } },
-    { id: 's10', address: '1465 S Columbian Way', city: 'Seattle', state: 'WA', zip: '98144', price: 800000, beds: 3, baths: 3, sqft: 1340, lot: 4000, year: 1950, type: 'SINGLE_FAMILY', status: 'FOR_SALE', lat: 47.5800, lng: -122.3000, listedAt: Date.now() - 25 * 86400000, pricePerSqft: 597, zestimate: null, hoa: 0, subtype: 'Single Family Residence', description: 'Charming Beacon Hill home with views...', photos: ['https://images.unsplash.com/photo-1605276374104-dee2a0ed3cd6?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1502005229762-cf1b2da7c5d6?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&fit=crop&w=900&q=70'], agent: { name: 'CME Partner', title: 'Listing Agent' } }
+  /* ============================================================
+     DATA — 30 properties (10 USA, 10 Ecuador, 10 PR)
+     8 for_sale + 2 for_rent per region.
+     Prices/addresses/specs verified Oct 2026.
+     ============================================================ */
+  const USA_SALE = [
+    {id:'us1',address:'11710 Flank Rider Blf',city:'San Antonio',state:'TX',zip:'78254',price:489890,beds:4,baths:3.5,sqft:2549,lot:5893,year:2026,type:'SINGLE_FAMILY',status:'FOR_SALE',listedAt:Date.now()-5*86400000,pricePerSqft:192,hoa:39,subtype:'Single Family Residence',lat:29.55,lng:-98.61,description:'New construction by Pulte in the sought-after Davis Ranch community. High ceilings, downstairs flex room, fireplace, and the famed Pulte Planning Center®. Available for November 2026 move-in.',photos:[IMG.house1,IMG.interior1,IMG.house4,IMG.interior2],agent:{name:'Pulte Homes',title:'Listing Agent'}},
+    {id:'us2',address:'2444 Brookmere Dr',city:'Houston',state:'TX',zip:'77008',price:699000,beds:3,baths:2,sqft:2129,lot:9200,year:1955,type:'SINGLE_FAMILY',status:'FOR_SALE',listedAt:Date.now()-15*86400000,pricePerSqft:328,hoa:0,subtype:'Single Family Residence',lat:29.80,lng:-95.42,description:'Beautifully remodeled home in Lazybrook on one of the largest lots in the neighborhood. Updated kitchen, home office, tankless water heater, double-pane windows, and a quiet street.',photos:[IMG.house2,IMG.interior2,IMG.house3],agent:{name:'CME Advisory',title:'Listing Agent'}},
+    {id:'us3',address:'1330 West Ave, Unit 614',city:'Miami Beach',state:'FL',zip:'33139',price:695000,beds:2,baths:2,sqft:1262,lot:0,year:2000,type:'CONDO',status:'FOR_SALE',listedAt:Date.now()-7*86400000,pricePerSqft:551,hoa:1080,subtype:'Condominium',lat:25.79,lng:-80.14,description:'Bright SE corner unit at the amenity-rich Waverly. Split floor plan, laminate flooring, stainless appliances, private balcony, and views of Biscayne Bay and the Miami skyline. Pool, tennis, gym, and valet.',photos:[IMG.condo1,IMG.condo2,IMG.villa1],agent:{name:'CME Advisory',title:'Listing Agent'}},
+    {id:'us4',address:'710 S Shore Dr',city:'Miami Beach',state:'FL',zip:'33141',price:7600000,beds:5,baths:5.5,sqft:4295,lot:10500,year:2018,type:'SINGLE_FAMILY',status:'FOR_SALE',listedAt:Date.now()-22*86400000,pricePerSqft:1770,hoa:0,subtype:'Single Family Residence',lat:25.86,lng:-80.13,description:'Fully reimagined waterfront home on Normandy Island with 60 ft of water frontage. Custom kitchen, luxe primary suite with wet bar, wine room, 800 SF garage, and resort-style pool.',photos:[IMG.villa1,IMG.beach1,IMG.interior1],agent:{name:'CME Advisory',title:'Listing Agent'}},
+    {id:'us5',address:'1338 Bates Rd',city:'Oakland',state:'CA',zip:'94610',price:925000,beds:3,baths:1,sqft:1500,lot:4200,year:1925,type:'SINGLE_FAMILY',status:'FOR_SALE',listedAt:Date.now()-3*86400000,pricePerSqft:617,hoa:0,subtype:'Single Family Residence',lat:37.80,lng:-122.24,description:'Inviting Crocker Highlands Craftsman with sun-filled interiors, classic details, and a delightful backyard retreat. Updated kitchen with stone counters and a GE Monogram stove.',photos:[IMG.house4,IMG.interior1,IMG.interior2],agent:{name:'CME Advisory',title:'Listing Agent'}},
+    {id:'us6',address:'840 Tulane St',city:'Houston',state:'TX',zip:'77007',price:1100000,beds:3,baths:3.5,sqft:2914,lot:3400,year:2024,type:'SINGLE_FAMILY',status:'FOR_SALE',listedAt:Date.now()-9*86400000,pricePerSqft:377,hoa:0,subtype:'Single Family Residence',lat:29.78,lng:-95.40,description:'Just-listed single-family home in the heart of Houston. 2,914 sqft of modern living space with high-end finishes. Active and available.',photos:[IMG.house3,IMG.interior1,IMG.villa2],agent:{name:'CME Advisory',title:'Listing Agent'}},
+    {id:'us7',address:'1203 Sand Wedge',city:'San Antonio',state:'TX',zip:'78258',price:950000,beds:5,baths:3,sqft:3420,lot:12000,year:2005,type:'SINGLE_FAMILY',status:'FOR_SALE',listedAt:Date.now()-18*86400000,pricePerSqft:278,hoa:80,subtype:'Single Family Residence',lat:29.60,lng:-98.50,description:'Spacious 5-bedroom, 3-bath home in Babcock North. 3,420 sqft of living space with a large lot, pool, and mature landscaping.',photos:[IMG.house1,IMG.interior2,IMG.house4],agent:{name:'CME Advisory',title:'Listing Agent'}},
+    {id:'us8',address:'10610 Cascade Ledge Ln',city:'Houston',state:'TX',zip:'77025',price:399900,beds:3,baths:2.5,sqft:2241,lot:4100,year:2023,type:'SINGLE_FAMILY',status:'FOR_SALE',listedAt:Date.now()-11*86400000,pricePerSqft:178,hoa:76,subtype:'Single Family Residence',lat:29.70,lng:-95.43,description:'New home in Willowbend Point, a gated community near Stella Link and Willowbend Blvd. 2,241 sqft with modern finishes and community amenities.',photos:[IMG.house3,IMG.interior2,IMG.house1],agent:{name:'CME Advisory',title:'Listing Agent'}}
+  ];
+  const USA_RENT = [
+    {id:'usr1',address:'97 Elm Street',city:'Staten Island',state:'NY',zip:'10310',rent:3000,beds:4,baths:1,sqft:2208,lot:0,year:1960,type:'SINGLE_FAMILY',status:'FOR_RENT',listedAt:Date.now()-14*86400000,leaseTerm:'12 months',lat:40.63,lng:-74.12,description:'Four-bedroom, one-bath rental home on Staten Island with brand-new appliances (microwave, oven, dishwasher). Active at $3,000/month.',photos:[IMG.condo2,IMG.interior1,IMG.condo3],agent:{name:'CME Rentals',title:'Leasing Agent'}},
+    {id:'usr2',address:'1613 SW 19th Ter',city:'Miami',state:'FL',zip:'33145',rent:2500,beds:3,baths:1,sqft:900,lot:0,year:1950,type:'SINGLE_FAMILY',status:'FOR_RENT',listedAt:Date.now()-27*86400000,leaseTerm:'1 Year',lat:25.76,lng:-80.22,description:'Beautiful 3-bedroom, 1-bath home with full kitchen, tile floors, and a private driveway. Minutes from Coral Way and Brickell.',photos:[IMG.house2,IMG.interior2,IMG.condo3],agent:{name:'CME Rentals',title:'Leasing Agent'}}
+  ];
+  const ECU_SALE = [
+    {id:'ec1',address:'Isla Celeste 1, Samborondon',city:'Guayaquil',state:'Guayas',zip:'092301',price:300000,beds:4,baths:4.5,sqft:2281,lot:2421,year:2025,type:'SINGLE_FAMILY',status:'FOR_SALE',listedAt:Date.now()-3*86400000,pricePerSqft:131,hoa:45,subtype:'House',lat:-2.14,lng:-79.87,description:'House for Sale in Isla Celeste. Modern Style. Land: 225 m², Construction: 211.89 m². Large master bedroom with walk-in closet, 3 secondary bedrooms with private bathrooms, family room, modern kitchen with island, laundry room, and private security.',photos:[IMG.house1,IMG.interior1,IMG.house3],agent:{name:'Century 21 Nova',title:'Listing Agent'}},
+    {id:'ec2',address:'Ciudad Celeste, Costanera 1',city:'Samborondon',state:'Guayas',zip:'092302',price:315000,beds:3,baths:4.5,sqft:2852,lot:2798,year:2025,type:'SINGLE_FAMILY',status:'FOR_SALE',listedAt:Date.now()-10*86400000,pricePerSqft:110,hoa:50,subtype:'House',lat:-2.14,lng:-79.86,description:'House for sale in Ciudad Celeste. Purchases accepted through BIESS financing. Study, laundry room, jacuzzi, BBQ area, two parking spaces, and a balcony. European profiles and fine finishes.',photos:[IMG.house2,IMG.interior2,IMG.house4],agent:{name:'Century 21 Nova',title:'Listing Agent'}},
+    {id:'ec3',address:'Urb. San Antonio 1, Samborondon',city:'Guayaquil',state:'Guayas',zip:'092303',price:165000,beds:3,baths:3.5,sqft:1539,lot:1302,year:2025,type:'SINGLE_FAMILY',status:'FOR_SALE',listedAt:Date.now()-15*86400000,pricePerSqft:107,hoa:40,subtype:'House',lat:-2.14,lng:-79.88,description:'Brand new house with high-end finishes. Spacious living room, TV room, dining room, open-plan kitchen, patio, laundry area, and a small study/office on the upper floor.',photos:[IMG.house3,IMG.interior1,IMG.villa2],agent:{name:'Century 21 Nova',title:'Listing Agent'}},
+    {id:'ec4',address:'Mucho Lote 1, 5ta Etapa',city:'Guayaquil',state:'Guayas',zip:'090101',price:50000,beds:3,baths:2,sqft:775,lot:800,year:2024,type:'SINGLE_FAMILY',status:'FOR_SALE',listedAt:Date.now()-2*86400000,pricePerSqft:65,hoa:20,subtype:'House',lat:-2.15,lng:-79.90,description:'Your new villa awaits in Mucho Lote 1, Guayaquil! Modern villa with 3 bedrooms, 2 full bathrooms, kitchen with shelves, and integrated living and dining room. Safe area with gates.',photos:[IMG.house4,IMG.interior2,IMG.house1],agent:{name:'Tu Propiedad',title:'Listing Agent'}},
+    {id:'ec5',address:'Tumbaco sector El Arenal',city:'Quito',state:'Pichincha',zip:'170901',price:140000,beds:3,baths:2.5,sqft:1292,lot:2045,year:2019,type:'SINGLE_FAMILY',status:'FOR_SALE',listedAt:Date.now()-5*86400000,pricePerSqft:108,hoa:30,subtype:'Duplex',lat:-0.22,lng:-78.40,description:'Duplex for sale in Tumbaco. Garden, laundry area, internet/WiFi, underground water tank, and a courtyard. Pets allowed.',photos:[IMG.house2,IMG.interior1,IMG.house3],agent:{name:'Century 21',title:'Listing Agent'}},
+    {id:'ec6',address:'Valle de Los Chillos',city:'Quito',state:'Pichincha',zip:'170801',price:110000,beds:3,baths:2.5,sqft:1507,lot:861,year:2025,type:'SINGLE_FAMILY',status:'FOR_SALE',listedAt:Date.now()-8*86400000,pricePerSqft:73,hoa:80,subtype:'House',lat:-0.30,lng:-78.42,description:'3 floors, dining room, American-style kitchen, social bathroom, 3 bedrooms, 2 full bathrooms, and a very spacious third floor for study or TV room. Complex has 24-hour security, children\'s park, lake, courts, and BBQ area.',photos:[IMG.house1,IMG.interior2,IMG.house4],agent:{name:'Century 21 Elite Gold',title:'Listing Agent'}},
+    {id:'ec7',address:'La Viña Alta, Bellavista, Tumbaco',city:'Quito',state:'Pichincha',zip:'170902',price:198000,beds:3,baths:3.5,sqft:2002,lot:2933,year:2025,type:'SINGLE_FAMILY',status:'FOR_SALE',listedAt:Date.now()-12*86400000,pricePerSqft:99,hoa:60,subtype:'House',lat:-0.23,lng:-78.39,description:'Brand new homes in an exclusive gated community with 9 homes and double security access. 3 bedrooms, each with its own full bathroom, living room with views, gardens, heated pool, and communal BBQ area.',photos:[IMG.villa2,IMG.interior1,IMG.house2],agent:{name:'Century 21 Elite',title:'Listing Agent'}},
+    {id:'ec8',address:'Zona Norte Miguel Burbano',city:'Quito',state:'Pichincha',zip:'170201',price:345000,beds:5,baths:3,sqft:4650,lot:5759,year:2010,type:'SINGLE_FAMILY',status:'FOR_SALE',listedAt:Date.now()-20*86400000,pricePerSqft:74,hoa:0,subtype:'House',lat:-0.15,lng:-78.48,description:'5 bedrooms, 3 bathrooms in Zona Norte, Pichincha. City, garden, greenbelt, and mountain views. Land area of 535 m² and living space of 432 m².',photos:[IMG.house3,IMG.interior2,IMG.villa3],agent:{name:'Casterdep Servicios',title:'Listing Agent'}}
+  ];
+  const ECU_RENT = [
+    {id:'ecr1',address:'Vía a la Costa, Km 23.5',city:'Guayaquil',state:'Guayas',zip:'090101',rent:350,beds:3,baths:2,sqft:893,lot:968,year:2025,type:'SINGLE_FAMILY',status:'FOR_RENT',listedAt:Date.now()-5*86400000,leaseTerm:'12 months',lat:-2.20,lng:-80.00,description:'Brand-new 2-story house in El Rosedal Phase 1. Living room, dining with access to back patio, fully furnished kitchen, laundry, 3 bedrooms, 2 bathrooms with tempered glass shower enclosures, parking. Rent includes HOA fees.',photos:[IMG.house1,IMG.interior1,IMG.house2],agent:{name:'Century 21',title:'Leasing Agent'}},
+    {id:'ecr2',address:'Norte de Quito',city:'Quito',state:'Pichincha',zip:'170201',rent:1000,beds:3,baths:2.5,sqft:1200,lot:0,year:2018,type:'CONDO',status:'FOR_RENT',listedAt:Date.now()-3*86400000,leaseTerm:'12 months',lat:-0.12,lng:-78.49,description:'Apartment in the north of Quito with 3 bedrooms and a privileged view. Previously rented for $1,600, now available for $1,000.',photos:[IMG.condo1,IMG.interior1,IMG.condo2],agent:{name:'CME Rentals',title:'Leasing Agent'}}
+  ];
+  const PR_SALE = [
+    {id:'pr1',address:'471 Arboles de Montehiedra',city:'San Juan',state:'Puerto Rico',zip:'00926',price:1050000,beds:4,baths:2.5,sqft:2526,lot:7726,year:2005,type:'SINGLE_FAMILY',status:'FOR_SALE',listedAt:Date.now()-4*86400000,pricePerSqft:416,hoa:225,subtype:'Single Family Residence',lat:18.38,lng:-66.08,description:'Beautifully remodeled smart home in the exclusive gated community of Los Árboles de Montehiedra. 4 bedrooms, 2.5 baths, 2,526 sqft on a 718 m² lot. Move-in ready.',photos:[IMG.villa2,IMG.colonial,IMG.interior1],agent:{name:'CME Puerto Rico',title:'Listing Agent'}},
+    {id:'pr2',address:'1204 Avenida Magdalena, Condado',city:'San Juan',state:'Puerto Rico',zip:'00907',price:4200000,beds:5,baths:5.5,sqft:5651,lot:5651,year:1995,type:'SINGLE_FAMILY',status:'FOR_SALE',listedAt:Date.now()-25*86400000,pricePerSqft:743,hoa:0,subtype:'Single Family Residence',lat:18.46,lng:-66.07,description:'Two-story single-family residence directly facing the ocean in Condado. 5 bedrooms, 5.5 baths, 14 rooms, 2-car garage on a 525 m² lot. One of San Juan\'s most prestigious oceanfront addresses.',photos:[IMG.villa3,IMG.interior2,IMG.beach1],agent:{name:'CME Puerto Rico',title:'Listing Agent'}},
+    {id:'pr3',address:'257 San Justo St, Old San Juan',city:'San Juan',state:'Puerto Rico',zip:'00901',price:3400000,beds:4,baths:4,sqft:2800,lot:2200,year:1890,type:'SINGLE_FAMILY',status:'FOR_SALE',listedAt:Date.now()-8*86400000,pricePerSqft:1214,hoa:0,subtype:'Colonial',lat:18.47,lng:-66.12,description:'Historic colonial property on San Justo Street in Old San Juan. A rare opportunity to own a piece of the walled city\'s architectural heritage.',photos:[IMG.colonial,IMG.villa1,IMG.interior1],agent:{name:'CME Puerto Rico',title:'Listing Agent'}},
+    {id:'pr4',address:'508 Av. Sagrado Corazón',city:'San Juan',state:'Puerto Rico',zip:'00915',price:810000,beds:7,baths:4,sqft:3500,lot:3800,year:1940,type:'SINGLE_FAMILY',status:'FOR_SALE',listedAt:Date.now()-16*86400000,pricePerSqft:231,hoa:0,subtype:'Historic Home',lat:18.44,lng:-66.06,description:'Seven-bedroom, four-bathroom property in the heart of the Sagrado Corazón Historic District. A substantial residence with income or multi-generational potential.',photos:[IMG.house4,IMG.colonial,IMG.interior2],agent:{name:'CME Puerto Rico',title:'Listing Agent'}},
+    {id:'pr5',address:'153 Calle Pomarrosa, Santurce',city:'San Juan',state:'Puerto Rico',zip:'00911',price:875000,beds:4,baths:3,sqft:2200,lot:2600,year:1955,type:'SINGLE_FAMILY',status:'FOR_SALE',listedAt:Date.now()-6*86400000,pricePerSqft:398,hoa:0,subtype:'Single Family Residence',lat:18.45,lng:-66.05,description:'Four-bedroom, three-bathroom single-family home in the vibrant Santurce district. Walkable to restaurants, galleries, and the beach.',photos:[IMG.house1,IMG.interior1,IMG.house3],agent:{name:'CME Puerto Rico',title:'Listing Agent'}},
+    {id:'pr6',address:'344 Tiburon, Paseo Las Olas',city:'Dorado',state:'Puerto Rico',zip:'00646',price:795000,beds:4,baths:2.5,sqft:2640,lot:3400,year:2008,type:'SINGLE_FAMILY',status:'FOR_SALE',listedAt:Date.now()-12*86400000,pricePerSqft:301,hoa:175,subtype:'Single Family Residence',lat:18.43,lng:-66.25,description:'Beautifully updated and expanded two-story residence in the desirable gated community of Paseo Las Olas, Dorado. 4 bedrooms, 2.5 baths, dedicated gym, and a private pool.',photos:[IMG.house2,IMG.interior2,IMG.villa1],agent:{name:'CME Puerto Rico',title:'Listing Agent'}},
+    {id:'pr7',address:'272 Camino De Guayacan',city:'Dorado',state:'Puerto Rico',zip:'00646',price:1450000,beds:3,baths:3.5,sqft:2900,lot:5000,year:2012,type:'SINGLE_FAMILY',status:'FOR_SALE',listedAt:Date.now()-19*86400000,pricePerSqft:500,hoa:220,subtype:'Single Family Residence',lat:18.45,lng:-66.28,description:'Elegant 3-bedroom, 3.5-bath home in Dorado with 2,900 sqft, a private pool, and tropical landscaping. A refined residence in one of Puerto Rico\'s most sought-after golf communities.',photos:[IMG.villa2,IMG.interior1,IMG.house4],agent:{name:'CME Puerto Rico',title:'Listing Agent'}},
+    {id:'pr8',address:'1 Harbour View #48, Palmas del Mar',city:'Humacao',state:'Puerto Rico',zip:'00791',price:895000,beds:3,baths:3,sqft:1785,lot:0,year:2000,type:'CONDO',status:'FOR_SALE',listedAt:Date.now()-3*86400000,pricePerSqft:501,hoa:495,subtype:'Condominium',lat:18.15,lng:-65.83,description:'Oceanfront living in Club Villa 48 at Palmas del Mar. 3 bedrooms, 3 baths, approximately 1,785 sqft. Resort amenities include beach club, tennis, golf, and marina access.',photos:[IMG.condo1,IMG.beach1,IMG.condo2],agent:{name:'CME Puerto Rico',title:'Listing Agent'}}
+  ];
+  const PR_RENT = [
+    {id:'prr1',address:'Condado, San Juan',city:'San Juan',state:'Puerto Rico',zip:'00907',rent:2200,beds:2,baths:2,sqft:1100,lot:0,year:2015,type:'CONDO',status:'FOR_RENT',listedAt:Date.now()-4*86400000,leaseTerm:'12 months',lat:18.46,lng:-66.07,description:'Fully furnished ocean-view condo in Condado with direct beach access. Building includes pool, gym, and 24/7 security.',photos:[IMG.condo3,IMG.interior1,IMG.condo1],agent:{name:'CME Rentals',title:'Leasing Agent'}},
+    {id:'prr2',address:'Dorado del Mar',city:'Dorado',state:'Puerto Rico',zip:'00646',rent:3500,beds:3,baths:2,sqft:1800,lot:0,year:2010,type:'SINGLE_FAMILY',status:'FOR_RENT',listedAt:Date.now()-9*86400000,leaseTerm:'12 months',lat:18.45,lng:-66.27,description:'Turnkey single-family home in Dorado del Mar with community pool, tennis, and 24-hour security. Move-in ready.',photos:[IMG.house3,IMG.interior2,IMG.villa1],agent:{name:'CME Rentals',title:'Leasing Agent'}}
   ];
 
-  /* ============ USA RENTALS ============ */
-  const USA_RENTALS = [
-    { id: 'r1', address: '7913 Lennon Dr', city: 'Austin', state: 'TX', zip: '78744', rent: 2350, beds: 2, baths: 2.5, sqft: 1602, lot: null, year: 2021, type: 'SINGLE_FAMILY', status: 'FOR_RENT', lat: 30.2450, lng: -97.7650, listedAt: Date.now() - 10 * 86400000, leaseTerm: '12 months', description: '*AVAILABLE FULLY FURNISHED* Nestled in the heart of Easton Park...', photos: ['https://images.unsplash.com/photo-1568605114967-8130f3a36994?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1570129477492-45c003edd2be?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=900&q=70'], agent: { name: 'CME Rentals', title: 'Leasing Agent' } },
-    { id: 'r2', address: '4611 Fremont Ave N', city: 'Seattle', state: 'WA', zip: '98103', rent: 2900, beds: 2, baths: 1, sqft: 1300, lot: null, year: 1920, type: 'SINGLE_FAMILY', status: 'FOR_RENT', lat: 47.6600, lng: -122.3500, listedAt: Date.now() - 13 * 86400000, leaseTerm: '1 year', description: 'Available 8/22! Very large Mother-in-law unit...', photos: ['https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?auto=format&fit=crop&w=900&q=70'], agent: { name: 'CME Rentals', title: 'Leasing Agent' } },
-    { id: 'r3', address: '1613 SW 19th Ter', city: 'Miami', state: 'FL', zip: '33145', rent: 2500, beds: 3, baths: 1, sqft: 900, lot: null, year: 1950, type: 'SINGLE_FAMILY', status: 'FOR_RENT', lat: 25.7550, lng: -80.2200, listedAt: Date.now() - 27 * 86400000, leaseTerm: '1 Year', description: 'It is Beautiful 3 bedroom, 1 bath with full kitchen...', photos: ['https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1605276374104-dee2a0ed3cd6?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1502005229762-cf1b2da7c5d6?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?auto=format&fit=crop&w=900&q=70'], agent: { name: 'CME Rentals', title: 'Leasing Agent' } },
-    { id: 'r4', address: '11406 Hidden Quail Dr', city: 'Austin', state: 'TX', zip: '78758', rent: 1900, beds: 3, baths: 2, sqft: 1520, lot: null, year: 1980, type: 'SINGLE_FAMILY', status: 'FOR_RENT', lat: 30.3900, lng: -97.7100, listedAt: Date.now() - 5 * 86400000, leaseTerm: '12 months', description: 'Spacious 3-bedroom, 2-bath home in North Austin...', photos: ['https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=900&q=70'], agent: { name: 'CME Rentals', title: 'Leasing Agent' } },
-    { id: 'r5', address: '1153 Webberville Rd UNIT 2', city: 'Austin', state: 'TX', zip: '78721', rent: 2900, beds: 2, baths: 1, sqft: 949, lot: null, year: 2010, type: 'SINGLE_FAMILY', status: 'FOR_RENT', lat: 30.2600, lng: -97.7100, listedAt: Date.now() - 18 * 86400000, leaseTerm: '12 months', description: 'Charming 2-bedroom, 1-bath unit in East Austin...', photos: ['https://images.unsplash.com/photo-1568605114967-8130f3a36994?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1570129477492-45c003edd2be?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=900&q=70'], agent: { name: 'CME Rentals', title: 'Leasing Agent' } },
-    { id: 'r6', address: '2411 Oak Crest Ave', city: 'Austin', state: 'TX', zip: '78704', rent: 4500, beds: 3, baths: 2, sqft: 1295, lot: null, year: 1955, type: 'SINGLE_FAMILY', status: 'FOR_RENT', lat: 30.2400, lng: -97.7700, listedAt: Date.now() - 30 * 86400000, leaseTerm: '12 months', description: 'Beautiful 3-bedroom, 2-bath home in the heart of South Austin...', photos: ['https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1600573472592-401b489a3cdc?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1518780664697-55e3ad937233?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1583608205776-bfd35f0d9f83?auto=format&fit=crop&w=900&q=70'], agent: { name: 'CME Rentals', title: 'Leasing Agent' } },
-    { id: 'r7', address: '3114 NW 93rd St', city: 'Seattle', state: 'WA', zip: '98117', rent: 2800, beds: 1, baths: 1, sqft: 900, lot: null, year: 1940, type: 'SINGLE_FAMILY', status: 'FOR_RENT', lat: 47.6900, lng: -122.3800, listedAt: Date.now() - 12 * 86400000, leaseTerm: 'Short or longer term', description: 'FULLY FURNISHED private apartment available...', photos: ['https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1554995207-c18c203602cb?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1523217582562-09d0def993a6?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1449844908441-8829872d2607?auto=format&fit=crop&w=900&q=70'], agent: { name: 'CME Rentals', title: 'Leasing Agent' } },
-    { id: 'r8', address: '8325 Dallas Ave S #1B', city: 'Seattle', state: 'WA', zip: '98108', rent: 1500, beds: 1, baths: 1, sqft: 649, lot: null, year: 1960, type: 'CONDO', status: 'FOR_RENT', lat: 47.5300, lng: -122.3100, listedAt: Date.now() - 8 * 86400000, leaseTerm: '12 months', description: 'Cozy 1-bedroom, 1-bath apartment in South Seattle...', photos: ['https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=900&q=70'], agent: { name: 'CME Rentals', title: 'Leasing Agent' } },
-    { id: 'r9', address: '2109 N 39th St', city: 'Seattle', state: 'WA', zip: '98103', rent: 4595, beds: 4, baths: 2, sqft: 2000, lot: null, year: 1910, type: 'SINGLE_FAMILY', status: 'FOR_RENT', lat: 47.6500, lng: -122.3400, listedAt: Date.now() - 20 * 86400000, leaseTerm: '12 months', description: 'Spacious 4-bedroom, 2-bath home in the desirable Fremont neighborhood...', photos: ['https://images.unsplash.com/photo-1568605114967-8130f3a36994?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1570129477492-45c003edd2be?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=900&q=70'], agent: { name: 'CME Rentals', title: 'Leasing Agent' } },
-    { id: 'r10', address: '13675 SW 62nd St APT 104', city: 'Miami', state: 'FL', zip: '33183', rent: 2800, beds: 2, baths: 1.5, sqft: 1000, lot: null, year: 1990, type: 'TOWNHOUSE', status: 'FOR_RENT', lat: 25.7100, lng: -80.4000, listedAt: Date.now() - 25 * 86400000, leaseTerm: '12 months', description: 'This charming 2-bedroom, 1.5-bath townhouse is located in a gated community in West Kendall...', photos: ['https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1600573472592-401b489a3cdc?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1518780664697-55e3ad937233?auto=format&fit=crop&w=900&q=70'], agent: { name: 'CME Rentals', title: 'Leasing Agent' } }
-  ];
-
-  /* ============ ECUADOR FOR SALE (10 Real Properties) ============ */
-  const ECU_LISTINGS = [
-    { id: 'e_s1', address: 'Isla Celeste 1, Samborondon', city: 'Guayaquil', state: 'Guayas', zip: '092301', price: 300000, beds: 4, baths: 4.5, sqft: 2281, lot: 2421, year: 2025, type: 'SINGLE_FAMILY', status: 'FOR_SALE', lat: -2.1626, lng: -79.8691, listedAt: Date.now() - 3 * 86400000, pricePerSqft: 131, zestimate: null, hoa: 45, subtype: 'House', description: 'House for Sale in Isla Celeste. Modern Style. Land: 225 m2, Construction: 211.89 m2. Features a large master bedroom with walk-in closet, 3 secondary bedrooms with private bathrooms, family room, modern kitchen with island, laundry room, and private security.', photos: ['https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=900&q=70'], agent: { name: 'Century 21 Nova', title: 'Listing Agent' } },
-    { id: 'e_s2', address: 'Ciudad Celeste etapa Costanera 1, Samborondon', city: 'Guayaquil', state: 'Guayas', zip: '092302', price: 315000, beds: 3, baths: 4.5, sqft: 2852, lot: 2798, year: 2025, type: 'SINGLE_FAMILY', status: 'FOR_SALE', lat: -2.1500, lng: -79.8800, listedAt: Date.now() - 10 * 86400000, pricePerSqft: 110, zestimate: null, hoa: 50, subtype: 'House', description: 'House for sale in Ciudad Celeste. Purchases accepted through BIESS financing. Features a study, laundry room, jacuzzi, BBQ area, two parking spaces, and a balcony. European profiles and fine finishes.', photos: ['https://images.unsplash.com/photo-1605276374104-dee2a0ed3cd6?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1502005229762-cf1b2da7c5d6?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?auto=format&fit=crop&w=900&q=70'], agent: { name: 'Century 21 Nova', title: 'Listing Agent' } },
-    { id: 'e_s3', address: 'Urb. San Antonio 1, Samborondon', city: 'Guayaquil', state: 'Guayas', zip: '092303', price: 165000, beds: 3, baths: 3.5, sqft: 1539, lot: 1302, year: 2025, type: 'SINGLE_FAMILY', status: 'FOR_SALE', lat: -2.1700, lng: -79.8900, listedAt: Date.now() - 15 * 86400000, pricePerSqft: 107, zestimate: null, hoa: 40, subtype: 'House', description: 'Brand new house with high-end finishes. Features a spacious living room, TV room, dining room, open-plan kitchen, patio, laundry area, and a small study/office on the upper floor.', photos: ['https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1600573472592-401b489a3cdc?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1518780664697-55e3ad937233?auto=format&fit=crop&w=900&q=70'], agent: { name: 'Century 21 Nova', title: 'Listing Agent' } },
-    { id: 'e_s4', address: 'Mucho Lote 1, 5ta Etapa', city: 'Guayaquil', state: 'Guayas', zip: '090101', price: 50000, beds: 3, baths: 2, sqft: 775, lot: 800, year: 2024, type: 'SINGLE_FAMILY', status: 'FOR_SALE', lat: -2.1000, lng: -79.9000, listedAt: Date.now() - 2 * 86400000, pricePerSqft: 65, zestimate: null, hoa: 20, subtype: 'House', description: '¡Tu nueva villa te espera en Mucho Lote 1, Guayaquil! Villa moderna con 3 dormitorios, 2 baños completos, cocina con anaqueles, sala y comedor integrados. Zona segura con cerramientos.', photos: ['https://images.unsplash.com/photo-1449844908441-8829872d2607?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1568605114967-8130f3a36994?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1570129477492-45c003edd2be?auto=format&fit=crop&w=900&q=70'], agent: { name: 'Tu Propiedad', title: 'Listing Agent' } },
-    { id: 'e_s5', address: 'Tumbaco sector El Arenal', city: 'Quito', state: 'Pichincha', zip: '170901', price: 140000, beds: 3, baths: 2.5, sqft: 1292, lot: 2045, year: 2019, type: 'SINGLE_FAMILY', status: 'FOR_SALE', lat: -0.2100, lng: -78.4100, listedAt: Date.now() - 5 * 86400000, pricePerSqft: 108, zestimate: null, hoa: 30, subtype: 'Duplex', description: 'Duplex for sale in Tumbaco. Features a garden, laundry area, internet/WiFi, underground water tank, and a courtyard. Pets allowed.', photos: ['https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=900&q=70'], agent: { name: 'Century 21', title: 'Listing Agent' } },
-    { id: 'e_s6', address: 'Sector Valle de Los Chillos', city: 'Quito', state: 'Pichincha', zip: '170801', price: 110000, beds: 3, baths: 2.5, sqft: 1507, lot: 861, year: 2025, type: 'SINGLE_FAMILY', status: 'FOR_SALE', lat: -0.3000, lng: -78.4500, listedAt: Date.now() - 8 * 86400000, pricePerSqft: 73, zestimate: null, hoa: 80, subtype: 'House', description: '3 floors, dining room, American style kitchen, social bathroom, 3 bedrooms, 2 full bathrooms, a very spacious third floor for study or TV room. Complex has 24-hour security, children’s park, lake, courts, and BBQ area.', photos: ['https://images.unsplash.com/photo-1605276374104-dee2a0ed3cd6?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1502005229762-cf1b2da7c5d6?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?auto=format&fit=crop&w=900&q=70'], agent: { name: 'Century 21 Elite Gold', title: 'Listing Agent' } },
-    { id: 'e_s7', address: 'La Viña Alta, Bellavista, Tumbaco', city: 'Quito', state: 'Pichincha', zip: '170902', price: 198000, beds: 3, baths: 3.5, sqft: 2002, lot: 2933, year: 2025, type: 'SINGLE_FAMILY', status: 'FOR_SALE', lat: -0.2200, lng: -78.4200, listedAt: Date.now() - 12 * 86400000, pricePerSqft: 99, zestimate: null, hoa: 60, subtype: 'House', description: 'Brand new homes for sale. Exclusive gated community features 9 homes with double security access. 3 bedrooms, each with its own full bathroom, living room with a beautiful view, gardens, heated pool, and communal BBQ area.', photos: ['https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1600573472592-401b489a3cdc?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1518780664697-55e3ad937233?auto=format&fit=crop&w=900&q=70'], agent: { name: 'Century 21 Elite', title: 'Listing Agent' } },
-    { id: 'e_s8', address: 'Zona Norte Miguel Burbano', city: 'Quito', state: 'Pichincha', zip: '170201', price: 345000, beds: 5, baths: 3, sqft: 4650, lot: 5759, year: 2010, type: 'SINGLE_FAMILY', status: 'FOR_SALE', lat: -0.1500, lng: -78.4900, listedAt: Date.now() - 20 * 86400000, pricePerSqft: 74, zestimate: null, hoa: 0, subtype: 'House', description: 'This house with 5 bedrooms and 3 bathrooms is located in Zona Norte, Pichincha. Property with city, garden, greenbelt, and mountain views. Land area of 535 m2 and a living space of 432 m2.', photos: ['https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1554995207-c18c203602cb?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1523217582562-09d0def993a6?auto=format&fit=crop&w=900&q=70'], agent: { name: 'Casterdep Servicios', title: 'Listing Agent' } },
-    { id: 'e_s9', address: 'San Juan, Centro Histórico', city: 'Quito', state: 'Pichincha', zip: '170401', price: 359000, beds: 6, baths: 5, sqft: 2314, lot: 4693, year: 1950, type: 'SINGLE_FAMILY', status: 'FOR_SALE', lat: -0.2200, lng: -78.5100, listedAt: Date.now() - 25 * 86400000, pricePerSqft: 155, zestimate: null, hoa: 0, subtype: 'House', description: 'This house with 6 bedrooms and 5 bathrooms is located in El Centro - Quito. Property with city view. Land area of 436 m2 and living space of 215 m2.', photos: ['https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=900&q=70'], agent: { name: 'Inmobiliaria360', title: 'Listing Agent' } },
-    { id: 'e_s10', address: 'Chiquintad (Near Cuenca)', city: 'Cuenca', state: 'Azuay', zip: '010150', price: 310000, beds: 3, baths: 2.5, sqft: 2500, lot: 5000, year: 2015, type: 'SINGLE_FAMILY', status: 'FOR_SALE', lat: -2.8500, lng: -79.0300, listedAt: Date.now() - 30 * 86400000, pricePerSqft: 124, zestimate: null, hoa: 0, subtype: 'House', description: 'Peaceful Mountain Retreat in Chiquintad, only 25 minutes from Cuenca, with endless views and a beautiful casita.', photos: ['https://images.unsplash.com/photo-1605276374104-dee2a0ed3cd6?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1502005229762-cf1b2da7c5d6?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?auto=format&fit=crop&w=900&q=70'], agent: { name: 'Realtor.com', title: 'Listing Agent' } }
-  ];
-
-  /* ============ ECUADOR RENTALS (10 Real Properties) ============ */
-  const ECU_RENTALS = [
-    { id: 'e_r1', address: 'Vía a la Costa, Km 23.5, Urbanización El Rosedal', city: 'Guayaquil', state: 'Guayas', zip: '090101', rent: 350, beds: 3, baths: 2, sqft: 893, lot: 968, year: 2025, type: 'SINGLE_FAMILY', status: 'FOR_RENT', lat: -2.2000, lng: -80.0000, listedAt: Date.now() - 5 * 86400000, leaseTerm: '12 months', description: 'Brand new 2-story house in El Rosedal Phase 1. Features a living room, dining room with access to the back patio, fully furnished kitchen, laundry area, 3 bedrooms, 2 bathrooms with tempered glass shower enclosures, and a parking space. Rent includes HOA fees.', photos: ['https://images.unsplash.com/photo-1568605114967-8130f3a36994?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1570129477492-45c003edd2be?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=900&q=70'], agent: { name: 'Century 21', title: 'Leasing Agent' } },
-    { id: 'e_r2', address: 'Mocoli Golf Club, Avenida Isla Mocolí', city: 'Samborondón', state: 'Guayas', zip: '092302', rent: 650, beds: 3, baths: 4, sqft: 1507, lot: null, year: 2010, type: 'SINGLE_FAMILY', status: 'FOR_RENT', lat: -2.1600, lng: -79.8800, listedAt: Date.now() - 10 * 86400000, leaseTerm: 'Unlimited', description: 'Precious villa fully furnished in Urbanización Cataluña. 3 bedrooms, 4 beds, 4 bathrooms. Includes split air conditioning, internet, cable, telephone, and access to 2 clubs with pools, courts, gym, and 24-hour security. Close to schools, banking zone, shopping centers, and restaurants.', photos: ['https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=900&q=70'], agent: { name: 'Rentola', title: 'Leasing Agent' } },
-    { id: 'e_r3', address: 'Nuevo Daule, Santa María de Casa Grande', city: 'Guayaquil', state: 'Guayas', zip: '090102', rent: 1100, beds: 4, baths: 6, sqft: 3757, lot: null, year: 2015, type: 'SINGLE_FAMILY', status: 'FOR_RENT', lat: -2.0500, lng: -79.9500, listedAt: Date.now() - 15 * 86400000, leaseTerm: 'Minimum 6 months', description: 'Beautiful home designed for people who like to spend time outdoors. Large patio area with private pool, jacuzzi, outdoor kitchen, covered porch. Huge kitchen with granite countertops. 4 bedrooms, each with ceiling fan and AC. 6 bathrooms. Two parking spaces.', photos: ['https://images.unsplash.com/photo-1605276374104-dee2a0ed3cd6?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1502005229762-cf1b2da7c5d6?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?auto=format&fit=crop&w=900&q=70'], agent: { name: 'Rentola', title: 'Leasing Agent' } },
-    { id: 'e_r4', address: 'Guayaquil (Centro)', city: 'Guayaquil', state: 'Guayas', zip: '090150', rent: 1400, beds: 4, baths: 3, sqft: 2013, lot: null, year: 2018, type: 'SINGLE_FAMILY', status: 'FOR_RENT', lat: -2.1900, lng: -79.8800, listedAt: Date.now() - 7 * 86400000, leaseTerm: 'Long term', description: 'This property is a 2,013 Sqft house with 4 bedrooms and 3 bathrooms, available for long-term rent.', photos: ['https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1600573472592-401b489a3cdc?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1518780664697-55e3ad937233?auto=format&fit=crop&w=900&q=70'], agent: { name: 'Rentola', title: 'Leasing Agent' } },
-    { id: 'e_r5', address: 'Guayaquil (Norte)', city: 'Guayaquil', state: 'Guayas', zip: '090201', rent: 750, beds: 5, baths: 3.5, sqft: 2153, lot: null, year: 2012, type: 'SINGLE_FAMILY', status: 'FOR_RENT', lat: -2.1200, lng: -79.9100, listedAt: Date.now() - 20 * 86400000, leaseTerm: 'Unlimited', description: '5-room house with 200 m² of living space. Rent includes HOA fees. Available ASAP.', photos: ['https://images.unsplash.com/photo-1449844908441-8829872d2607?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1568605114967-8130f3a36994?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1570129477492-45c003edd2be?auto=format&fit=crop&w=900&q=70'], agent: { name: 'Rentola', title: 'Leasing Agent' } },
-    { id: 'e_r6', address: 'Quito (Norte)', city: 'Quito', state: 'Pichincha', zip: '170201', rent: 1000, beds: 3, baths: 2.5, sqft: 1200, lot: null, year: 2018, type: 'CONDO', status: 'FOR_RENT', lat: -0.1200, lng: -78.4900, listedAt: Date.now() - 3 * 86400000, leaseTerm: '12 months', description: 'Department in the north of the capital with 3 bedrooms and a privileged view. Previously rented for $1,600, now available for $1,000.', photos: ['https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=900&q=70'], agent: { name: 'Ecuavisa', title: 'Leasing Agent' } },
-    { id: 'e_r7', address: 'Quito (Centro-Norte)', city: 'Quito', state: 'Pichincha', zip: '170501', rent: 500, beds: 2, baths: 1, sqft: 700, lot: null, year: 2015, type: 'CONDO', status: 'FOR_RENT', lat: -0.1800, lng: -78.4800, listedAt: Date.now() - 12 * 86400000, leaseTerm: '12 months', description: 'Average rental price for a 2-bedroom apartment in Quito is around $500 per month.', photos: ['https://images.unsplash.com/photo-1605276374104-dee2a0ed3cd6?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1502005229762-cf1b2da7c5d6?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?auto=format&fit=crop&w=900&q=70'], agent: { name: 'Local Market', title: 'Leasing Agent' } },
-    { id: 'e_r8', address: 'Quito (Sur)', city: 'Quito', state: 'Pichincha', zip: '170801', rent: 250, beds: 1, baths: 1, sqft: 450, lot: null, year: 2010, type: 'CONDO', status: 'FOR_RENT', lat: -0.2800, lng: -78.5300, listedAt: Date.now() - 8 * 86400000, leaseTerm: '12 months', description: 'Apartments in the southern extremes of Quito can be found starting from $200 per month.', photos: ['https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1600573472592-401b489a3cdc?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1518780664697-55e3ad937233?auto=format&fit=crop&w=900&q=70'], agent: { name: 'Local Market', title: 'Leasing Agent' } },
-    { id: 'e_r9', address: 'Cuenca (Centro)', city: 'Cuenca', state: 'Azuay', zip: '010101', rent: 430, beds: 2, baths: 2, sqft: 900, lot: null, year: 2015, type: 'CONDO', status: 'FOR_RENT', lat: -2.9000, lng: -79.0000, listedAt: Date.now() - 18 * 86400000, leaseTerm: '12 months', description: 'Furnished accommodation in a normal area of Cuenca.', photos: ['https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1554995207-c18c203602cb?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1523217582562-09d0def993a6?auto=format&fit=crop&w=900&q=70'], agent: { name: 'Expatistan', title: 'Leasing Agent' } },
-    { id: 'e_r10', address: 'Cumbayá (Quito)', city: 'Quito', state: 'Pichincha', zip: '170157', rent: 1200, beds: 3, baths: 2.5, sqft: 1500, lot: null, year: 2020, type: 'CONDO', status: 'FOR_RENT', lat: -0.2000, lng: -78.4300, listedAt: Date.now() - 22 * 86400000, leaseTerm: '12 months', description: 'Apartments in San Juan de Cumbayá, one of the most expensive sectors of Quito, cost on average $1,205 to $2,934 per month.', photos: ['https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=900&q=70'], agent: { name: 'Properati', title: 'Leasing Agent' } }
-  ];
-
-  /* ------------------------------------------------------------------
-     STATE & UTILS
-     ------------------------------------------------------------------ */
-  const SAVED_KEY = 'cme_saved_v7';
+  /* ============================================================
+     STATE
+     ============================================================ */
+  const SAVED_KEY = 'cme_saved_v9';
   const state = {
-    mode: 'sale', region: 'usa', q: '', min: 0, max: 2000000,
+    mode: 'sale', region: 'usa', q: '', min: 0, max: 10000000,
     beds: '', baths: '', type: '', status: 'FOR_SALE',
-    sort: 'newest', savedOnly: false, shown: 12, pageSize: 12
+    sort: 'newest', savedOnly: false, shown: 12, pageSize: 12,
+    view: 'grid', compare: new Set()
   };
 
   let saved = new Set();
-  try { saved = new Set(JSON.parse(localStorage.getItem(SAVED_KEY) || '[]')); } catch (e) { saved = new Set(); }
+  try { saved = new Set(JSON.parse(localStorage.getItem(SAVED_KEY) || '[]')); } catch (e) {}
+
   function persistSaved() { try { localStorage.setItem(SAVED_KEY, JSON.stringify([...saved])); } catch (e) {} }
 
   const $ = (s, e = document) => e.querySelector(s);
@@ -738,70 +784,57 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{ou
   function debounce(fn, ms) { let t; return function (...args) { clearTimeout(t); t = setTimeout(() => fn.apply(this, args), ms); }; }
   function initials(name) { return (name || 'CME').split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase(); }
 
-  const TYPE_LABEL = { SINGLE_FAMILY:'Single family', CONDO:'Condo', TOWNHOUSE:'Townhouse', MULTI_FAMILY:'Multi-family' };
+  const TYPE_LABEL = { SINGLE_FAMILY:'Single family', CONDO:'Condo', TOWNHOUSE:'Townhouse', LAND:'Land' };
   const STATUS_LABEL = { FOR_SALE:'For sale', FOR_RENT:'For rent', PENDING:'Pending', SOLD:'Sold' };
 
   function currentData() {
-    if (state.region === 'ecuador') return state.mode === 'sale' ? ECU_LISTINGS : ECU_RENTALS;
-    return state.mode === 'sale' ? USA_LISTINGS : USA_RENTALS;
+    if (state.region === 'ecuador') return state.mode === 'sale' ? ECU_SALE : ECU_RENT;
+    if (state.region === 'puerto_rico') return state.mode === 'sale' ? PR_SALE : PR_RENT;
+    return state.mode === 'sale' ? USA_SALE : USA_RENT;
   }
   function priceOf(l) { return state.mode === 'sale' ? (l.price || 0) : (l.rent || 0); }
-  function maxPriceForMode() { return state.mode === 'sale' ? 2000000 : 6000; }
+  function maxPriceForMode() { return state.mode === 'sale' ? 10000000 : 6000; }
   function minPriceForMode() { return state.mode === 'sale' ? 0 : 200; }
+  function stepForMode() { return state.mode === 'sale' ? 50000 : 50; }
 
-  /* ------------------------------------------------------------------
-     MAPBOX
-     ------------------------------------------------------------------ */
+  /* ============================================================
+     MAP
+     ============================================================ */
   let map = null;
-  const markers = [];
-
+  let mapMarkers = [];
   function initMap() {
-    if (!CONFIG.MAPBOX_TOKEN || CONFIG.MAPBOX_TOKEN.includes('...')) return;
-    mapboxgl.accessToken = CONFIG.MAPBOX_TOKEN;
-    map = new mapboxgl.Map({
-      container: 'map', style: 'mapbox://styles/mapbox/streets-v12',
-      center: [-97.74, 30.27], zoom: 4
+    if (map) return;
+    map = L.map('map').setView([15, -80], 3);
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+      attribution: '&copy; OpenStreetMap &copy; CartoDB', subdomains: 'abcd', maxZoom: 19
+    }).addTo(map);
+  }
+  function updateMapMarkers(listings) {
+    if (!map) initMap();
+    mapMarkers.forEach(m => map.removeLayer(m));
+    mapMarkers = [];
+    const bounds = [];
+    listings.forEach(l => {
+      if (!l.lat || !l.lng) return;
+      const marker = L.marker([l.lat, l.lng]).addTo(map);
+      marker.bindPopup('<strong>' + esc(l.address) + '</strong><br>' + (state.mode === 'rent' ? '$' + fmtNum(l.rent) + '/mo' : fmtUSD(l.price)) + '<br>' + esc(l.city) + ', ' + esc(l.state));
+      marker.on('click', () => openDetail(l.id));
+      mapMarkers.push(marker);
+      bounds.push([l.lat, l.lng]);
     });
-    map.addControl(new mapboxgl.NavigationControl({ showCompass: false }), 'bottom-right');
+    if (bounds.length) map.fitBounds(bounds, { padding: [40, 40] });
   }
 
-  function renderMapMarkers(list) {
-    if (!map) return;
-    markers.forEach(m => m.remove());
-    markers.length = 0;
-    const bounds = new mapboxgl.LngLatBounds();
-    let hasCoords = false;
-
-    list.forEach(l => {
-      if (l.lat == null || l.lng == null) return;
-      const el = document.createElement('div');
-      el.className = 'pin ' + (state.mode === 'sale' ? 'sale' : 'rent');
-      const label = state.mode === 'sale' ? shortPrice(l.price) : '$' + fmtNum(l.rent) + '/mo';
-      el.innerHTML = '<span>' + esc(label) + '</span>';
-      el.addEventListener('click', () => openDetail(l.id));
-
-      const marker = new mapboxgl.Marker({ element: el, anchor: 'bottom' }).setLngLat([l.lng, l.lat]).addTo(map);
-      markers.push(marker);
-      bounds.extend([l.lng, l.lat]);
-      hasCoords = true;
-    });
-
-    if (hasCoords && list.length > 1) {
-      map.fitBounds(bounds, { padding: 80, maxZoom: 13, duration: 800 });
-    } else if (hasCoords) {
-      map.flyTo({ center: bounds.getCenter(), zoom: 13 });
-    }
-  }
-
-  /* ------------------------------------------------------------------
+  /* ============================================================
      RENDER
-     ------------------------------------------------------------------ */
+     ============================================================ */
   let currentResults = [];
 
   function render() {
     currentResults = filtered();
-    renderHead(); renderGrid(); renderMapMarkers(currentResults);
-    syncSavedUI(); updateModeUI(); updateFilterBadge();
+    renderHead(); renderGrid();
+    syncSavedUI(); updateModeUI(); updateFilterBadge(); renderCompareBar();
+    if (state.view === 'map') updateMapMarkers(currentResults);
   }
 
   function filtered() {
@@ -821,7 +854,6 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{ou
       if (state.savedOnly && !saved.has(l.id)) return false;
       return true;
     });
-
     switch (state.sort) {
       case 'price_asc': out.sort((a, b) => priceOf(a) - priceOf(b)); break;
       case 'price_desc': out.sort((a, b) => priceOf(b) - priceOf(a)); break;
@@ -844,12 +876,14 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{ou
     } else {
       title.textContent = 'Homes for rent';
     }
-    const suffix = state.q ? ' matching “' + state.q + '”' : ' available right now';
+    const regionLabel = state.region === 'usa' ? 'USA' : state.region === 'ecuador' ? 'Ecuador' : 'Puerto Rico';
+    const suffix = state.q ? ' matching “' + state.q + '”' : ' in ' + regionLabel;
     sub.innerHTML = '<b>' + total + '</b> ' + (total === 1 ? 'listing' : 'listings') + esc(suffix);
   }
 
   function cardHTML(l, index) {
     const isSaved = saved.has(l.id);
+    const isComparing = state.compare.has(l.id);
     const isRent = state.mode === 'rent';
     const isNew = Date.now() - l.listedAt < 7 * 86400000;
 
@@ -859,13 +893,12 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{ou
     const badgeClass = isRent ? 'for_rent' : 'for_sale';
     const badgeLabel = isRent ? 'For rent' : STATUS_LABEL[l.status];
     const metaLeft = isRent ? (l.leaseTerm || '12 mo lease') : (TYPE_LABEL[l.type] || l.subtype);
-    const metaRight = isRent ? 'Listed ' + timeAgo(l.listedAt) : timeAgo(l.listedAt);
+    const metaRight = timeAgo(l.listedAt);
 
     const photos = l.photos || [];
     const slides = photos.map((src, i) =>
-      `<img src="${esc(src)}" alt="${esc(l.address)} photo ${i + 1}" loading="lazy" class="${i === 0 ? 'active' : ''}">`
+      `<img src="${esc(src)}" alt="${esc(l.address)} photo ${i + 1}" loading="lazy" class="${i === 0 ? 'active' : ''}" onerror="this.src='${IMG.house1}'">`
     ).join('');
-
     const dots = photos.map((_, i) => `<span class="${i === 0 ? 'active' : ''}" data-slide="${i}"></span>`).join('');
 
     return `
@@ -876,7 +909,8 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{ou
             <span class="badge badge--${badgeClass}">${esc(badgeLabel)}</span>
             ${isNew ? '<span class="badge badge--new">New</span>' : ''}
           </div>
-          <button class="card-heart${isSaved ? ' on' : ''}" data-fav="${l.id}" aria-label="${isSaved ? 'Remove from saved' : 'Save home'}">
+          <button class="card-compare${isComparing ? ' on' : ''}" data-compare="${l.id}" aria-label="${isComparing ? 'Remove from compare' : 'Add to compare'}" aria-pressed="${isComparing}">⇄</button>
+          <button class="card-heart${isSaved ? ' on' : ''}" data-fav="${l.id}" aria-label="${isSaved ? 'Remove from saved' : 'Save home'}" aria-pressed="${isSaved}">
             <svg viewBox="0 0 24 24"><path d="M12 20.5s-7.4-4.6-9.2-8.9C1.4 8.1 3.5 4.8 6.9 4.8c2 0 3.5 1 4.4 2.3.9-1.3 2.4-2.3 4.4-2.3 3.4 0 5.5 3.3 4.1 6.8-1.8 4.3-9.2 8.9-9.2 8.9z"/></svg>
           </button>
           <button class="slide-arrow prev" data-slide-prev aria-label="Previous photo"><svg viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></svg></button>
@@ -895,7 +929,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{ou
           </div>
           <div class="addr">${esc(l.address)}, ${esc(l.city)}, ${esc(l.state)} ${esc(l.zip)}</div>
           <div class="meta-row">
-            <span class="meta-tag"><svg viewBox="0 0 24 24"><path d="M3 9h18M3 15h18M9 3v18M15 3v18"/></svg>${esc(metaLeft)}</span>
+            <span class="meta-tag">${esc(metaLeft)}</span>
             <span>${metaRight}</span>
           </div>
         </div>
@@ -943,21 +977,21 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{ou
     const btn = $('#savedBtn');
     btn.classList.toggle('active', state.savedOnly);
     btn.setAttribute('aria-pressed', state.savedOnly);
-    const navSaved = $('#navSaved');
-    if (navSaved) navSaved.classList.toggle('active', state.savedOnly);
+    $('#navSaved').classList.toggle('active', state.savedOnly);
   }
 
   function toggleSaved(id) {
-    const wasSaved = saved.has(id);
-    if (wasSaved) saved.delete(id); else saved.add(id);
+    const was = saved.has(id);
+    if (was) saved.delete(id); else saved.add(id);
     persistSaved();
     $$('[data-fav="' + id + '"]').forEach(el => {
-      el.classList.toggle('on', !wasSaved);
-      el.setAttribute('aria-label', wasSaved ? 'Save home' : 'Remove from saved');
+      el.classList.toggle('on', !was);
+      el.setAttribute('aria-pressed', !was);
+      el.setAttribute('aria-label', was ? 'Save home' : 'Remove from saved');
     });
     syncSavedUI();
     if (state.savedOnly) render();
-    toast(wasSaved ? 'Removed from saved' : 'Saved to your homes');
+    toast(was ? 'Removed from saved' : 'Saved to your homes');
   }
 
   function updateFilterBadge() {
@@ -972,15 +1006,76 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{ou
     if (nav) { nav.textContent = count; nav.classList.toggle('show', count > 0); }
   }
 
-  /* ------------------------------------------------------------------
+  /* ============================================================
+     COMPARE
+     ============================================================ */
+  function toggleCompare(id) {
+    if (state.compare.has(id)) state.compare.delete(id);
+    else {
+      if (state.compare.size >= 3) { toast('Compare up to 3 homes'); return; }
+      state.compare.add(id);
+    }
+    renderCompareBar();
+    $$('[data-compare="' + id + '"]').forEach(el => {
+      const on = state.compare.has(id);
+      el.classList.toggle('on', on);
+      el.setAttribute('aria-pressed', on);
+      el.setAttribute('aria-label', on ? 'Remove from compare' : 'Add to compare');
+    });
+  }
+
+  function renderCompareBar() {
+    const bar = $('#compareBar'), chips = $('#compareChips'), btn = $('#compareNowBtn');
+    const nav = $('#navCompCount');
+    if (nav) { nav.textContent = state.compare.size; nav.classList.toggle('show', state.compare.size > 0); }
+    if (state.compare.size === 0) { bar.classList.remove('show'); return; }
+    bar.classList.add('show');
+    chips.innerHTML = [...state.compare].map(id => {
+      const l = currentData().find(x => x.id === id) || USA_SALE.concat(USA_RENT, ECU_SALE, ECU_RENT, PR_SALE, PR_RENT).find(x => x.id === id);
+      if (!l) return '';
+      return `<span class="compare-chip"><span>${esc(l.address)}</span><button data-remove-comp="${id}" aria-label="Remove">✕</button></span>`;
+    }).join('');
+    chips.querySelectorAll('button[data-remove-comp]').forEach(b => {
+      b.addEventListener('click', () => { toggleCompare(b.dataset.removeComp); });
+    });
+    btn.disabled = state.compare.size < 2;
+  }
+
+  function openCompareModal() {
+    const all = USA_SALE.concat(USA_RENT, ECU_SALE, ECU_RENT, PR_SALE, PR_RENT);
+    const items = [...state.compare].map(id => all.find(x => x.id === id)).filter(Boolean);
+    if (items.length < 2) return;
+    const rows = [
+      ['Price', ...items.map(l => state.mode === 'rent' ? '$' + fmtNum(l.rent) + '/mo' : fmtUSD(l.price))],
+      ['Bedrooms', ...items.map(l => l.beds)],
+      ['Bathrooms', ...items.map(l => l.baths)],
+      ['Sq Ft', ...items.map(l => fmtNum(l.sqft))],
+      ['$ / SqFt', ...items.map(l => l.pricePerSqft ? '$' + l.pricePerSqft : '—')],
+      ['Year built', ...items.map(l => l.year || '—')],
+      ['Type', ...items.map(l => TYPE_LABEL[l.type] || l.subtype || '—')],
+      ['City', ...items.map(l => l.city)],
+      ['State', ...items.map(l => l.state)]
+    ];
+    const html = '<table class="compare-table"><thead><tr><th>Feature</th>' + items.map(l => '<th>' + esc(l.address) + '</th>').join('') + '</tr></thead><tbody>' + rows.map(r => '<tr>' + r.map((c, i) => i === 0 ? '<td>' + c + '</td>' : '<td>' + esc(c) + '</td>').join('') + '</tr>').join('') + '</tbody></table>';
+    $('#compareTableWrap').innerHTML = html;
+    $('#compareModal').classList.add('show');
+    $('#compareModal').setAttribute('aria-hidden', 'false');
+  }
+
+  function closeCompareModal() {
+    $('#compareModal').classList.remove('show');
+    $('#compareModal').setAttribute('aria-hidden', 'true');
+  }
+
+  /* ============================================================
      DRAWER
-     ------------------------------------------------------------------ */
+     ============================================================ */
   const drawer = $('#drawer'), scrim = $('#scrim');
-  let activeDetailId = null, heroIndex = 0;
+  let heroIndex = 0;
 
   function factRow(label, value) {
     if (value == null || value === '' || value === 0) return '';
-    return `<div class="fact"><span>${esc(label)}</span><b>${value}</b></div>`;
+    return '<div class="fact"><span>' + esc(label) + '</span><b>' + value + '</b></div>';
   }
 
   function detailHTML(l) {
@@ -992,15 +1087,11 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{ou
     const badgeClass = isRent ? 'rent' : 'brand';
     const photos = l.photos || [];
 
-    const heroSlides = photos.map((src, i) =>
-      `<img src="${esc(src)}" alt="${esc(l.address)} photo ${i + 1}" class="${i === 0 ? 'active' : ''}">`
-    ).join('');
-
-    const dots = photos.map((_, i) => `<span class="${i === 0 ? 'active' : ''}" data-hero-slide="${i}"></span>`).join('');
+    const heroSlides = photos.map((src, i) => '<img src="' + esc(src) + '" alt="' + esc(l.address) + ' photo ' + (i + 1) + '" class="' + (i === 0 ? 'active' : '') + '" onerror="this.src=\'' + IMG.house1 + '\'">').join('');
+    const dots = photos.map((_, i) => '<span class="' + (i === 0 ? 'active' : '') + '" data-hero-slide="' + i + '"></span>').join('');
 
     const facts = [
       factRow('Price / sqft', l.pricePerSqft ? '$' + l.pricePerSqft : null),
-      factRow('Zestimate', l.zestimate ? fmtUSD(l.zestimate) : null),
       factRow('HOA', l.hoa ? '$' + fmtNum(l.hoa) + '/mo' : null),
       factRow('Year built', l.year),
       factRow('Lot size', l.lot ? fmtNum(l.lot) + ' sqft' : null),
@@ -1074,12 +1165,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{ou
       const isR = state.mode === 'rent';
       const p = isR ? '$' + fmtNum(x.rent) + '/mo' : fmtUSD(x.price);
       const photo = (x.photos && x.photos[0]) || '';
-      return `<div class="mini" data-id="${x.id}" role="button" tabindex="0">
-        <img src="${esc(photo)}" alt="${esc(x.address)}" loading="lazy">
-        <div class="mini-body"><div class="mini-price">${p}</div>
-        <div class="mini-specs">${x.beds === 0 ? 'Studio' : x.beds + ' bd'} · ${x.baths} ba · ${fmtNum(x.sqft)} sqft</div>
-        <div class="mini-addr">${esc(x.address)}</div></div>
-      </div>`;
+      return '<div class="mini" data-id="' + x.id + '" role="button" tabindex="0"><img src="' + esc(photo) + '" alt="' + esc(x.address) + '" loading="lazy" onerror="this.src=\'' + IMG.house1 + '\'"><div class="mini-body"><div class="mini-price">' + p + '</div><div class="mini-specs">' + (x.beds === 0 ? 'Studio' : x.beds + ' bd') + ' · ' + x.baths + ' ba · ' + fmtNum(x.sqft) + ' sqft</div><div class="mini-addr">' + esc(x.address) + '</div></div></div>';
     }).join('');
   }
 
@@ -1091,27 +1177,29 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{ou
       imgs.forEach((img, j) => img.classList.toggle('active', j === heroIndex));
       dots.forEach((d, j) => d.classList.toggle('active', j === heroIndex));
     }
-    const next = $('[data-hero-next]'), prev = $('[data-hero-prev]');
-    if (next) next.addEventListener('click', e => { e.stopPropagation(); show(heroIndex + 1); });
-    if (prev) prev.addEventListener('click', e => { e.stopPropagation(); show(heroIndex - 1); });
+    $('[data-hero-next]')?.addEventListener('click', e => { e.stopPropagation(); show(heroIndex + 1); });
+    $('[data-hero-prev]')?.addEventListener('click', e => { e.stopPropagation(); show(heroIndex - 1); });
     dots.forEach((dot, i) => dot.addEventListener('click', e => { e.stopPropagation(); show(i); }));
   }
 
   function openDetail(id) {
-    const listing = currentData().find(x => x.id === id);
+    const all = USA_SALE.concat(USA_RENT, ECU_SALE, ECU_RENT, PR_SALE, PR_RENT);
+    const listing = currentData().find(x => x.id === id) || all.find(x => x.id === id);
     if (!listing) return;
-    activeDetailId = id;
     drawer.innerHTML = detailHTML(listing);
-    drawer.classList.add('open'); drawer.setAttribute('aria-hidden', 'false'); drawer.scrollTop = 0;
+    drawer.classList.add('open');
+    drawer.setAttribute('aria-hidden', 'false');
+    drawer.scrollTop = 0;
     scrim.classList.add('show');
-    if (state.mode === 'sale') bindCalculator(listing.price);
+    if (state.mode === 'sale' && listing.price) bindCalculator(listing.price);
     renderSimilar(listing); bindHeroSlideshow();
-    const closeBtn = $('#closeDrawer'); if (closeBtn) closeBtn.focus({ preventScroll: true });
+    $('#closeDrawer')?.focus({ preventScroll: true });
   }
 
   function closeDrawer() {
-    activeDetailId = null;
-    drawer.classList.remove('open'); drawer.setAttribute('aria-hidden', 'true'); scrim.classList.remove('show');
+    drawer.classList.remove('open');
+    drawer.setAttribute('aria-hidden', 'true');
+    scrim.classList.remove('show');
   }
 
   function bindCalculator(price) {
@@ -1122,7 +1210,8 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{ou
       const r = Math.min(Math.max(parseFloat(rate.value) || 0, 0), 15);
       out.textContent = fmtUSD(Math.round(monthlyPayment(price, d, r)));
     };
-    down.addEventListener('input', update); rate.addEventListener('input', update);
+    down.addEventListener('input', update);
+    rate.addEventListener('input', update);
   }
 
   let toastTimer = null;
@@ -1140,15 +1229,13 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{ou
     const isRent = state.mode === 'rent';
     $('#statusSection').style.display = isRent ? 'none' : '';
     if (isRent) state.status = '';
-
     const minSlider = $('#priceMin'), maxSlider = $('#priceMax');
-    minSlider.min = minPriceForMode(); maxSlider.min = minPriceForMode();
-    minSlider.max = maxPriceForMode(); maxSlider.max = maxPriceForMode();
-    minSlider.step = isRent ? 50 : 25000; maxSlider.step = isRent ? 50 : 25000;
-    minSlider.value = minPriceForMode(); maxSlider.value = maxPriceForMode();
-    state.min = minPriceForMode(); state.max = maxPriceForMode();
+    const min = minPriceForMode(), max = maxPriceForMode(), step = stepForMode();
+    minSlider.min = min; maxSlider.min = min; minSlider.max = max; maxSlider.max = max;
+    minSlider.step = step; maxSlider.step = step;
+    minSlider.value = min; maxSlider.value = max;
+    state.min = min; state.max = max;
     updatePriceDisplay();
-
     const toggle = document.querySelector('.mode-toggle');
     toggle.dataset.mode = isRent ? 'rent' : 'sale';
     $$('.mode-toggle button').forEach(b => b.classList.toggle('active', b.dataset.mode === state.mode));
@@ -1161,12 +1248,17 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{ou
     $('#priceMinDisplay').textContent = isRent ? '$' + fmtNum(min) : (min === 0 ? '$0' : shortPrice(min));
     $('#priceMaxDisplay').textContent = isRent
       ? (max >= maxPriceForMode() ? '$' + fmtNum(maxPriceForMode()) + '+' : '$' + fmtNum(max))
-      : (max >= maxPriceForMode() ? '$2M+' : shortPrice(max));
-    const minPct = ((min - minPriceForMode()) / (maxPriceForMode() - minPriceForMode())) * 100;
-    const maxPct = ((max - minPriceForMode()) / (maxPriceForMode() - minPriceForMode())) * 100;
-    $('#rangeFill').style.left = minPct + '%'; $('#rangeFill').style.right = (100 - maxPct) + '%';
+      : (max >= maxPriceForMode() ? '$10M+' : shortPrice(max));
+    const range = maxPriceForMode() - minPriceForMode();
+    const minPct = ((min - minPriceForMode()) / range) * 100;
+    const maxPct = ((max - minPriceForMode()) / range) * 100;
+    $('#rangeFill').style.left = minPct + '%';
+    $('#rangeFill').style.right = (100 - maxPct) + '%';
   }
 
+  /* ============================================================
+     EVENTS
+     ============================================================ */
   function bindEvents() {
     $$('.mode-toggle button').forEach(btn => {
       btn.addEventListener('click', () => {
@@ -1176,6 +1268,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{ou
         state.beds = ''; state.baths = ''; state.type = '';
         state.status = state.mode === 'sale' ? 'FOR_SALE' : '';
         $$('.chip-row').forEach(row => { $$('.chip', row).forEach(c => c.classList.toggle('active', c.dataset.val === (row.dataset.filter === 'status' ? 'FOR_SALE' : ''))); });
+        state.shown = state.pageSize;
         updateModeUI(); render();
       });
     });
@@ -1193,7 +1286,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{ou
     const minSlider = $('#priceMin'), maxSlider = $('#priceMax');
     function onSliderInput(which) {
       let min = +minSlider.value, max = +maxSlider.value;
-      const step = state.mode === 'sale' ? 25000 : 50;
+      const step = stepForMode();
       if (min > max - step) { if (which === 'min') minSlider.value = max - step; else maxSlider.value = min + step; }
       min = +minSlider.value; max = +maxSlider.value;
       state.min = min; state.max = max;
@@ -1205,21 +1298,32 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{ou
     $$('.chip-row').forEach(row => {
       row.addEventListener('click', e => {
         const chip = e.target.closest('.chip'); if (!chip) return;
-        $$('.chip', row).forEach(c => c.classList.remove('active')); chip.classList.add('active');
-        state[row.dataset.filter] = chip.dataset.val; state.savedOnly = false; render();
+        $$('.chip', row).forEach(c => c.classList.remove('active'));
+        chip.classList.add('active');
+        state[row.dataset.filter] = chip.dataset.val;
+        state.savedOnly = false; render();
       });
     });
 
-    $('#searchForm').addEventListener('submit', e => { e.preventDefault(); state.q = $('#searchInput').value; state.savedOnly = false; render(); $('#resultsPane').scrollTop = 0; });
-    $('#searchInput').addEventListener('input', debounce(function () { const v = this.value; if (v === state.q) return; state.q = v; state.savedOnly = false; render(); }, 320));
+    $('#searchForm').addEventListener('submit', e => {
+      e.preventDefault();
+      state.q = $('#searchInput').value; state.savedOnly = false; render();
+      $('#resultsPane').scrollTop = 0;
+    });
+    $('#searchInput').addEventListener('input', debounce(function () {
+      const v = this.value;
+      if (v === state.q) return;
+      state.q = v; state.savedOnly = false; render();
+    }, 320));
 
-    $('#savedBtn').addEventListener('click', () => { state.savedOnly = !state.savedOnly; render(); if (window.innerWidth <= 1000) document.body.classList.remove('show-map'); });
-    $('#navSaved').addEventListener('click', () => { state.savedOnly = !state.savedOnly; render(); document.body.classList.remove('show-map'); $$('.view-toggle button').forEach(b => b.classList.toggle('active', b.dataset.view === 'list')); $('#navMap').classList.remove('active'); });
+    $('#savedBtn').addEventListener('click', () => { state.savedOnly = !state.savedOnly; render(); });
+    $('#navSaved').addEventListener('click', () => { state.savedOnly = !state.savedOnly; render(); });
     $('#sortSelect').addEventListener('change', e => { state.sort = e.target.value; render(); });
 
     $('#resetBtn').addEventListener('click', () => {
       state.q = ''; $('#searchInput').value = '';
-      state.beds = ''; state.baths = ''; state.type = ''; state.status = state.mode === 'sale' ? 'FOR_SALE' : '';
+      state.beds = ''; state.baths = ''; state.type = '';
+      state.status = state.mode === 'sale' ? 'FOR_SALE' : '';
       state.savedOnly = false; state.sort = 'newest'; $('#sortSelect').value = 'newest';
       $$('.chip-row').forEach(row => { $$('.chip', row).forEach(c => c.classList.toggle('active', c.dataset.val === (row.dataset.filter === 'status' ? 'FOR_SALE' : ''))); });
       minSlider.value = minPriceForMode(); maxSlider.value = maxPriceForMode();
@@ -1228,29 +1332,27 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{ou
     });
 
     $('#moreBtn').addEventListener('click', () => { state.shown += state.pageSize; renderGrid(); });
-    $('#filterBtn').addEventListener('click', openFilters); $('#navFilters').addEventListener('click', openFilters);
-
-    $$('.view-toggle button').forEach(btn => {
-      btn.addEventListener('click', () => {
-        $$('.view-toggle button').forEach(b => b.classList.remove('active')); btn.classList.add('active');
-        const showMap = btn.dataset.view === 'map';
-        document.body.classList.toggle('show-map', showMap); $('#navMap').classList.toggle('active', showMap);
-        if (showMap && map) setTimeout(() => map.resize(), 60);
-      });
-    });
-    $('#navMap').addEventListener('click', () => {
-      const isMap = document.body.classList.toggle('show-map');
-      $('#navMap').classList.toggle('active', isMap);
-      $$('.view-toggle button').forEach(b => b.classList.toggle('active', b.dataset.view === (isMap ? 'map' : 'list')));
-      if (isMap && map) setTimeout(() => map.resize(), 60);
+    $('#filterBtn').addEventListener('click', openFilters);
+    $('#navFilters').addEventListener('click', openFilters);
+    $('#navCompare').addEventListener('click', () => {
+      if (state.compare.size >= 2) openCompareModal();
+      else toast('Select 2–3 homes to compare');
     });
 
-    scrim.addEventListener('click', () => { if (drawer.classList.contains('open')) closeDrawer(); else closeFilters(); });
+    $('#compareNowBtn').addEventListener('click', openCompareModal);
+    $$('[data-close-cm]').forEach(el => el.addEventListener('click', closeCompareModal));
+
+    scrim.addEventListener('click', () => {
+      if (drawer.classList.contains('open')) closeDrawer();
+      else closeFilters();
+    });
 
     document.addEventListener('click', e => {
       if (e.target.closest('#closeDrawer')) { closeDrawer(); return; }
       const favBtn = e.target.closest('[data-fav]');
       if (favBtn) { e.preventDefault(); e.stopPropagation(); toggleSaved(favBtn.dataset.fav); return; }
+      const cmpBtn = e.target.closest('[data-compare]');
+      if (cmpBtn) { e.preventDefault(); e.stopPropagation(); toggleCompare(cmpBtn.dataset.compare); return; }
       if (e.target.closest('[data-contact]')) { toast('An agent will reach out shortly'); return; }
       if (e.target.closest('#alertBtn')) { toast('Price alert created for this search'); return; }
       const target = e.target.closest('.card[data-id], .mini[data-id]');
@@ -1259,17 +1361,39 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{ou
 
     document.addEventListener('keydown', e => {
       if (e.key === 'Escape') {
+        if ($('#compareModal').classList.contains('show')) { closeCompareModal(); return; }
         if (drawer.classList.contains('open')) { closeDrawer(); return; }
         if (filtersPanel.classList.contains('open')) { closeFilters(); return; }
-        return;
       }
-      if ((e.key === 'Enter' || e.key === ' ') && e.target.matches('.card[data-id], .mini[data-id]')) { e.preventDefault(); openDetail(e.target.dataset.id); }
+      if ((e.key === 'Enter' || e.key === ' ') && e.target.matches('.card[data-id], .mini[data-id]')) {
+        e.preventDefault(); openDetail(e.target.dataset.id);
+      }
     });
 
-    window.addEventListener('resize', debounce(() => { if (map) map.resize(); }, 180));
+    $('#gridViewBtn').addEventListener('click', () => {
+      state.view = 'grid';
+      $('#gridViewBtn').classList.add('active'); $('#mapViewBtn').classList.remove('active');
+      $('#grid').style.display = ''; $('#mapContainer').classList.remove('active');
+      renderGrid();
+    });
+    $('#mapViewBtn').addEventListener('click', () => {
+      state.view = 'map';
+      $('#mapViewBtn').classList.add('active'); $('#gridViewBtn').classList.remove('active');
+      $('#grid').style.display = 'none'; $('#mapContainer').classList.add('active');
+      initMap(); updateMapMarkers(currentResults);
+      setTimeout(() => map.invalidateSize(), 200);
+    });
+
+    $('#themeBtn').addEventListener('click', () => {
+      document.body.classList.toggle('dark-mode');
+      const isDark = document.body.classList.contains('dark-mode');
+      $('#themeBtn').innerHTML = isDark
+        ? '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M1 12h2M21 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4"/></svg>'
+        : '<svg viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>';
+    });
   }
 
-  function boot() { initMap(); bindEvents(); updateModeUI(); render(); }
+  function boot() { bindEvents(); updateModeUI(); render(); }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot); else boot();
 })();
 </script>
