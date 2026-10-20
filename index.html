@@ -4,7 +4,7 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <meta name="theme-color" content="#0b5fff" />
-<title>CME Real Estate and Properties — Buy or Rent Your Next Home</title>
+<title>CME Real Estate and Properties — USA & Ecuador</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -91,6 +91,10 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{ou
 .mode-toggle[data-mode="rent"]::before{transform:translateX(100%)}
 .mode-toggle button{position:relative;z-index:1;min-width:74px;padding:8px 18px;border-radius:999px;font-size:13.5px;font-weight:700;color:var(--muted);transition:color .22s ease}
 .mode-toggle button.active{color:var(--ink)}
+
+.region-toggle{display:flex;gap:6px;flex:0 0 auto}
+.region-toggle button{padding:8px 12px;border-radius:8px;font-size:12.5px;font-weight:700;border:1.5px solid var(--line);background:#fff;color:var(--muted);transition:all .18s ease}
+.region-toggle button.active{background:var(--ink);color:#fff;border-color:var(--ink)}
 
 .searchbar{position:relative;flex:1 1 auto;max-width:600px;min-width:0}
 .searchbar>svg{position:absolute;left:18px;top:50%;transform:translateY(-50%);width:18px;height:18px;stroke:#8a97a8;fill:none;stroke-width:2;pointer-events:none}
@@ -344,7 +348,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{ou
    ============================================================ */
 .whatsapp-float {
   position: fixed;
-  bottom: 96px; /* Sits above the Tawk.to widget */
+  bottom: 96px;
   right: 22px;
   z-index: 960;
   width: 60px;
@@ -374,7 +378,6 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{ou
   100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); }
 }
 
-/* Customizing GTranslate positioning so it doesn't clash with mobile nav */
 .gtranslate_wrapper {
   position: fixed;
   bottom: 24px;
@@ -383,7 +386,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{ou
 }
 @media (max-width: 1000px) {
   .gtranslate_wrapper {
-    bottom: 100px; /* Push above mobile bottom nav */
+    bottom: 100px;
     left: 14px;
   }
 }
@@ -421,6 +424,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{ou
   .brand-sub{font-size:8.5px;letter-spacing:.1em}
   .mode-toggle{padding:3px}
   .mode-toggle button{min-width:58px;padding:7px 12px;font-size:12.5px}
+  .region-toggle button{padding:6px 8px;font-size:11.5px}
   .searchbar{display:none}
   .nav-link{display:none}
   .btn-filter{display:inline-flex;height:38px;padding:0 14px;font-size:12.5px;gap:6px}
@@ -471,13 +475,13 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{ou
   .similar-grid{grid-template-columns:1fr}
   .toast{bottom:calc(100px + env(safe-area-inset-bottom,0px));font-size:13px;padding:12px 18px;max-width:calc(100vw - 32px)}
   
-  /* Adjust widgets for mobile */
   .whatsapp-float { bottom: 90px; right: 16px; width: 50px; height: 50px; }
   .whatsapp-float svg { width: 26px; height: 26px; }
 }
 @media (max-width:400px){
   .brand-name{font-size:16px}
   .mode-toggle button{min-width:52px;padding:7px 10px;font-size:12px}
+  .region-toggle button{padding:5px 6px;font-size:11px}
   .results-head h1{font-size:20px}
   .bottom-nav{right:80px}
 }
@@ -497,6 +501,11 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{ou
   <div class="mode-toggle" data-mode="sale" role="group" aria-label="Buy or rent">
     <button type="button" data-mode="sale" class="active">Buy</button>
     <button type="button" data-mode="rent">Rent</button>
+  </div>
+
+  <div class="region-toggle" role="group" aria-label="Region">
+    <button type="button" data-region="usa" class="active">USA</button>
+    <button type="button" data-region="ecuador">Ecuador</button>
   </div>
 
   <form class="searchbar" id="searchForm" role="search" autocomplete="off">
@@ -611,12 +620,10 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{ou
 
 <div class="toast" id="toast"><svg viewBox="0 0 24 24"><path d="m4 12.5 5 5L20 6.5"/></svg><span id="toastMsg"></span></div>
 
-<!-- GTranslate Widget -->
 <div class="gtranslate_wrapper"></div>
 <script>window.gtranslateSettings = {"default_language":"en","detect_browser_language":true,"wrapper_selector":".gtranslate_wrapper"}</script>
 <script src="https://cdn.gtranslate.net/widgets/latest/float.js" defer></script>
 
-<!-- WhatsApp Float Widget -->
 <a href="https://wa.me/447787374543" class="whatsapp-float" target="_blank" rel="noopener noreferrer" aria-label="Chat with us on WhatsApp">
   <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
     <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
@@ -624,57 +631,83 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{ou
 </a>
 
 <script>
-/* =====================================================================
-   CME Real Estate — Mapbox + Live Property Data + Slideshows
-   ===================================================================== */
 (function () {
   'use strict';
 
-  /* ------------------------------------------------------------------
-     CONFIGURATION
-     ------------------------------------------------------------------ */
   const CONFIG = {
-    // Your provided Mapbox token from the screenshot
-    MAPBOX_TOKEN: 'pk.eyJ1IjoiZ2xpYXdGMkRqMUlCQ2hJjoiY2lJjoiY2lJZ2VjZ2VjZ2VjZ2VjIn0.REPLACE...',
-
-    // RapidAPI key for live properties (Keep your own key here if you have one)
-    // If this is left as is, the site will fall back to high-quality demo data.
-    RAPIDAPI_KEY: 'REPLACE_WITH_YOUR_RAPIDAPI_KEY',
-    RAPIDAPI_HOST: 'realtor.p.rapidapi.com'
+    MAPBOX_TOKEN: 'pk.eyJ1IjoiZ2xpYXdGMkRqMUlCQ2hJjoiY2lJjoiY2lJZ2VjZ2VjZ2VjZ2VjIn0...' // ← Paste your Mapbox token here
   };
 
-  /* ------------------------------------------------------------------
-     IMAGE POOL (fallback if API images fail)
-     ------------------------------------------------------------------ */
-  const FALLBACK_IMAGES = [
-    'https://images.unsplash.com/photo-1568605114967-8130f3a36994?auto=format&fit=crop&w=900&q=70',
-    'https://images.unsplash.com/photo-1570129477492-45c003edd2be?auto=format&fit=crop&w=900&q=70',
-    'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=900&q=70',
-    'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=900&q=70',
-    'https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&w=900&q=70',
-    'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=900&q=70',
-    'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=900&q=70',
-    'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=900&q=70'
+  /* ============ USA FOR SALE ============ */
+  const USA_LISTINGS = [
+    { id: 's1', address: '11725 Timber Heights Dr', city: 'Austin', state: 'TX', zip: '78754', price: 390000, beds: 4, baths: 3, sqft: 2099, lot: 5893, year: 2006, type: 'SINGLE_FAMILY', status: 'FOR_SALE', lat: 30.3550, lng: -97.6700, listedAt: Date.now() - 9 * 86400000, pricePerSqft: 186, zestimate: null, hoa: 39, subtype: 'Single Family Residence', description: 'Come see this beautiful and spacious home with 4 bedrooms and 3 bathrooms, offering about 2,099 square feet of living space...', photos: ['https://images.unsplash.com/photo-1568605114967-8130f3a36994?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1570129477492-45c003edd2be?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=900&q=70'], agent: { name: 'Thinh Le', title: 'Listing Agent' } },
+    { id: 's2', address: '5718 25th Ave NE', city: 'Seattle', state: 'WA', zip: '98105', price: 888249, beds: 4, baths: 2, sqft: 1780, lot: 3750, year: 1925, type: 'SINGLE_FAMILY', status: 'FOR_SALE', lat: 47.6710, lng: -122.3000, listedAt: Date.now() - 15 * 86400000, pricePerSqft: 499, zestimate: 901000, hoa: 0, subtype: 'Single Family Residence', description: 'Welcome to beautiful Ravenna! This well-cared for Northwest craftsman home is perfect as either a turn-key rental property...', photos: ['https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?auto=format&fit=crop&w=900&q=70'], agent: { name: 'Redfin', title: 'Listing Agent' } },
+    { id: 's3', address: '15575 SW 9th Ln', city: 'Miami', state: 'FL', zip: '33194', price: 819900, beds: 3, baths: 2.5, sqft: 2254, lot: 5000, year: 2003, type: 'SINGLE_FAMILY', status: 'FOR_SALE', lat: 25.7350, lng: -80.3350, listedAt: Date.now() - 148 * 86400000, pricePerSqft: 364, zestimate: null, hoa: 0, subtype: 'Single Family Residence', description: 'Step into this well maintained home, designed for comfort and entertaining—both indoors and out...', photos: ['https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1605276374104-dee2a0ed3cd6?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1502005229762-cf1b2da7c5d6?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?auto=format&fit=crop&w=900&q=70'], agent: { name: 'Michelle del Valle', title: 'Listing Agent' } },
+    { id: 's4', address: '8613 Aracari Cv', city: 'Austin', state: 'TX', zip: '78744', price: 706526, beds: 5, baths: 5.5, sqft: 2829, lot: null, year: 2025, type: 'SINGLE_FAMILY', status: 'FOR_SALE', lat: 30.1950, lng: -97.7350, listedAt: Date.now() - 5 * 86400000, pricePerSqft: 250, zestimate: null, hoa: 60, subtype: 'Single Family Residence', description: 'New construction in a thriving community...', photos: ['https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1600573472592-401b489a3cdc?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1518780664697-55e3ad937233?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1583608205776-bfd35f0d9f83?auto=format&fit=crop&w=900&q=70'], agent: { name: 'CME Partner', title: 'Listing Agent' } },
+    { id: 's5', address: '8511 Dongan Dr', city: 'Austin', state: 'TX', zip: '78744', price: 624990, beds: 5, baths: 4, sqft: 2709, lot: 9239, year: 2025, type: 'SINGLE_FAMILY', status: 'FOR_SALE', lat: 30.1950, lng: -97.7350, listedAt: Date.now() - 36 * 86400000, pricePerSqft: 231, zestimate: null, hoa: 76, subtype: 'Single Family Residence', description: 'Newmark Homes Grace floorplan...', photos: ['https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1554995207-c18c203602cb?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1523217582562-09d0def993a6?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1449844908441-8829872d2607?auto=format&fit=crop&w=900&q=70'], agent: { name: 'Sarah', title: 'Listing Agent' } },
+    { id: 's6', address: '15326 SW 58th Ter', city: 'Miami', state: 'FL', zip: '33193', price: 599000, beds: 3, baths: 2, sqft: 1264, lot: 4826, year: 2000, type: 'SINGLE_FAMILY', status: 'FOR_SALE', lat: 25.7550, lng: -80.2200, listedAt: Date.now() - 10 * 86400000, pricePerSqft: 474, zestimate: null, hoa: 0, subtype: 'Single Family Residence', description: 'Well-maintained 3-bedroom, 2-bath home...', photos: ['https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=900&q=70'], agent: { name: 'CME Partner', title: 'Listing Agent' } },
+    { id: 's7', address: '1245 NE 154th St', city: 'North Miami Beach', state: 'FL', zip: '33162', price: 680000, beds: 4, baths: 3, sqft: 1515, lot: 7722, year: 1960, type: 'SINGLE_FAMILY', status: 'FOR_SALE', lat: 25.9250, lng: -80.1700, listedAt: Date.now() - 7 * 86400000, pricePerSqft: 449, zestimate: null, hoa: 0, subtype: 'Single Family Residence', description: 'Charming 4-bedroom, 3-bath home...', photos: ['https://images.unsplash.com/photo-1568605114967-8130f3a36994?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1570129477492-45c003edd2be?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=900&q=70'], agent: { name: 'CME Partner', title: 'Listing Agent' } },
+    { id: 's8', address: '2505 Baxter Dr', city: 'Austin', state: 'TX', zip: '78745', price: 540000, beds: 3, baths: 2, sqft: 1306, lot: 7945, year: 1965, type: 'SINGLE_FAMILY', status: 'FOR_SALE', lat: 30.2200, lng: -97.7900, listedAt: Date.now() - 20 * 86400000, pricePerSqft: 413, zestimate: null, hoa: 0, subtype: 'Single Family Residence', description: 'Well-located 3-bedroom, 2-bath home...', photos: ['https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1600573472592-401b489a3cdc?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1518780664697-55e3ad937233?auto=format&fit=crop&w=900&q=70'], agent: { name: 'CME Partner', title: 'Listing Agent' } },
+    { id: 's9', address: '7745 SW 54th Ave', city: 'Miami', state: 'FL', zip: '33143', price: 5275000, beds: 7, baths: 6.5, sqft: 5797, lot: null, year: 2010, type: 'SINGLE_FAMILY', status: 'FOR_SALE', lat: 25.7200, lng: -80.2800, listedAt: Date.now() - 30 * 86400000, pricePerSqft: 910, zestimate: null, hoa: 0, subtype: 'Single Family Residence', description: 'Magnificent estate in the heart of Miami...', photos: ['https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=900&q=70'], agent: { name: 'CME Partner', title: 'Listing Agent' } },
+    { id: 's10', address: '1465 S Columbian Way', city: 'Seattle', state: 'WA', zip: '98144', price: 800000, beds: 3, baths: 3, sqft: 1340, lot: 4000, year: 1950, type: 'SINGLE_FAMILY', status: 'FOR_SALE', lat: 47.5800, lng: -122.3000, listedAt: Date.now() - 25 * 86400000, pricePerSqft: 597, zestimate: null, hoa: 0, subtype: 'Single Family Residence', description: 'Charming Beacon Hill home with views...', photos: ['https://images.unsplash.com/photo-1605276374104-dee2a0ed3cd6?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1502005229762-cf1b2da7c5d6?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&fit=crop&w=900&q=70'], agent: { name: 'CME Partner', title: 'Listing Agent' } }
+  ];
+
+  /* ============ USA RENTALS ============ */
+  const USA_RENTALS = [
+    { id: 'r1', address: '7913 Lennon Dr', city: 'Austin', state: 'TX', zip: '78744', rent: 2350, beds: 2, baths: 2.5, sqft: 1602, lot: null, year: 2021, type: 'SINGLE_FAMILY', status: 'FOR_RENT', lat: 30.2450, lng: -97.7650, listedAt: Date.now() - 10 * 86400000, leaseTerm: '12 months', description: '*AVAILABLE FULLY FURNISHED* Nestled in the heart of Easton Park...', photos: ['https://images.unsplash.com/photo-1568605114967-8130f3a36994?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1570129477492-45c003edd2be?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=900&q=70'], agent: { name: 'CME Rentals', title: 'Leasing Agent' } },
+    { id: 'r2', address: '4611 Fremont Ave N', city: 'Seattle', state: 'WA', zip: '98103', rent: 2900, beds: 2, baths: 1, sqft: 1300, lot: null, year: 1920, type: 'SINGLE_FAMILY', status: 'FOR_RENT', lat: 47.6600, lng: -122.3500, listedAt: Date.now() - 13 * 86400000, leaseTerm: '1 year', description: 'Available 8/22! Very large Mother-in-law unit...', photos: ['https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?auto=format&fit=crop&w=900&q=70'], agent: { name: 'CME Rentals', title: 'Leasing Agent' } },
+    { id: 'r3', address: '1613 SW 19th Ter', city: 'Miami', state: 'FL', zip: '33145', rent: 2500, beds: 3, baths: 1, sqft: 900, lot: null, year: 1950, type: 'SINGLE_FAMILY', status: 'FOR_RENT', lat: 25.7550, lng: -80.2200, listedAt: Date.now() - 27 * 86400000, leaseTerm: '1 Year', description: 'It is Beautiful 3 bedroom, 1 bath with full kitchen...', photos: ['https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1605276374104-dee2a0ed3cd6?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1502005229762-cf1b2da7c5d6?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?auto=format&fit=crop&w=900&q=70'], agent: { name: 'CME Rentals', title: 'Leasing Agent' } },
+    { id: 'r4', address: '11406 Hidden Quail Dr', city: 'Austin', state: 'TX', zip: '78758', rent: 1900, beds: 3, baths: 2, sqft: 1520, lot: null, year: 1980, type: 'SINGLE_FAMILY', status: 'FOR_RENT', lat: 30.3900, lng: -97.7100, listedAt: Date.now() - 5 * 86400000, leaseTerm: '12 months', description: 'Spacious 3-bedroom, 2-bath home in North Austin...', photos: ['https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=900&q=70'], agent: { name: 'CME Rentals', title: 'Leasing Agent' } },
+    { id: 'r5', address: '1153 Webberville Rd UNIT 2', city: 'Austin', state: 'TX', zip: '78721', rent: 2900, beds: 2, baths: 1, sqft: 949, lot: null, year: 2010, type: 'SINGLE_FAMILY', status: 'FOR_RENT', lat: 30.2600, lng: -97.7100, listedAt: Date.now() - 18 * 86400000, leaseTerm: '12 months', description: 'Charming 2-bedroom, 1-bath unit in East Austin...', photos: ['https://images.unsplash.com/photo-1568605114967-8130f3a36994?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1570129477492-45c003edd2be?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=900&q=70'], agent: { name: 'CME Rentals', title: 'Leasing Agent' } },
+    { id: 'r6', address: '2411 Oak Crest Ave', city: 'Austin', state: 'TX', zip: '78704', rent: 4500, beds: 3, baths: 2, sqft: 1295, lot: null, year: 1955, type: 'SINGLE_FAMILY', status: 'FOR_RENT', lat: 30.2400, lng: -97.7700, listedAt: Date.now() - 30 * 86400000, leaseTerm: '12 months', description: 'Beautiful 3-bedroom, 2-bath home in the heart of South Austin...', photos: ['https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1600573472592-401b489a3cdc?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1518780664697-55e3ad937233?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1583608205776-bfd35f0d9f83?auto=format&fit=crop&w=900&q=70'], agent: { name: 'CME Rentals', title: 'Leasing Agent' } },
+    { id: 'r7', address: '3114 NW 93rd St', city: 'Seattle', state: 'WA', zip: '98117', rent: 2800, beds: 1, baths: 1, sqft: 900, lot: null, year: 1940, type: 'SINGLE_FAMILY', status: 'FOR_RENT', lat: 47.6900, lng: -122.3800, listedAt: Date.now() - 12 * 86400000, leaseTerm: 'Short or longer term', description: 'FULLY FURNISHED private apartment available...', photos: ['https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1554995207-c18c203602cb?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1523217582562-09d0def993a6?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1449844908441-8829872d2607?auto=format&fit=crop&w=900&q=70'], agent: { name: 'CME Rentals', title: 'Leasing Agent' } },
+    { id: 'r8', address: '8325 Dallas Ave S #1B', city: 'Seattle', state: 'WA', zip: '98108', rent: 1500, beds: 1, baths: 1, sqft: 649, lot: null, year: 1960, type: 'CONDO', status: 'FOR_RENT', lat: 47.5300, lng: -122.3100, listedAt: Date.now() - 8 * 86400000, leaseTerm: '12 months', description: 'Cozy 1-bedroom, 1-bath apartment in South Seattle...', photos: ['https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=900&q=70'], agent: { name: 'CME Rentals', title: 'Leasing Agent' } },
+    { id: 'r9', address: '2109 N 39th St', city: 'Seattle', state: 'WA', zip: '98103', rent: 4595, beds: 4, baths: 2, sqft: 2000, lot: null, year: 1910, type: 'SINGLE_FAMILY', status: 'FOR_RENT', lat: 47.6500, lng: -122.3400, listedAt: Date.now() - 20 * 86400000, leaseTerm: '12 months', description: 'Spacious 4-bedroom, 2-bath home in the desirable Fremont neighborhood...', photos: ['https://images.unsplash.com/photo-1568605114967-8130f3a36994?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1570129477492-45c003edd2be?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=900&q=70'], agent: { name: 'CME Rentals', title: 'Leasing Agent' } },
+    { id: 'r10', address: '13675 SW 62nd St APT 104', city: 'Miami', state: 'FL', zip: '33183', rent: 2800, beds: 2, baths: 1.5, sqft: 1000, lot: null, year: 1990, type: 'TOWNHOUSE', status: 'FOR_RENT', lat: 25.7100, lng: -80.4000, listedAt: Date.now() - 25 * 86400000, leaseTerm: '12 months', description: 'This charming 2-bedroom, 1.5-bath townhouse is located in a gated community in West Kendall...', photos: ['https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1600573472592-401b489a3cdc?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1518780664697-55e3ad937233?auto=format&fit=crop&w=900&q=70'], agent: { name: 'CME Rentals', title: 'Leasing Agent' } }
+  ];
+
+  /* ============ ECUADOR FOR SALE (10 Real Properties) ============ */
+  const ECU_LISTINGS = [
+    { id: 'e_s1', address: 'Isla Celeste 1, Samborondon', city: 'Guayaquil', state: 'Guayas', zip: '092301', price: 300000, beds: 4, baths: 4.5, sqft: 2281, lot: 2421, year: 2025, type: 'SINGLE_FAMILY', status: 'FOR_SALE', lat: -2.1626, lng: -79.8691, listedAt: Date.now() - 3 * 86400000, pricePerSqft: 131, zestimate: null, hoa: 45, subtype: 'House', description: 'House for Sale in Isla Celeste. Modern Style. Land: 225 m2, Construction: 211.89 m2. Features a large master bedroom with walk-in closet, 3 secondary bedrooms with private bathrooms, family room, modern kitchen with island, laundry room, and private security.', photos: ['https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=900&q=70'], agent: { name: 'Century 21 Nova', title: 'Listing Agent' } },
+    { id: 'e_s2', address: 'Ciudad Celeste etapa Costanera 1, Samborondon', city: 'Guayaquil', state: 'Guayas', zip: '092302', price: 315000, beds: 3, baths: 4.5, sqft: 2852, lot: 2798, year: 2025, type: 'SINGLE_FAMILY', status: 'FOR_SALE', lat: -2.1500, lng: -79.8800, listedAt: Date.now() - 10 * 86400000, pricePerSqft: 110, zestimate: null, hoa: 50, subtype: 'House', description: 'House for sale in Ciudad Celeste. Purchases accepted through BIESS financing. Features a study, laundry room, jacuzzi, BBQ area, two parking spaces, and a balcony. European profiles and fine finishes.', photos: ['https://images.unsplash.com/photo-1605276374104-dee2a0ed3cd6?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1502005229762-cf1b2da7c5d6?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?auto=format&fit=crop&w=900&q=70'], agent: { name: 'Century 21 Nova', title: 'Listing Agent' } },
+    { id: 'e_s3', address: 'Urb. San Antonio 1, Samborondon', city: 'Guayaquil', state: 'Guayas', zip: '092303', price: 165000, beds: 3, baths: 3.5, sqft: 1539, lot: 1302, year: 2025, type: 'SINGLE_FAMILY', status: 'FOR_SALE', lat: -2.1700, lng: -79.8900, listedAt: Date.now() - 15 * 86400000, pricePerSqft: 107, zestimate: null, hoa: 40, subtype: 'House', description: 'Brand new house with high-end finishes. Features a spacious living room, TV room, dining room, open-plan kitchen, patio, laundry area, and a small study/office on the upper floor.', photos: ['https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1600573472592-401b489a3cdc?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1518780664697-55e3ad937233?auto=format&fit=crop&w=900&q=70'], agent: { name: 'Century 21 Nova', title: 'Listing Agent' } },
+    { id: 'e_s4', address: 'Mucho Lote 1, 5ta Etapa', city: 'Guayaquil', state: 'Guayas', zip: '090101', price: 50000, beds: 3, baths: 2, sqft: 775, lot: 800, year: 2024, type: 'SINGLE_FAMILY', status: 'FOR_SALE', lat: -2.1000, lng: -79.9000, listedAt: Date.now() - 2 * 86400000, pricePerSqft: 65, zestimate: null, hoa: 20, subtype: 'House', description: '¡Tu nueva villa te espera en Mucho Lote 1, Guayaquil! Villa moderna con 3 dormitorios, 2 baños completos, cocina con anaqueles, sala y comedor integrados. Zona segura con cerramientos.', photos: ['https://images.unsplash.com/photo-1449844908441-8829872d2607?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1568605114967-8130f3a36994?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1570129477492-45c003edd2be?auto=format&fit=crop&w=900&q=70'], agent: { name: 'Tu Propiedad', title: 'Listing Agent' } },
+    { id: 'e_s5', address: 'Tumbaco sector El Arenal', city: 'Quito', state: 'Pichincha', zip: '170901', price: 140000, beds: 3, baths: 2.5, sqft: 1292, lot: 2045, year: 2019, type: 'SINGLE_FAMILY', status: 'FOR_SALE', lat: -0.2100, lng: -78.4100, listedAt: Date.now() - 5 * 86400000, pricePerSqft: 108, zestimate: null, hoa: 30, subtype: 'Duplex', description: 'Duplex for sale in Tumbaco. Features a garden, laundry area, internet/WiFi, underground water tank, and a courtyard. Pets allowed.', photos: ['https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=900&q=70'], agent: { name: 'Century 21', title: 'Listing Agent' } },
+    { id: 'e_s6', address: 'Sector Valle de Los Chillos', city: 'Quito', state: 'Pichincha', zip: '170801', price: 110000, beds: 3, baths: 2.5, sqft: 1507, lot: 861, year: 2025, type: 'SINGLE_FAMILY', status: 'FOR_SALE', lat: -0.3000, lng: -78.4500, listedAt: Date.now() - 8 * 86400000, pricePerSqft: 73, zestimate: null, hoa: 80, subtype: 'House', description: '3 floors, dining room, American style kitchen, social bathroom, 3 bedrooms, 2 full bathrooms, a very spacious third floor for study or TV room. Complex has 24-hour security, children’s park, lake, courts, and BBQ area.', photos: ['https://images.unsplash.com/photo-1605276374104-dee2a0ed3cd6?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1502005229762-cf1b2da7c5d6?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?auto=format&fit=crop&w=900&q=70'], agent: { name: 'Century 21 Elite Gold', title: 'Listing Agent' } },
+    { id: 'e_s7', address: 'La Viña Alta, Bellavista, Tumbaco', city: 'Quito', state: 'Pichincha', zip: '170902', price: 198000, beds: 3, baths: 3.5, sqft: 2002, lot: 2933, year: 2025, type: 'SINGLE_FAMILY', status: 'FOR_SALE', lat: -0.2200, lng: -78.4200, listedAt: Date.now() - 12 * 86400000, pricePerSqft: 99, zestimate: null, hoa: 60, subtype: 'House', description: 'Brand new homes for sale. Exclusive gated community features 9 homes with double security access. 3 bedrooms, each with its own full bathroom, living room with a beautiful view, gardens, heated pool, and communal BBQ area.', photos: ['https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1600573472592-401b489a3cdc?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1518780664697-55e3ad937233?auto=format&fit=crop&w=900&q=70'], agent: { name: 'Century 21 Elite', title: 'Listing Agent' } },
+    { id: 'e_s8', address: 'Zona Norte Miguel Burbano', city: 'Quito', state: 'Pichincha', zip: '170201', price: 345000, beds: 5, baths: 3, sqft: 4650, lot: 5759, year: 2010, type: 'SINGLE_FAMILY', status: 'FOR_SALE', lat: -0.1500, lng: -78.4900, listedAt: Date.now() - 20 * 86400000, pricePerSqft: 74, zestimate: null, hoa: 0, subtype: 'House', description: 'This house with 5 bedrooms and 3 bathrooms is located in Zona Norte, Pichincha. Property with city, garden, greenbelt, and mountain views. Land area of 535 m2 and a living space of 432 m2.', photos: ['https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1554995207-c18c203602cb?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1523217582562-09d0def993a6?auto=format&fit=crop&w=900&q=70'], agent: { name: 'Casterdep Servicios', title: 'Listing Agent' } },
+    { id: 'e_s9', address: 'San Juan, Centro Histórico', city: 'Quito', state: 'Pichincha', zip: '170401', price: 359000, beds: 6, baths: 5, sqft: 2314, lot: 4693, year: 1950, type: 'SINGLE_FAMILY', status: 'FOR_SALE', lat: -0.2200, lng: -78.5100, listedAt: Date.now() - 25 * 86400000, pricePerSqft: 155, zestimate: null, hoa: 0, subtype: 'House', description: 'This house with 6 bedrooms and 5 bathrooms is located in El Centro - Quito. Property with city view. Land area of 436 m2 and living space of 215 m2.', photos: ['https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=900&q=70'], agent: { name: 'Inmobiliaria360', title: 'Listing Agent' } },
+    { id: 'e_s10', address: 'Chiquintad (Near Cuenca)', city: 'Cuenca', state: 'Azuay', zip: '010150', price: 310000, beds: 3, baths: 2.5, sqft: 2500, lot: 5000, year: 2015, type: 'SINGLE_FAMILY', status: 'FOR_SALE', lat: -2.8500, lng: -79.0300, listedAt: Date.now() - 30 * 86400000, pricePerSqft: 124, zestimate: null, hoa: 0, subtype: 'House', description: 'Peaceful Mountain Retreat in Chiquintad, only 25 minutes from Cuenca, with endless views and a beautiful casita.', photos: ['https://images.unsplash.com/photo-1605276374104-dee2a0ed3cd6?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1502005229762-cf1b2da7c5d6?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?auto=format&fit=crop&w=900&q=70'], agent: { name: 'Realtor.com', title: 'Listing Agent' } }
+  ];
+
+  /* ============ ECUADOR RENTALS (10 Real Properties) ============ */
+  const ECU_RENTALS = [
+    { id: 'e_r1', address: 'Vía a la Costa, Km 23.5, Urbanización El Rosedal', city: 'Guayaquil', state: 'Guayas', zip: '090101', rent: 350, beds: 3, baths: 2, sqft: 893, lot: 968, year: 2025, type: 'SINGLE_FAMILY', status: 'FOR_RENT', lat: -2.2000, lng: -80.0000, listedAt: Date.now() - 5 * 86400000, leaseTerm: '12 months', description: 'Brand new 2-story house in El Rosedal Phase 1. Features a living room, dining room with access to the back patio, fully furnished kitchen, laundry area, 3 bedrooms, 2 bathrooms with tempered glass shower enclosures, and a parking space. Rent includes HOA fees.', photos: ['https://images.unsplash.com/photo-1568605114967-8130f3a36994?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1570129477492-45c003edd2be?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=900&q=70'], agent: { name: 'Century 21', title: 'Leasing Agent' } },
+    { id: 'e_r2', address: 'Mocoli Golf Club, Avenida Isla Mocolí', city: 'Samborondón', state: 'Guayas', zip: '092302', rent: 650, beds: 3, baths: 4, sqft: 1507, lot: null, year: 2010, type: 'SINGLE_FAMILY', status: 'FOR_RENT', lat: -2.1600, lng: -79.8800, listedAt: Date.now() - 10 * 86400000, leaseTerm: 'Unlimited', description: 'Precious villa fully furnished in Urbanización Cataluña. 3 bedrooms, 4 beds, 4 bathrooms. Includes split air conditioning, internet, cable, telephone, and access to 2 clubs with pools, courts, gym, and 24-hour security. Close to schools, banking zone, shopping centers, and restaurants.', photos: ['https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=900&q=70'], agent: { name: 'Rentola', title: 'Leasing Agent' } },
+    { id: 'e_r3', address: 'Nuevo Daule, Santa María de Casa Grande', city: 'Guayaquil', state: 'Guayas', zip: '090102', rent: 1100, beds: 4, baths: 6, sqft: 3757, lot: null, year: 2015, type: 'SINGLE_FAMILY', status: 'FOR_RENT', lat: -2.0500, lng: -79.9500, listedAt: Date.now() - 15 * 86400000, leaseTerm: 'Minimum 6 months', description: 'Beautiful home designed for people who like to spend time outdoors. Large patio area with private pool, jacuzzi, outdoor kitchen, covered porch. Huge kitchen with granite countertops. 4 bedrooms, each with ceiling fan and AC. 6 bathrooms. Two parking spaces.', photos: ['https://images.unsplash.com/photo-1605276374104-dee2a0ed3cd6?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1502005229762-cf1b2da7c5d6?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?auto=format&fit=crop&w=900&q=70'], agent: { name: 'Rentola', title: 'Leasing Agent' } },
+    { id: 'e_r4', address: 'Guayaquil (Centro)', city: 'Guayaquil', state: 'Guayas', zip: '090150', rent: 1400, beds: 4, baths: 3, sqft: 2013, lot: null, year: 2018, type: 'SINGLE_FAMILY', status: 'FOR_RENT', lat: -2.1900, lng: -79.8800, listedAt: Date.now() - 7 * 86400000, leaseTerm: 'Long term', description: 'This property is a 2,013 Sqft house with 4 bedrooms and 3 bathrooms, available for long-term rent.', photos: ['https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1600573472592-401b489a3cdc?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1518780664697-55e3ad937233?auto=format&fit=crop&w=900&q=70'], agent: { name: 'Rentola', title: 'Leasing Agent' } },
+    { id: 'e_r5', address: 'Guayaquil (Norte)', city: 'Guayaquil', state: 'Guayas', zip: '090201', rent: 750, beds: 5, baths: 3.5, sqft: 2153, lot: null, year: 2012, type: 'SINGLE_FAMILY', status: 'FOR_RENT', lat: -2.1200, lng: -79.9100, listedAt: Date.now() - 20 * 86400000, leaseTerm: 'Unlimited', description: '5-room house with 200 m² of living space. Rent includes HOA fees. Available ASAP.', photos: ['https://images.unsplash.com/photo-1449844908441-8829872d2607?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1568605114967-8130f3a36994?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1570129477492-45c003edd2be?auto=format&fit=crop&w=900&q=70'], agent: { name: 'Rentola', title: 'Leasing Agent' } },
+    { id: 'e_r6', address: 'Quito (Norte)', city: 'Quito', state: 'Pichincha', zip: '170201', rent: 1000, beds: 3, baths: 2.5, sqft: 1200, lot: null, year: 2018, type: 'CONDO', status: 'FOR_RENT', lat: -0.1200, lng: -78.4900, listedAt: Date.now() - 3 * 86400000, leaseTerm: '12 months', description: 'Department in the north of the capital with 3 bedrooms and a privileged view. Previously rented for $1,600, now available for $1,000.', photos: ['https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=900&q=70'], agent: { name: 'Ecuavisa', title: 'Leasing Agent' } },
+    { id: 'e_r7', address: 'Quito (Centro-Norte)', city: 'Quito', state: 'Pichincha', zip: '170501', rent: 500, beds: 2, baths: 1, sqft: 700, lot: null, year: 2015, type: 'CONDO', status: 'FOR_RENT', lat: -0.1800, lng: -78.4800, listedAt: Date.now() - 12 * 86400000, leaseTerm: '12 months', description: 'Average rental price for a 2-bedroom apartment in Quito is around $500 per month.', photos: ['https://images.unsplash.com/photo-1605276374104-dee2a0ed3cd6?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1502005229762-cf1b2da7c5d6?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?auto=format&fit=crop&w=900&q=70'], agent: { name: 'Local Market', title: 'Leasing Agent' } },
+    { id: 'e_r8', address: 'Quito (Sur)', city: 'Quito', state: 'Pichincha', zip: '170801', rent: 250, beds: 1, baths: 1, sqft: 450, lot: null, year: 2010, type: 'CONDO', status: 'FOR_RENT', lat: -0.2800, lng: -78.5300, listedAt: Date.now() - 8 * 86400000, leaseTerm: '12 months', description: 'Apartments in the southern extremes of Quito can be found starting from $200 per month.', photos: ['https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1600573472592-401b489a3cdc?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1518780664697-55e3ad937233?auto=format&fit=crop&w=900&q=70'], agent: { name: 'Local Market', title: 'Leasing Agent' } },
+    { id: 'e_r9', address: 'Cuenca (Centro)', city: 'Cuenca', state: 'Azuay', zip: '010101', rent: 430, beds: 2, baths: 2, sqft: 900, lot: null, year: 2015, type: 'CONDO', status: 'FOR_RENT', lat: -2.9000, lng: -79.0000, listedAt: Date.now() - 18 * 86400000, leaseTerm: '12 months', description: 'Furnished accommodation in a normal area of Cuenca.', photos: ['https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1554995207-c18c203602cb?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1523217582562-09d0def993a6?auto=format&fit=crop&w=900&q=70'], agent: { name: 'Expatistan', title: 'Leasing Agent' } },
+    { id: 'e_r10', address: 'Cumbayá (Quito)', city: 'Quito', state: 'Pichincha', zip: '170157', rent: 1200, beds: 3, baths: 2.5, sqft: 1500, lot: null, year: 2020, type: 'CONDO', status: 'FOR_RENT', lat: -0.2000, lng: -78.4300, listedAt: Date.now() - 22 * 86400000, leaseTerm: '12 months', description: 'Apartments in San Juan de Cumbayá, one of the most expensive sectors of Quito, cost on average $1,205 to $2,934 per month.', photos: ['https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=900&q=70','https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=900&q=70'], agent: { name: 'Properati', title: 'Leasing Agent' } }
   ];
 
   /* ------------------------------------------------------------------
-     STATE
+     STATE & UTILS
      ------------------------------------------------------------------ */
-  const SAVED_KEY = 'cme_saved_v5';
+  const SAVED_KEY = 'cme_saved_v7';
   const state = {
-    mode: 'sale', q: '', min: 0, max: 2000000,
+    mode: 'sale', region: 'usa', q: '', min: 0, max: 2000000,
     beds: '', baths: '', type: '', status: 'FOR_SALE',
-    sort: 'newest', savedOnly: false, shown: 12, pageSize: 12,
-    listings: [], rentals: [], loading: true, apiError: false
+    sort: 'newest', savedOnly: false, shown: 12, pageSize: 12
   };
 
   let saved = new Set();
   try { saved = new Set(JSON.parse(localStorage.getItem(SAVED_KEY) || '[]')); } catch (e) { saved = new Set(); }
   function persistSaved() { try { localStorage.setItem(SAVED_KEY, JSON.stringify([...saved])); } catch (e) {} }
 
-  /* ------------------------------------------------------------------
-     UTILITIES
-     ------------------------------------------------------------------ */
   const $ = (s, e = document) => e.querySelector(s);
   const $$ = (s, e = document) => [...e.querySelectorAll(s)];
   const esc = v => String(v == null ? '' : v).replace(/[&<>"']/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c]));
@@ -708,164 +741,34 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{ou
   const TYPE_LABEL = { SINGLE_FAMILY:'Single family', CONDO:'Condo', TOWNHOUSE:'Townhouse', MULTI_FAMILY:'Multi-family' };
   const STATUS_LABEL = { FOR_SALE:'For sale', FOR_RENT:'For rent', PENDING:'Pending', SOLD:'Sold' };
 
-  /* ------------------------------------------------------------------
-     DATA SOURCE
-     ------------------------------------------------------------------ */
-  function currentData() { return state.mode === 'sale' ? state.listings : state.rentals; }
+  function currentData() {
+    if (state.region === 'ecuador') return state.mode === 'sale' ? ECU_LISTINGS : ECU_RENTALS;
+    return state.mode === 'sale' ? USA_LISTINGS : USA_RENTALS;
+  }
   function priceOf(l) { return state.mode === 'sale' ? (l.price || 0) : (l.rent || 0); }
   function maxPriceForMode() { return state.mode === 'sale' ? 2000000 : 6000; }
-  function minPriceForMode() { return state.mode === 'sale' ? 0 : 500; }
+  function minPriceForMode() { return state.mode === 'sale' ? 0 : 200; }
 
   /* ------------------------------------------------------------------
-     API FETCH — Realtor.com via RapidAPI
-     ------------------------------------------------------------------ */
-  async function fetchListings(status, city = 'Austin', stateCode = 'TX') {
-    const url = `https://${CONFIG.RAPIDAPI_HOST}/properties/v3/list`;
-    const body = {
-      status: [status === 'FOR_SALE' ? 'for_sale' : status === 'FOR_RENT' ? 'for_rent' : 'recently_sold'],
-      city: city,
-      state_code: stateCode,
-      limit: 20,
-      offset: 0,
-      sort: { field: 'list_date', direction: 'desc' }
-    };
-
-    const response = await fetch(url, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-RapidAPI-Key': CONFIG.RAPIDAPI_KEY,
-        'X-RapidAPI-Host': CONFIG.RAPIDAPI_HOST
-      },
-      body: JSON.stringify(body)
-    });
-
-    if (!response.ok) throw new Error('API request failed: ' + response.status);
-    const data = await response.json();
-    const results = data?.data?.home_search?.results || [];
-    return results.map(item => normalizeListing(item, status === 'FOR_RENT' ? 'rent' : 'sale'));
-  }
-
-  function normalizeListing(item, mode) {
-    const isRent = mode === 'rent';
-    const address = item.location?.address || {};
-    const description = item.description || {};
-    const primaryPhoto = item.primary_photo;
-    const photos = item.photos || [];
-
-    const photoUrls = [];
-    if (primaryPhoto?.href) photoUrls.push(primaryPhoto.href);
-    photos.forEach(p => { if (p?.href && !photoUrls.includes(p.href)) photoUrls.push(p.href); });
-    while (photoUrls.length < 3) photoUrls.push(FALLBACK_IMAGES[photoUrls.length % FALLBACK_IMAGES.length]);
-
-    const price = isRent ? (item.list_price || 0) : (item.list_price || 0);
-    const beds = item.description?.beds ?? item.beds ?? 0;
-    const baths = item.description?.baths ?? item.baths ?? 0;
-    const sqft = item.description?.sqft ?? item.sqft ?? 0;
-
-    const propType = (item.description?.type || 'single_family').toUpperCase().replace(/ /g, '_');
-    const typeMap = { SINGLE_FAMILY:'SINGLE_FAMILY', CONDO:'CONDO', TOWNHOUSE:'TOWNHOUSE', MULTI_FAMILY:'MULTI_FAMILY', APARTMENT:'CONDO' };
-
-    return {
-      id: item.property_id || Math.random().toString(36).slice(2),
-      address: address.line || 'Address unavailable',
-      city: address.city || 'Unknown',
-      state: address.state_code || '',
-      zip: address.postal_code || '',
-      price: isRent ? null : price,
-      rent: isRent ? price : null,
-      beds, baths, sqft,
-      lot: item.description?.lot_sqft || null,
-      year: item.description?.year_built || null,
-      type: typeMap[propType] || 'SINGLE_FAMILY',
-      status: isRent ? 'FOR_RENT' : (item.status === 'for_sale' ? 'FOR_SALE' : item.status?.toUpperCase() || 'FOR_SALE'),
-      lat: item.location?.coordinates?.lat || null,
-      lng: item.location?.coordinates?.lon || null,
-      listedAt: item.list_date ? new Date(item.list_date).getTime() : Date.now(),
-      leaseTerm: isRent ? '12 months' : null,
-      pricePerSqft: sqft > 0 && price > 0 ? Math.round(price / sqft) : null,
-      zestimate: item.estimate?.estimate || null,
-      hoa: item.hoa?.fee || 0,
-      subtype: item.description?.sub_type || (isRent ? 'Rental' : 'Single Family'),
-      description: description.text || 'No description available for this property.',
-      photos: photoUrls,
-      agent: { name: item.agents?.[0]?.name || 'CME Partner', title: item.agents?.[0]?.title || 'Listing Agent' }
-    };
-  }
-
-  async function loadData() {
-    state.loading = true; state.apiError = false;
-    try {
-      const [sales, rentals] = await Promise.all([ fetchListings('FOR_SALE'), fetchListings('FOR_RENT') ]);
-      state.listings = sales; state.rentals = rentals; state.loading = false;
-      if (sales.length === 0) state.apiError = true;
-      render();
-      toast(`Loaded ${sales.length} for-sale and ${rentals.length} rental properties`);
-    } catch (err) {
-      console.error('API error:', err);
-      state.loading = false; state.apiError = true;
-      state.listings = getFallbackListings('sale');
-      state.rentals = getFallbackListings('rent');
-      render();
-      toast('Using offline demo data — add your RapidAPI key to fetch live listings');
-    }
-  }
-
-  function getFallbackListings(mode) {
-    const base = [
-      { id: 'f1', address: '1712 Alleghany Dr', city: 'Austin', state: 'TX', zip: '78741', price: 569900, rent: 2095, beds: 5, baths: 4, sqft: 1744, lot: 10019, year: 1968, type: 'SINGLE_FAMILY', lat: 30.2325, lng: -97.7215, photos: [FALLBACK_IMAGES[0], FALLBACK_IMAGES[1], FALLBACK_IMAGES[2]], agent: { name: 'Jordan Moorhead', title: 'Listing Agent' }, description: 'Remodeled 4-bed home with attached ADU.', listedAt: Date.now() - 21 * 86400000, status: 'FOR_SALE', leaseTerm: '12 months' },
-      { id: 'f2', address: '16101 Larustinus St', city: 'Austin', state: 'TX', zip: '78725', price: 328990, rent: 1895, beds: 3, baths: 2, sqft: 1499, lot: null, year: 2025, type: 'SINGLE_FAMILY', lat: 30.245, lng: -97.665, photos: [FALLBACK_IMAGES[3], FALLBACK_IMAGES[4], FALLBACK_IMAGES[5]], agent: { name: 'Starlight Homes', title: 'Builder' }, description: 'Newly built Athena plan — one-story, open concept.', listedAt: Date.now() - 16 * 86400000, status: 'FOR_SALE', leaseTerm: '12 months' },
-      { id: 'f3', address: '8037 Wallingford Ave N', city: 'Seattle', state: 'WA', zip: '98103', price: 699950, rent: 2695, beds: 2, baths: 2, sqft: 1117, lot: 649, year: 2026, type: 'SINGLE_FAMILY', lat: 47.6775, lng: -122.335, photos: [FALLBACK_IMAGES[6], FALLBACK_IMAGES[7], FALLBACK_IMAGES[0]], agent: { name: 'Daniel Eaton', title: 'Listing Agent' }, description: 'New construction blocks from Green Lake Park.', listedAt: Date.now() - 2 * 86400000, status: 'FOR_SALE', leaseTerm: '12 months' }
-    ];
-    return base.map(l => ({ ...l, rent: mode === 'rent' ? l.rent : null, price: mode === 'sale' ? l.price : null, status: mode === 'rent' ? 'FOR_RENT' : 'FOR_SALE' }));
-  }
-
-  /* ------------------------------------------------------------------
-     MAPBOX MAP
+     MAPBOX
      ------------------------------------------------------------------ */
   let map = null;
   const markers = [];
 
   function initMap() {
-    if (!CONFIG.MAPBOX_TOKEN || CONFIG.MAPBOX_TOKEN.includes('REPLACE') || CONFIG.MAPBOX_TOKEN.length < 50) {
-      console.warn('Mapbox token missing or invalid — map will not render.');
-      return;
-    }
-
+    if (!CONFIG.MAPBOX_TOKEN || CONFIG.MAPBOX_TOKEN.includes('...')) return;
     mapboxgl.accessToken = CONFIG.MAPBOX_TOKEN;
     map = new mapboxgl.Map({
-      container: 'map',
-      style: 'mapbox://styles/mapbox/streets-v12',
-      center: [-97.74, 30.27],
-      zoom: 11
+      container: 'map', style: 'mapbox://styles/mapbox/streets-v12',
+      center: [-97.74, 30.27], zoom: 4
     });
-
     map.addControl(new mapboxgl.NavigationControl({ showCompass: false }), 'bottom-right');
-
-    map.on('load', () => {
-      if (map.getLayer('building')) return;
-      const layers = map.getStyle().layers;
-      const labelLayer = layers.find(l => l.type === 'symbol' && l.layout?.['text-field']);
-      if (labelLayer) {
-        map.addLayer({
-          id: '3d-buildings', source: 'composite', 'source-layer': 'building',
-          filter: ['==', 'extrude', 'true'], type: 'fill-extrusion', minzoom: 14,
-          paint: {
-            'fill-extrusion-color': '#c5d1e0',
-            'fill-extrusion-height': ['get', 'height'],
-            'fill-extrusion-base': ['get', 'min_height'],
-            'fill-extrusion-opacity': 0.65
-          }
-        }, labelLayer.id);
-      }
-    });
   }
 
   function renderMapMarkers(list) {
     if (!map) return;
     markers.forEach(m => m.remove());
     markers.length = 0;
-
     const bounds = new mapboxgl.LngLatBounds();
     let hasCoords = false;
 
@@ -897,12 +800,8 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{ou
 
   function render() {
     currentResults = filtered();
-    renderHead();
-    renderGrid();
-    renderMapMarkers(currentResults);
-    syncSavedUI();
-    updateModeUI();
-    updateFilterBadge();
+    renderHead(); renderGrid(); renderMapMarkers(currentResults);
+    syncSavedUI(); updateModeUI(); updateFilterBadge();
   }
 
   function filtered() {
@@ -946,7 +845,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{ou
       title.textContent = 'Homes for rent';
     }
     const suffix = state.q ? ' matching “' + state.q + '”' : ' available right now';
-    sub.innerHTML = state.loading ? 'Loading live listings…' : '<b>' + total + '</b> ' + (total === 1 ? 'listing' : 'listings') + esc(suffix);
+    sub.innerHTML = '<b>' + total + '</b> ' + (total === 1 ? 'listing' : 'listings') + esc(suffix);
   }
 
   function cardHTML(l, index) {
@@ -962,9 +861,9 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{ou
     const metaLeft = isRent ? (l.leaseTerm || '12 mo lease') : (TYPE_LABEL[l.type] || l.subtype);
     const metaRight = isRent ? 'Listed ' + timeAgo(l.listedAt) : timeAgo(l.listedAt);
 
-    const photos = l.photos || FALLBACK_IMAGES;
+    const photos = l.photos || [];
     const slides = photos.map((src, i) =>
-      `<img src="${esc(src)}" alt="${esc(l.address)} photo ${i + 1}" loading="lazy" class="${i === 0 ? 'active' : ''}" onerror="this.onerror=null;this.src='${FALLBACK_IMAGES[i % FALLBACK_IMAGES.length]}'">`
+      `<img src="${esc(src)}" alt="${esc(l.address)} photo ${i + 1}" loading="lazy" class="${i === 0 ? 'active' : ''}">`
     ).join('');
 
     const dots = photos.map((_, i) => `<span class="${i === 0 ? 'active' : ''}" data-slide="${i}"></span>`).join('');
@@ -1004,9 +903,6 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{ou
   }
 
   function emptyHTML() {
-    if (state.loading) {
-      return `<div class="empty"><div class="empty-ico"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg></div><h3>Loading live listings…</h3><p>Fetching real properties and photos from the API.</p></div>`;
-    }
     if (state.savedOnly) {
       return `<div class="empty"><div class="empty-ico"><svg viewBox="0 0 24 24"><path d="M12 20.5s-7.4-4.6-9.2-8.9C1.4 8.1 3.5 4.8 6.9 4.8c2 0 3.5 1 4.4 2.3.9-1.3 2.4-2.3 4.4-2.3 3.4 0 5.5 3.3 4.1 6.8-1.8 4.3-9.2 8.9-9.2 8.9z"/></svg></div><h3>No saved homes yet</h3><p>Tap the heart icon on any listing and it will show up here.</p></div>`;
     }
@@ -1020,39 +916,26 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{ou
     bindSlideshows();
   }
 
-  /* ------------------------------------------------------------------
-     CARD SLIDESHOWS
-     ------------------------------------------------------------------ */
   function bindSlideshows() {
     $$('.card').forEach(card => {
       const imgs = $$('img', card);
       const dots = $$('.slideshow-dots span', card);
       let idx = 0;
-
       function show(i) {
         idx = (i + imgs.length) % imgs.length;
         imgs.forEach((img, j) => img.classList.toggle('active', j === idx));
         dots.forEach((d, j) => d.classList.toggle('active', j === idx));
       }
-
-      const next = $('[data-slide-next]', card);
-      const prev = $('[data-slide-prev]', card);
+      const next = $('[data-slide-next]', card), prev = $('[data-slide-prev]', card);
       if (next) next.addEventListener('click', e => { e.stopPropagation(); show(idx + 1); });
       if (prev) prev.addEventListener('click', e => { e.stopPropagation(); show(idx - 1); });
       dots.forEach((dot, i) => dot.addEventListener('click', e => { e.stopPropagation(); show(i); }));
-
       let hoverTimer;
-      card.addEventListener('mouseenter', () => {
-        if (imgs.length < 2) return;
-        hoverTimer = setInterval(() => show(idx + 1), 3200);
-      });
+      card.addEventListener('mouseenter', () => { if (imgs.length > 1) hoverTimer = setInterval(() => show(idx + 1), 3200); });
       card.addEventListener('mouseleave', () => clearInterval(hoverTimer));
     });
   }
 
-  /* ------------------------------------------------------------------
-     SAVED
-     ------------------------------------------------------------------ */
   function syncSavedUI() {
     $('#savedCount').textContent = saved.size;
     const nav = $('#navSavedCount');
@@ -1077,9 +960,6 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{ou
     toast(wasSaved ? 'Removed from saved' : 'Saved to your homes');
   }
 
-  /* ------------------------------------------------------------------
-     FILTER BADGE
-     ------------------------------------------------------------------ */
   function updateFilterBadge() {
     let count = 0;
     if (state.min > minPriceForMode() || state.max < maxPriceForMode()) count++;
@@ -1093,11 +973,10 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{ou
   }
 
   /* ------------------------------------------------------------------
-     DRAWER with HERO SLIDESHOW
+     DRAWER
      ------------------------------------------------------------------ */
   const drawer = $('#drawer'), scrim = $('#scrim');
-  let activeDetailId = null;
-  let heroIndex = 0;
+  let activeDetailId = null, heroIndex = 0;
 
   function factRow(label, value) {
     if (value == null || value === '' || value === 0) return '';
@@ -1111,10 +990,10 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{ou
     const est = isRent ? null : Math.round(monthlyPayment(l.price, 20, 6.5));
     const badgeLabel = isRent ? 'For rent' : STATUS_LABEL[l.status];
     const badgeClass = isRent ? 'rent' : 'brand';
-    const photos = l.photos || FALLBACK_IMAGES;
+    const photos = l.photos || [];
 
     const heroSlides = photos.map((src, i) =>
-      `<img src="${esc(src)}" alt="${esc(l.address)} photo ${i + 1}" class="${i === 0 ? 'active' : ''}" onerror="this.onerror=null;this.src='${FALLBACK_IMAGES[i % FALLBACK_IMAGES.length]}'">`
+      `<img src="${esc(src)}" alt="${esc(l.address)} photo ${i + 1}" class="${i === 0 ? 'active' : ''}">`
     ).join('');
 
     const dots = photos.map((_, i) => `<span class="${i === 0 ? 'active' : ''}" data-hero-slide="${i}"></span>`).join('');
@@ -1183,10 +1062,8 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{ou
   function similarFor(l) {
     const p = priceOf(l);
     const lo = p * 0.55, hi = p * 1.45;
-    return currentData()
-      .filter(x => x.id !== l.id && x.city === l.city && priceOf(x) >= lo && priceOf(x) <= hi)
-      .sort((a, b) => Math.abs(priceOf(a) - p) - Math.abs(priceOf(b) - p))
-      .slice(0, 4);
+    return currentData().filter(x => x.id !== l.id && x.city === l.city && priceOf(x) >= lo && priceOf(x) <= hi)
+      .sort((a, b) => Math.abs(priceOf(a) - p) - Math.abs(priceOf(b) - p)).slice(0, 4);
   }
 
   function renderSimilar(l) {
@@ -1196,31 +1073,25 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{ou
     grid.innerHTML = items.map(x => {
       const isR = state.mode === 'rent';
       const p = isR ? '$' + fmtNum(x.rent) + '/mo' : fmtUSD(x.price);
-      const photo = (x.photos && x.photos[0]) || FALLBACK_IMAGES[0];
+      const photo = (x.photos && x.photos[0]) || '';
       return `<div class="mini" data-id="${x.id}" role="button" tabindex="0">
-        <img src="${esc(photo)}" alt="${esc(x.address)}" loading="lazy" onerror="this.onerror=null;this.src='${FALLBACK_IMAGES[0]}'">
-        <div class="mini-body">
-          <div class="mini-price">${p}</div>
-          <div class="mini-specs">${x.beds === 0 ? 'Studio' : x.beds + ' bd'} · ${x.baths} ba · ${fmtNum(x.sqft)} sqft</div>
-          <div class="mini-addr">${esc(x.address)}</div>
-        </div>
+        <img src="${esc(photo)}" alt="${esc(x.address)}" loading="lazy">
+        <div class="mini-body"><div class="mini-price">${p}</div>
+        <div class="mini-specs">${x.beds === 0 ? 'Studio' : x.beds + ' bd'} · ${x.baths} ba · ${fmtNum(x.sqft)} sqft</div>
+        <div class="mini-addr">${esc(x.address)}</div></div>
       </div>`;
     }).join('');
   }
 
   function bindHeroSlideshow() {
-    const imgs = $$('.drawer-hero img');
-    const dots = $$('.hero-dots span');
+    const imgs = $$('.drawer-hero img'), dots = $$('.hero-dots span');
     heroIndex = 0;
-
     function show(i) {
       heroIndex = (i + imgs.length) % imgs.length;
       imgs.forEach((img, j) => img.classList.toggle('active', j === heroIndex));
       dots.forEach((d, j) => d.classList.toggle('active', j === heroIndex));
     }
-
-    const next = $('[data-hero-next]');
-    const prev = $('[data-hero-prev]');
+    const next = $('[data-hero-next]'), prev = $('[data-hero-prev]');
     if (next) next.addEventListener('click', e => { e.stopPropagation(); show(heroIndex + 1); });
     if (prev) prev.addEventListener('click', e => { e.stopPropagation(); show(heroIndex - 1); });
     dots.forEach((dot, i) => dot.addEventListener('click', e => { e.stopPropagation(); show(i); }));
@@ -1231,21 +1102,16 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{ou
     if (!listing) return;
     activeDetailId = id;
     drawer.innerHTML = detailHTML(listing);
-    drawer.classList.add('open');
-    drawer.setAttribute('aria-hidden', 'false');
-    drawer.scrollTop = 0;
+    drawer.classList.add('open'); drawer.setAttribute('aria-hidden', 'false'); drawer.scrollTop = 0;
     scrim.classList.add('show');
     if (state.mode === 'sale') bindCalculator(listing.price);
-    renderSimilar(listing);
-    bindHeroSlideshow();
+    renderSimilar(listing); bindHeroSlideshow();
     const closeBtn = $('#closeDrawer'); if (closeBtn) closeBtn.focus({ preventScroll: true });
   }
 
   function closeDrawer() {
     activeDetailId = null;
-    drawer.classList.remove('open');
-    drawer.setAttribute('aria-hidden', 'true');
-    scrim.classList.remove('show');
+    drawer.classList.remove('open'); drawer.setAttribute('aria-hidden', 'true'); scrim.classList.remove('show');
   }
 
   function bindCalculator(price) {
@@ -1256,32 +1122,20 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{ou
       const r = Math.min(Math.max(parseFloat(rate.value) || 0, 0), 15);
       out.textContent = fmtUSD(Math.round(monthlyPayment(price, d, r)));
     };
-    down.addEventListener('input', update);
-    rate.addEventListener('input', update);
+    down.addEventListener('input', update); rate.addEventListener('input', update);
   }
 
-  /* ------------------------------------------------------------------
-     TOAST
-     ------------------------------------------------------------------ */
   let toastTimer = null;
   function toast(msg) {
-    const el = $('#toast');
-    $('#toastMsg').textContent = msg;
-    el.classList.add('show');
-    clearTimeout(toastTimer);
+    const el = $('#toast'); $('#toastMsg').textContent = msg;
+    el.classList.add('show'); clearTimeout(toastTimer);
     toastTimer = setTimeout(() => el.classList.remove('show'), 2600);
   }
 
-  /* ------------------------------------------------------------------
-     MOBILE PANELS
-     ------------------------------------------------------------------ */
   const filtersPanel = $('#filters');
   function openFilters() { filtersPanel.classList.add('open'); scrim.classList.add('show'); }
   function closeFilters() { filtersPanel.classList.remove('open'); if (!drawer.classList.contains('open')) scrim.classList.remove('show'); }
 
-  /* ------------------------------------------------------------------
-     MODE UI
-     ------------------------------------------------------------------ */
   function updateModeUI() {
     const isRent = state.mode === 'rent';
     $('#statusSection').style.display = isRent ? 'none' : '';
@@ -1290,8 +1144,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{ou
     const minSlider = $('#priceMin'), maxSlider = $('#priceMax');
     minSlider.min = minPriceForMode(); maxSlider.min = minPriceForMode();
     minSlider.max = maxPriceForMode(); maxSlider.max = maxPriceForMode();
-    minSlider.step = isRent ? 50 : 25000;
-    maxSlider.step = isRent ? 50 : 25000;
+    minSlider.step = isRent ? 50 : 25000; maxSlider.step = isRent ? 50 : 25000;
     minSlider.value = minPriceForMode(); maxSlider.value = maxPriceForMode();
     state.min = minPriceForMode(); state.max = maxPriceForMode();
     updatePriceDisplay();
@@ -1311,26 +1164,28 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{ou
       : (max >= maxPriceForMode() ? '$2M+' : shortPrice(max));
     const minPct = ((min - minPriceForMode()) / (maxPriceForMode() - minPriceForMode())) * 100;
     const maxPct = ((max - minPriceForMode()) / (maxPriceForMode() - minPriceForMode())) * 100;
-    $('#rangeFill').style.left = minPct + '%';
-    $('#rangeFill').style.right = (100 - maxPct) + '%';
+    $('#rangeFill').style.left = minPct + '%'; $('#rangeFill').style.right = (100 - maxPct) + '%';
   }
 
-  /* ------------------------------------------------------------------
-     EVENTS
-     ------------------------------------------------------------------ */
   function bindEvents() {
     $$('.mode-toggle button').forEach(btn => {
       btn.addEventListener('click', () => {
         if (state.mode === btn.dataset.mode) return;
-        state.mode = btn.dataset.mode;
-        state.savedOnly = false;
+        state.mode = btn.dataset.mode; state.savedOnly = false;
         state.q = ''; $('#searchInput').value = '';
         state.beds = ''; state.baths = ''; state.type = '';
         state.status = state.mode === 'sale' ? 'FOR_SALE' : '';
-        $$('.chip-row').forEach(row => {
-          $$('.chip', row).forEach(c => c.classList.toggle('active', c.dataset.val === (row.dataset.filter === 'status' ? 'FOR_SALE' : '')));
-        });
-        updateModeUI();
+        $$('.chip-row').forEach(row => { $$('.chip', row).forEach(c => c.classList.toggle('active', c.dataset.val === (row.dataset.filter === 'status' ? 'FOR_SALE' : ''))); });
+        updateModeUI(); render();
+      });
+    });
+
+    $$('.region-toggle button').forEach(btn => {
+      btn.addEventListener('click', () => {
+        if (state.region === btn.dataset.region) return;
+        state.region = btn.dataset.region; state.savedOnly = false;
+        $$('.region-toggle button').forEach(b => b.classList.toggle('active', b.dataset.region === state.region));
+        state.shown = state.pageSize;
         render();
       });
     });
@@ -1349,62 +1204,37 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{ou
 
     $$('.chip-row').forEach(row => {
       row.addEventListener('click', e => {
-        const chip = e.target.closest('.chip');
-        if (!chip) return;
-        $$('.chip', row).forEach(c => c.classList.remove('active'));
-        chip.classList.add('active');
-        state[row.dataset.filter] = chip.dataset.val;
-        state.savedOnly = false;
-        render();
+        const chip = e.target.closest('.chip'); if (!chip) return;
+        $$('.chip', row).forEach(c => c.classList.remove('active')); chip.classList.add('active');
+        state[row.dataset.filter] = chip.dataset.val; state.savedOnly = false; render();
       });
     });
 
-    $('#searchForm').addEventListener('submit', e => {
-      e.preventDefault(); state.q = $('#searchInput').value; state.savedOnly = false; render(); $('#resultsPane').scrollTop = 0;
-    });
-    $('#searchInput').addEventListener('input', debounce(function () {
-      const v = this.value; if (v === state.q) return;
-      state.q = v; state.savedOnly = false; render();
-    }, 320));
+    $('#searchForm').addEventListener('submit', e => { e.preventDefault(); state.q = $('#searchInput').value; state.savedOnly = false; render(); $('#resultsPane').scrollTop = 0; });
+    $('#searchInput').addEventListener('input', debounce(function () { const v = this.value; if (v === state.q) return; state.q = v; state.savedOnly = false; render(); }, 320));
 
-    $('#savedBtn').addEventListener('click', () => {
-      state.savedOnly = !state.savedOnly; render();
-      if (window.innerWidth <= 1000) document.body.classList.remove('show-map');
-    });
-    $('#navSaved').addEventListener('click', () => {
-      state.savedOnly = !state.savedOnly; render();
-      document.body.classList.remove('show-map');
-      $$('.view-toggle button').forEach(b => b.classList.toggle('active', b.dataset.view === 'list'));
-      $('#navMap').classList.remove('active');
-    });
-
+    $('#savedBtn').addEventListener('click', () => { state.savedOnly = !state.savedOnly; render(); if (window.innerWidth <= 1000) document.body.classList.remove('show-map'); });
+    $('#navSaved').addEventListener('click', () => { state.savedOnly = !state.savedOnly; render(); document.body.classList.remove('show-map'); $$('.view-toggle button').forEach(b => b.classList.toggle('active', b.dataset.view === 'list')); $('#navMap').classList.remove('active'); });
     $('#sortSelect').addEventListener('change', e => { state.sort = e.target.value; render(); });
 
     $('#resetBtn').addEventListener('click', () => {
       state.q = ''; $('#searchInput').value = '';
-      state.beds = ''; state.baths = ''; state.type = '';
-      state.status = state.mode === 'sale' ? 'FOR_SALE' : '';
-      state.savedOnly = false;
-      state.sort = 'newest'; $('#sortSelect').value = 'newest';
-      $$('.chip-row').forEach(row => {
-        $$('.chip', row).forEach(c => c.classList.toggle('active', c.dataset.val === (row.dataset.filter === 'status' ? 'FOR_SALE' : '')));
-      });
+      state.beds = ''; state.baths = ''; state.type = ''; state.status = state.mode === 'sale' ? 'FOR_SALE' : '';
+      state.savedOnly = false; state.sort = 'newest'; $('#sortSelect').value = 'newest';
+      $$('.chip-row').forEach(row => { $$('.chip', row).forEach(c => c.classList.toggle('active', c.dataset.val === (row.dataset.filter === 'status' ? 'FOR_SALE' : ''))); });
       minSlider.value = minPriceForMode(); maxSlider.value = maxPriceForMode();
       state.min = minPriceForMode(); state.max = maxPriceForMode();
       updatePriceDisplay(); render(); toast('Filters cleared');
     });
 
     $('#moreBtn').addEventListener('click', () => { state.shown += state.pageSize; renderGrid(); });
-    $('#filterBtn').addEventListener('click', openFilters);
-    $('#navFilters').addEventListener('click', openFilters);
+    $('#filterBtn').addEventListener('click', openFilters); $('#navFilters').addEventListener('click', openFilters);
 
     $$('.view-toggle button').forEach(btn => {
       btn.addEventListener('click', () => {
-        $$('.view-toggle button').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
+        $$('.view-toggle button').forEach(b => b.classList.remove('active')); btn.classList.add('active');
         const showMap = btn.dataset.view === 'map';
-        document.body.classList.toggle('show-map', showMap);
-        $('#navMap').classList.toggle('active', showMap);
+        document.body.classList.toggle('show-map', showMap); $('#navMap').classList.toggle('active', showMap);
         if (showMap && map) setTimeout(() => map.resize(), 60);
       });
     });
@@ -1415,10 +1245,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{ou
       if (isMap && map) setTimeout(() => map.resize(), 60);
     });
 
-    scrim.addEventListener('click', () => {
-      if (drawer.classList.contains('open')) closeDrawer();
-      else closeFilters();
-    });
+    scrim.addEventListener('click', () => { if (drawer.classList.contains('open')) closeDrawer(); else closeFilters(); });
 
     document.addEventListener('click', e => {
       if (e.target.closest('#closeDrawer')) { closeDrawer(); return; }
@@ -1436,24 +1263,13 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{ou
         if (filtersPanel.classList.contains('open')) { closeFilters(); return; }
         return;
       }
-      if ((e.key === 'Enter' || e.key === ' ') && e.target.matches('.card[data-id], .mini[data-id]')) {
-        e.preventDefault(); openDetail(e.target.dataset.id);
-      }
+      if ((e.key === 'Enter' || e.key === ' ') && e.target.matches('.card[data-id], .mini[data-id]')) { e.preventDefault(); openDetail(e.target.dataset.id); }
     });
 
     window.addEventListener('resize', debounce(() => { if (map) map.resize(); }, 180));
   }
 
-  /* ------------------------------------------------------------------
-     BOOT
-     ------------------------------------------------------------------ */
-  function boot() {
-    initMap();
-    bindEvents();
-    updateModeUI();
-    loadData();
-  }
-
+  function boot() { initMap(); bindEvents(); updateModeUI(); render(); }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot); else boot();
 })();
 </script>
