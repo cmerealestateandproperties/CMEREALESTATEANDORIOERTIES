@@ -2,526 +2,651 @@
 <html lang="en">
 <head>
 <meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#0b5fff" />
 <title>CME Real Estate and Properties — Buy or Rent Your Next Home</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap" rel="stylesheet">
+<link href="https://api.mapbox.com/mapbox-gl-js/v3.5.1/mapbox-gl.css" rel="stylesheet" />
+<script src="https://api.mapbox.com/mapbox-gl-js/v3.5.1/mapbox-gl.js"></script>
 
 <style>
 /* ============================================================
    DESIGN TOKENS
    ============================================================ */
 :root{
-  --ink:#0d1b2a;
-  --ink-2:#33465c;
-  --muted:#6b7a8d;
-  --line:#e6eaf0;
-  --line-2:#eef1f6;
-  --bg:#f6f8fb;
+  --ink:#0a1628;
+  --ink-2:#2b3a4f;
+  --muted:#65748a;
+  --line:#e7ecf3;
+  --line-2:#eff3f8;
+  --bg:#f5f7fb;
   --card:#ffffff;
   --brand:#0b5fff;
-  --brand-dark:#0849cc;
-  --brand-soft:#e8f0ff;
-  --green:#0e9f6e;
-  --radius:16px;
-  --radius-sm:10px;
-  --shadow-sm:0 1px 2px rgba(13,27,42,.05), 0 1px 3px rgba(13,27,42,.05);
-  --shadow-md:0 10px 30px rgba(13,27,42,.12);
-  --shadow-lg:0 24px 60px rgba(13,27,42,.20);
-  --header-h:72px;
+  --brand-2:#3b82f6;
+  --brand-dark:#0846d4;
+  --brand-soft:#eaf1ff;
+  --brand-glow:rgba(11,95,255,.24);
+  --accent:#0e9f6e;
+  --accent-soft:#e6f7ef;
+  --whatsapp:#25D366;
+  --danger:#e8453c;
+  --radius-xl:22px;
+  --radius-lg:16px;
+  --radius-md:12px;
+  --shadow-xs:0 1px 2px rgba(10,22,40,.04),0 1px 3px rgba(10,22,40,.06);
+  --shadow-sm:0 2px 6px rgba(10,22,40,.05),0 4px 14px rgba(10,22,40,.04);
+  --shadow-md:0 6px 20px rgba(10,22,40,.09),0 2px 6px rgba(10,22,40,.05);
+  --shadow-lg:0 24px 60px rgba(10,22,40,.16),0 6px 20px rgba(10,22,40,.08);
+  --shadow-xl:0 32px 80px rgba(10,22,40,.22);
+  --shadow-brand:0 12px 32px rgba(11,95,255,.32);
+  --header-h:76px;
+  --serif:'Fraunces',Georgia,serif;
 }
 
 *{box-sizing:border-box}
 html,body{height:100%}
 body{
-  margin:0;
-  font-family:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
-  font-size:15px;
-  line-height:1.45;
-  color:var(--ink);
-  background:var(--bg);
-  -webkit-font-smoothing:antialiased;
-  text-rendering:optimizeLegibility;
+  margin:0;font-family:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+  font-size:15px;line-height:1.5;color:var(--ink);background:var(--bg);
+  -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;text-rendering:optimizeLegibility;
 }
 img{display:block;max-width:100%}
-button{font:inherit;color:inherit;cursor:pointer;border:0;background:none}
+button{font:inherit;color:inherit;cursor:pointer;border:0;background:none;padding:0}
 input,select{font:inherit;color:inherit}
 a{color:inherit;text-decoration:none}
 ::selection{background:var(--brand);color:#fff}
+[hidden]{display:none !important}
+button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--brand);outline-offset:2px;border-radius:8px}
 
 .results::-webkit-scrollbar,.drawer::-webkit-scrollbar,.filters::-webkit-scrollbar{width:10px}
-.results::-webkit-scrollbar-thumb,.drawer::-webkit-scrollbar-thumb,
-.filters::-webkit-scrollbar-thumb{
-  background:#d3dae3;border-radius:99px;border:3px solid transparent;background-clip:content-box;
-}
+.results::-webkit-scrollbar-thumb,.drawer::-webkit-scrollbar-thumb,.filters::-webkit-scrollbar-thumb{background:#d3dae3;border-radius:99px;border:3px solid transparent;background-clip:content-box}
 
 /* ============================================================
-   TOP BAR
+   HEADER
    ============================================================ */
 .topbar{
-  position:sticky;top:0;z-index:800;
-  height:var(--header-h);
-  display:flex;align-items:center;gap:18px;
-  padding:0 22px;
-  background:rgba(255,255,255,.92);
-  backdrop-filter:saturate(180%) blur(14px);
-  -webkit-backdrop-filter:saturate(180%) blur(14px);
-  border-bottom:1px solid var(--line);
+  position:sticky;top:0;z-index:800;height:var(--header-h);
+  display:flex;align-items:center;gap:20px;padding:0 28px;
+  background:rgba(255,255,255,.82);backdrop-filter:saturate(180%) blur(20px);
+  -webkit-backdrop-filter:saturate(180%) blur(20px);border-bottom:1px solid var(--line);
 }
-
-.brand{display:flex;align-items:center;gap:10px;flex:0 0 auto}
+.brand{display:flex;align-items:center;gap:11px;flex:0 0 auto}
 .brand-mark{
-  width:34px;height:34px;border-radius:10px;display:grid;place-items:center;
-  background:linear-gradient(140deg,#2f7bff,#0b5fff 55%,#0640b5);
-  box-shadow:0 4px 12px rgba(11,95,255,.32);
-  flex:0 0 auto;
+  width:38px;height:38px;border-radius:12px;display:grid;place-items:center;
+  background:linear-gradient(135deg,#3b82f6 0%,#0b5fff 55%,#0846d4 100%);
+  box-shadow:0 8px 20px rgba(11,95,255,.30),inset 0 1px 0 rgba(255,255,255,.25);
+  position:relative;overflow:hidden;flex:0 0 auto;
 }
-.brand-mark svg{width:19px;height:19px;fill:#fff}
-.brand-text{display:flex;flex-direction:column;line-height:1.05;min-width:0}
-.brand-name{font-size:19px;font-weight:800;letter-spacing:-.03em;color:var(--ink);white-space:nowrap}
-.brand-sub{font-size:9.5px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--brand);white-space:nowrap;margin-top:2px}
+.brand-mark::after{content:"";position:absolute;inset:0;background:linear-gradient(160deg,transparent 40%,rgba(255,255,255,.16));pointer-events:none}
+.brand-mark svg{width:20px;height:20px;fill:#fff;position:relative;z-index:1}
+.brand-text{display:flex;flex-direction:column;line-height:1.1;min-width:0}
+.brand-name{font-family:var(--serif);font-size:21px;font-weight:700;letter-spacing:-.02em;color:var(--ink);white-space:nowrap}
+.brand-sub{font-size:9.5px;font-weight:800;letter-spacing:.11em;text-transform:uppercase;color:var(--brand);white-space:nowrap;margin-top:3px}
 
-/* Mode toggle (Buy / Rent) */
-.mode-toggle{display:flex;gap:2px;padding:4px;background:#f1f4f8;border-radius:999px;flex:0 0 auto}
-.mode-toggle button{
-  padding:8px 18px;border-radius:999px;font-size:13.5px;font-weight:700;
-  color:var(--muted);transition:background .16s ease,color .16s ease,box-shadow .16s ease;
-}
-.mode-toggle button.active{background:#fff;color:var(--ink);box-shadow:var(--shadow-sm)}
+.mode-toggle{display:flex;position:relative;flex:0 0 auto;padding:4px;background:#eef2f8;border-radius:999px;box-shadow:inset 0 1px 3px rgba(10,22,40,.06)}
+.mode-toggle::before{content:"";position:absolute;top:4px;bottom:4px;left:4px;width:calc(50% - 4px);background:#fff;border-radius:999px;box-shadow:0 2px 8px rgba(10,22,40,.12);transition:transform .32s cubic-bezier(.22,.9,.3,1)}
+.mode-toggle[data-mode="rent"]::before{transform:translateX(100%)}
+.mode-toggle button{position:relative;z-index:1;min-width:74px;padding:8px 18px;border-radius:999px;font-size:13.5px;font-weight:700;color:var(--muted);transition:color .22s ease}
+.mode-toggle button.active{color:var(--ink)}
 
-.searchbar{position:relative;flex:1 1 auto;max-width:560px;min-width:0}
-.searchbar svg{position:absolute;left:16px;top:50%;transform:translateY(-50%);width:17px;height:17px;stroke:#8a97a8;fill:none;stroke-width:2;pointer-events:none}
-.searchbar input{
-  width:100%;height:44px;padding:0 18px 0 44px;border:1px solid transparent;border-radius:999px;
-  background:#f1f4f8;font-size:15px;font-weight:500;outline:none;
-  transition:background .18s ease, box-shadow .18s ease, border-color .18s ease;
-}
+.searchbar{position:relative;flex:1 1 auto;max-width:600px;min-width:0}
+.searchbar>svg{position:absolute;left:18px;top:50%;transform:translateY(-50%);width:18px;height:18px;stroke:#8a97a8;fill:none;stroke-width:2;pointer-events:none}
+.searchbar input{width:100%;height:46px;padding:0 20px 0 48px;border:1.5px solid transparent;border-radius:999px;background:#eff3f8;font-size:14.5px;font-weight:500;outline:none;transition:background .18s ease,box-shadow .18s ease,border-color .18s ease}
 .searchbar input::placeholder{color:#8a97a8;font-weight:500}
-.searchbar input:focus{background:#fff;border-color:var(--brand);box-shadow:0 0 0 4px rgba(11,95,255,.13)}
+.searchbar input:focus{background:#fff;border-color:var(--brand);box-shadow:0 0 0 4px rgba(11,95,255,.14)}
 
-.top-actions{display:flex;align-items:center;gap:8px;margin-left:auto}
-.nav-link{padding:9px 13px;border-radius:999px;font-size:14px;font-weight:600;color:var(--ink-2)}
-.nav-link:hover{background:#f1f4f8;color:var(--ink)}
+.top-actions{display:flex;align-items:center;gap:6px;margin-left:auto}
+.nav-link{padding:9px 14px;border-radius:999px;font-size:13.5px;font-weight:600;color:var(--ink-2);transition:background .16s ease,color .16s ease}
+.nav-link:hover{background:#eff3f8;color:var(--ink)}
 .nav-link.dim{color:var(--muted)}
 
-.btn-saved{
-  display:inline-flex;align-items:center;gap:8px;height:40px;padding:0 15px;border-radius:999px;
-  border:1px solid var(--line);background:#fff;font-size:14px;font-weight:600;
-  transition:border-color .16s ease,background .16s ease,color .16s ease;
-}
-.btn-saved svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.9;color:#96a3b3}
-.btn-saved:hover{border-color:#cfd8e3;background:#fbfcfe}
-.btn-saved.active{background:var(--brand);border-color:var(--brand);color:#fff}
+.btn-saved{display:inline-flex;align-items:center;gap:9px;height:42px;padding:0 16px 0 14px;border-radius:999px;border:1.5px solid var(--line);background:#fff;font-size:13.5px;font-weight:700;transition:border-color .18s ease,background .18s ease,color .18s ease,box-shadow .18s ease}
+.btn-saved svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2;color:#94a3b5;transition:.18s}
+.btn-saved:hover{border-color:#cfd8e3;background:#fbfcfe;box-shadow:var(--shadow-xs)}
+.btn-saved.active{background:linear-gradient(135deg,#3b82f6,#0b5fff);border-color:transparent;color:#fff;box-shadow:var(--shadow-brand)}
 .btn-saved.active svg{fill:#fff;stroke:#fff;color:#fff}
-.btn-saved .count{min-width:20px;height:20px;padding:0 6px;border-radius:999px;display:inline-grid;place-items:center;font-size:12px;font-weight:700;background:#eef1f6;color:var(--ink-2)}
+.btn-saved .count{min-width:22px;height:22px;padding:0 7px;border-radius:999px;display:inline-grid;place-items:center;font-size:11.5px;font-weight:800;background:#eff3f8;color:var(--ink-2);transition:background .18s ease,color .18s ease}
 .btn-saved.active .count{background:rgba(255,255,255,.25);color:#fff}
 
-.btn-filter{display:none;align-items:center;gap:7px;height:40px;padding:0 15px;border-radius:999px;border:1px solid var(--line);background:#fff;font-size:14px;font-weight:600}
+.btn-filter{display:none;align-items:center;gap:8px;height:42px;padding:0 16px;border-radius:999px;border:1.5px solid var(--line);background:#fff;font-size:13.5px;font-weight:700;position:relative}
 .btn-filter svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2}
+.btn-filter .badge{position:absolute;top:-6px;right:-6px;min-width:20px;height:20px;padding:0 6px;border-radius:999px;display:grid;place-items:center;font-size:11px;font-weight:800;background:var(--brand);color:#fff;box-shadow:0 2px 6px var(--brand-glow);transform:scale(0);transition:transform .2s cubic-bezier(.34,1.56,.64,1)}
+.btn-filter .badge.show{transform:scale(1)}
 
 /* ============================================================
    APP LAYOUT
    ============================================================ */
-.app{display:grid;grid-template-columns:270px minmax(0,1fr) minmax(340px,44%);height:calc(100vh - var(--header-h))}
+.app{display:grid;grid-template-columns:296px minmax(0,1fr) minmax(380px,42%);height:calc(100vh - var(--header-h))}
 
-.filters{padding:22px 18px 40px;background:#fff;border-right:1px solid var(--line);overflow-y:auto}
-.filters-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
-.filters-head h2{margin:0;font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
-.link-reset{font-size:13px;font-weight:600;color:var(--brand);padding:4px 6px;border-radius:6px}
+.filters{padding:26px 22px 100px;background:#fff;border-right:1px solid var(--line);overflow-y:auto}
+.filters-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:22px}
+.filters-head h2{margin:0;font-size:11.5px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.link-reset{font-size:12.5px;font-weight:700;color:var(--brand);padding:6px 10px;border-radius:8px;transition:background .16s ease}
 .link-reset:hover{background:var(--brand-soft)}
 
-.field{display:block;margin-bottom:16px}
-.field > span{display:block;margin-bottom:7px;font-size:12.5px;font-weight:600;color:var(--ink-2)}
-.select-wrap{position:relative}
-.select-wrap::after{content:"";position:absolute;right:13px;top:50%;width:8px;height:8px;margin-top:-5px;border-right:2px solid #8a97a8;border-bottom:2px solid #8a97a8;transform:rotate(45deg);pointer-events:none}
-.field select{
-  width:100%;height:42px;padding:0 34px 0 13px;border:1px solid var(--line);border-radius:var(--radius-sm);
-  background:#fff;font-size:14px;font-weight:500;outline:none;appearance:none;-webkit-appearance:none;
-}
-.field select:focus{border-color:var(--brand);box-shadow:0 0 0 3px rgba(11,95,255,.12)}
+.filter-section{padding:20px 0;border-bottom:1px solid var(--line-2)}
+.filter-section:first-of-type{padding-top:0}
+.filter-section:last-of-type{border-bottom:0}
+.filter-section h3{margin:0 0 14px;font-size:13px;font-weight:700;color:var(--ink)}
 
-.side-card{margin-top:22px;padding:16px;border-radius:var(--radius);background:linear-gradient(160deg,#f4f8ff,#eef4ff);border:1px solid #dde9ff}
-.side-card h3{margin:0 0 4px;font-size:14px;font-weight:700}
-.side-card p{margin:0 0 12px;font-size:12.5px;color:var(--muted);line-height:1.5}
-.side-card button{width:100%;height:38px;border-radius:9px;background:var(--brand);color:#fff;font-size:13.5px;font-weight:600}
+.price-display{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;font-size:13px;font-weight:700;color:var(--ink-2);font-variant-numeric:tabular-nums}
+.price-display .val{padding:4px 10px;background:var(--brand-soft);border-radius:8px;color:var(--brand-dark);font-size:12.5px}
 
-.results{overflow-y:auto;padding:0 24px 70px;scroll-behavior:smooth}
-.results-head{
-  position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-content:space-between;gap:16px;
-  padding:20px 0 16px;margin-bottom:4px;
-  background:linear-gradient(to bottom,var(--bg) 72%,rgba(246,248,251,0));
-}
-.results-head h1{margin:0;font-size:19px;font-weight:800;letter-spacing:-.02em}
-.results-head .sub{margin-top:2px;font-size:12.5px;color:var(--muted);font-weight:500}
+.range-slider{position:relative;height:40px;padding:0 2px;margin-bottom:4px}
+.range-track{position:absolute;top:50%;left:0;right:0;height:6px;transform:translateY(-50%);background:#e7ecf3;border-radius:3px}
+.range-fill{position:absolute;top:0;bottom:0;background:linear-gradient(90deg,#3b82f6,#0b5fff);border-radius:3px;box-shadow:0 1px 4px var(--brand-glow)}
+.range-slider input[type=range]{position:absolute;top:0;left:0;right:0;width:100%;height:100%;background:transparent;pointer-events:none;-webkit-appearance:none;appearance:none;margin:0;padding:0}
+.range-slider input[type=range]::-webkit-slider-thumb{pointer-events:auto;-webkit-appearance:none;width:22px;height:22px;border-radius:50%;background:#fff;border:3px solid var(--brand);cursor:grab;box-shadow:0 2px 8px rgba(10,22,40,.2),0 0 0 4px rgba(11,95,255,.08);transition:transform .15s ease,box-shadow .15s ease}
+.range-slider input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.1);box-shadow:0 3px 12px rgba(10,22,40,.25),0 0 0 6px rgba(11,95,255,.12)}
+.range-slider input[type=range]::-moz-range-thumb{pointer-events:auto;width:16px;height:16px;border-radius:50%;background:#fff;border:3px solid var(--brand);cursor:grab;box-shadow:0 2px 8px rgba(10,22,40,.2),0 0 0 4px rgba(11,95,255,.08)}
+
+.chip-row{display:flex;flex-wrap:wrap;gap:7px}
+.chip{padding:8px 14px;border-radius:999px;border:1.5px solid var(--line);background:#fff;font-size:13px;font-weight:600;color:var(--ink-2);transition:all .18s cubic-bezier(.2,.8,.3,1);white-space:nowrap}
+.chip:hover{border-color:#c5d1e0;background:#fbfcfe;transform:translateY(-1px)}
+.chip.active{background:linear-gradient(135deg,#3b82f6,#0b5fff);border-color:transparent;color:#fff;box-shadow:0 6px 16px var(--brand-glow);transform:translateY(-1px)}
+
+.side-card{margin-top:26px;padding:18px;border-radius:var(--radius-lg);background:linear-gradient(155deg,#eef4ff 0%,#e0ebff 100%);border:1px solid #d4e3ff;position:relative;overflow:hidden}
+.side-card::before{content:"";position:absolute;top:-40px;right:-40px;width:120px;height:120px;border-radius:50%;background:radial-gradient(circle,rgba(11,95,255,.14),transparent 70%);pointer-events:none}
+.side-card h3{margin:0 0 6px;font-size:14px;font-weight:800;position:relative}
+.side-card p{margin:0 0 14px;font-size:12.5px;color:#4c5d75;line-height:1.55;position:relative}
+.side-card button{width:100%;height:40px;border-radius:10px;background:linear-gradient(135deg,#3b82f6,#0b5fff);color:#fff;font-size:13.5px;font-weight:700;box-shadow:0 4px 12px var(--brand-glow);transition:transform .15s ease,box-shadow .15s ease;position:relative}
+.side-card button:hover{transform:translateY(-1px);box-shadow:0 8px 20px var(--brand-glow)}
+
+.results{overflow-y:auto;padding:0 32px 100px;scroll-behavior:smooth;position:relative}
+.results-head{position:sticky;top:0;z-index:20;display:flex;align-items:flex-end;justify-content:space-between;gap:20px;padding:26px 0 20px;margin-bottom:6px;background:linear-gradient(to bottom,var(--bg) 78%,rgba(245,247,251,0))}
+.results-head h1{margin:0;font-family:var(--serif);font-size:26px;font-weight:700;letter-spacing:-.02em;color:var(--ink);line-height:1.15}
+.results-head .sub{margin-top:5px;font-size:13px;color:var(--muted);font-weight:500}
+.results-head .sub b{color:var(--ink);font-weight:700}
+
 .sort-wrap{position:relative;flex:0 0 auto}
-.sort-wrap::after{content:"";position:absolute;right:12px;top:50%;width:7px;height:7px;margin-top:-4px;border-right:2px solid #8a97a8;border-bottom:2px solid #8a97a8;transform:rotate(45deg);pointer-events:none}
-.sort-wrap select{height:38px;padding:0 30px 0 13px;border-radius:999px;border:1px solid var(--line);background:#fff;font-size:13px;font-weight:600;outline:none;appearance:none;-webkit-appearance:none;cursor:pointer}
+.sort-wrap>svg{position:absolute;left:13px;top:50%;transform:translateY(-50%);width:14px;height:14px;stroke:#8a97a8;fill:none;stroke-width:2;pointer-events:none}
+.sort-wrap select{height:40px;padding:0 32px 0 34px;border-radius:999px;border:1.5px solid var(--line);background:#fff;font-size:13px;font-weight:700;color:var(--ink);outline:none;appearance:none;-webkit-appearance:none;cursor:pointer}
+.sort-wrap::after{content:"";position:absolute;right:14px;top:50%;width:7px;height:7px;margin-top:-5px;border-right:2px solid #8a97a8;border-bottom:2px solid #8a97a8;transform:rotate(45deg);pointer-events:none}
 
-.grid{display:grid;gap:20px;grid-template-columns:repeat(auto-fill,minmax(262px,1fr))}
+.grid{display:grid;gap:26px;grid-template-columns:repeat(auto-fill,minmax(288px,1fr))}
 
-.card{
-  position:relative;background:var(--card);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;
-  cursor:pointer;transition:transform .18s cubic-bezier(.2,.8,.3,1), box-shadow .18s ease;
-}
-.card:hover{transform:translateY(-3px);box-shadow:var(--shadow-md)}
+/* ============================================================
+   CARD with SLIDESHOW
+   ============================================================ */
+.card{position:relative;background:var(--card);border-radius:var(--radius-lg);overflow:hidden;cursor:pointer;box-shadow:0 1px 2px rgba(10,22,40,.05),0 2px 8px rgba(10,22,40,.04);transition:transform .32s cubic-bezier(.2,.8,.3,1),box-shadow .32s ease;animation:cardIn .4s ease backwards}
+@keyframes cardIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.card:hover{transform:translateY(-6px);box-shadow:0 24px 48px rgba(10,22,40,.14),0 8px 20px rgba(10,22,40,.08)}
+
 .card-media{position:relative;aspect-ratio:4/3;background:#eef1f5;overflow:hidden}
-.card-media img{width:100%;height:100%;object-fit:cover;transition:transform .5s ease}
-.card:hover .card-media img{transform:scale(1.045)}
+.card-media img{width:100%;height:100%;object-fit:cover;transition:transform .6s cubic-bezier(.2,.8,.3,1);position:absolute;inset:0;opacity:0;transition:opacity .4s ease,transform .6s cubic-bezier(.2,.8,.3,1)}
+.card-media img.active{opacity:1}
+.card:hover .card-media img.active{transform:scale(1.06)}
 
-.badge{position:absolute;top:10px;left:10px;padding:4px 9px;border-radius:7px;font-size:10.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;background:rgba(255,255,255,.95);box-shadow:0 1px 3px rgba(13,27,42,.16)}
-.badge--for_sale{color:#0a4fd6}
-.badge--for_rent{color:#0e7a4a}
-.badge--pending{color:#8a5300;background:#fff4dd}
-.badge--sold{color:#4a5768;background:#eef1f6}
+.slideshow-dots{position:absolute;bottom:14px;left:50%;transform:translateX(-50%);display:flex;gap:6px;z-index:3;padding:6px 10px;background:rgba(0,0,0,.35);border-radius:999px;backdrop-filter:blur(8px);opacity:0;transition:opacity .25s ease}
+.card:hover .slideshow-dots,.card:focus-within .slideshow-dots{opacity:1}
+.slideshow-dots span{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.45);transition:background .2s ease,transform .2s ease;cursor:pointer}
+.slideshow-dots span.active{background:#fff;transform:scale(1.3)}
 
-.heart{position:absolute;bottom:10px;right:10px;width:36px;height:36px;border-radius:50%;display:grid;place-items:center;background:rgba(255,255,255,.95);box-shadow:0 2px 8px rgba(13,27,42,.18);transition:transform .16s ease;z-index:2}
-.heart svg{width:18px;height:18px;stroke:#5d6b7d;fill:transparent;stroke-width:1.9}
-.heart:hover svg{stroke:#e8453c}
-.heart.on svg{fill:#e8453c;stroke:#e8453c}
-.heart.on{animation:pop .3s ease}
-@keyframes pop{0%{transform:scale(1)}45%{transform:scale(1.22)}100%{transform:scale(1)}}
+.slide-arrow{position:absolute;top:50%;transform:translateY(-50%);z-index:3;width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:rgba(255,255,255,.92);backdrop-filter:blur(8px);box-shadow:0 2px 10px rgba(10,22,40,.18);opacity:0;transition:opacity .22s ease,transform .18s ease;pointer-events:none}
+.card:hover .slide-arrow{opacity:1;pointer-events:auto}
+.slide-arrow:hover{transform:translateY(-50%) scale(1.1);background:#fff}
+.slide-arrow.prev{left:10px}
+.slide-arrow.next{right:10px}
+.slide-arrow svg{width:16px;height:16px;stroke:var(--ink);fill:none;stroke-width:2.4}
 
-.card-body{padding:13px 15px 16px}
-.card-price{display:flex;align-items:baseline;justify-content:space-between;gap:10px}
-.price{font-size:20px;font-weight:800;letter-spacing:-.03em}
-.est{font-size:12px;font-weight:600;color:var(--muted);white-space:nowrap}
-.specs{margin-top:3px;font-size:14px;font-weight:600;color:var(--ink-2)}
-.addr{margin-top:5px;font-size:13px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.meta{margin-top:8px;padding-top:9px;border-top:1px solid var(--line-2);font-size:12px;color:#8a97a8;font-weight:500;display:flex;justify-content:space-between;gap:8px}
+.card-media::after{content:"";position:absolute;inset:0;background:linear-gradient(to bottom,transparent 50%,rgba(10,22,40,.6) 100%);pointer-events:none;z-index:1}
 
-.more-wrap{display:flex;justify-content:center;margin-top:32px}
-.more{height:46px;padding:0 32px;border-radius:999px;border:1.5px solid var(--brand);background:#fff;color:var(--brand);font-size:14.5px;font-weight:700}
-.more:hover{background:var(--brand);color:#fff}
+.card-badges{position:absolute;top:12px;left:12px;z-index:4;display:flex;gap:6px;flex-wrap:wrap}
+.badge{padding:5px 10px;border-radius:7px;font-size:10.5px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;background:rgba(255,255,255,.96);box-shadow:0 2px 8px rgba(10,22,40,.16);backdrop-filter:blur(6px)}
+.badge--for_sale{color:#0a4fd6;background:rgba(234,241,255,.96)}
+.badge--for_rent{color:#0e7a4a;background:rgba(230,247,239,.96)}
+.badge--pending{color:#8a5300;background:rgba(255,244,224,.96)}
+.badge--sold{color:#4a5768;background:rgba(238,243,248,.96)}
+.badge--new{color:#fff;background:linear-gradient(135deg,#12b981,#0e9f6e);box-shadow:0 4px 12px rgba(14,159,110,.35)}
 
-.empty{grid-column:1/-1;padding:64px 24px;text-align:center;border:1.5px dashed #d9e1ea;border-radius:var(--radius);background:#fff}
-.empty h3{margin:0 0 6px;font-size:17px;font-weight:700}
-.empty p{margin:0 auto;max-width:340px;font-size:13.5px;color:var(--muted);line-height:1.6}
+.card-heart{position:absolute;top:12px;right:12px;z-index:5;width:38px;height:38px;border-radius:50%;display:grid;place-items:center;background:rgba(255,255,255,.95);backdrop-filter:blur(8px);box-shadow:0 3px 12px rgba(10,22,40,.2);transition:transform .18s ease,background .18s ease}
+.card-heart svg{width:18px;height:18px;stroke:#5d6b7d;fill:transparent;stroke-width:2;transition:fill .18s ease,stroke .18s ease}
+.card-heart:hover{transform:scale(1.08);background:#fff}
+.card-heart:hover svg{stroke:var(--danger)}
+.card-heart.on svg{fill:var(--danger);stroke:var(--danger)}
+.card-heart.on{animation:heartPop .45s cubic-bezier(.34,1.56,.64,1)}
+@keyframes heartPop{0%{transform:scale(1)}40%{transform:scale(1.28)}70%{transform:scale(.94)}100%{transform:scale(1)}}
 
-.mapwrap{position:relative;border-left:1px solid var(--line);background:#e9eef3}
+.card-price-overlay{position:absolute;bottom:12px;left:14px;right:14px;z-index:3;display:flex;align-items:baseline;justify-content:space-between;gap:10px}
+.card-price-overlay .price{font-size:22px;font-weight:800;color:#fff;letter-spacing:-.03em;text-shadow:0 2px 8px rgba(0,0,0,.35);font-variant-numeric:tabular-nums}
+.card-price-overlay .price .suffix{font-size:13px;font-weight:700;color:rgba(255,255,255,.9)}
+.card-price-overlay .est{font-size:12px;font-weight:700;color:rgba(255,255,255,.94);padding:4px 9px;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.28);border-radius:7px;backdrop-filter:blur(6px);text-shadow:0 1px 2px rgba(0,0,0,.15)}
+
+.card-body{padding:15px 16px 17px}
+.specs{display:flex;align-items:center;gap:10px;font-size:13.5px;font-weight:600;color:var(--ink-2)}
+.specs span{display:inline-flex;align-items:center;gap:5px}
+.specs svg{width:13px;height:13px;stroke:#8a97a8;fill:none;stroke-width:2}
+.specs .dot{width:3px;height:3px;border-radius:50%;background:#c5d1e0}
+.addr{margin-top:8px;font-size:13px;color:var(--muted);font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.meta-row{margin-top:12px;padding-top:12px;border-top:1px solid var(--line-2);display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:12px;color:#8a97a8;font-weight:600}
+.meta-tag{display:inline-flex;align-items:center;gap:5px;padding:3px 9px;background:#f5f7fb;border-radius:6px;font-size:11.5px;color:var(--ink-2);font-weight:600}
+.meta-tag svg{width:11px;height:11px;stroke:#8a97a8;fill:none;stroke-width:2}
+
+.empty{grid-column:1/-1;padding:80px 24px;text-align:center;background:#fff;border-radius:var(--radius-lg);border:1.5px dashed #d9e1ea}
+.empty-ico{width:80px;height:80px;margin:0 auto 20px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,var(--brand-soft),#dbe7ff);position:relative}
+.empty-ico::after{content:"";position:absolute;inset:-8px;border-radius:50%;border:2px dashed #c6d9ff;opacity:.6}
+.empty-ico svg{width:36px;height:36px;stroke:var(--brand);fill:none;stroke-width:1.8}
+.empty h3{margin:0 0 8px;font-size:19px;font-weight:800;color:var(--ink)}
+.empty p{margin:0 auto;max-width:360px;font-size:14px;color:var(--muted);line-height:1.65}
+
+.more-wrap{display:flex;justify-content:center;margin-top:36px}
+.more{height:48px;padding:0 36px;border-radius:999px;border:1.5px solid var(--brand);background:#fff;color:var(--brand);font-size:14px;font-weight:700;transition:all .18s ease}
+.more:hover{background:var(--brand);color:#fff;box-shadow:var(--shadow-brand)}
+
+/* ============================================================
+   MAPBOX MAP
+   ============================================================ */
+.mapwrap{position:relative;background:#e9eef3;overflow:hidden}
 #map{position:absolute;inset:0}
-.leaflet-container{font-family:inherit;background:#e9eef3}
-.leaflet-control-attribution{font-size:10.5px !important;background:rgba(255,255,255,.85) !important;border-radius:6px 0 0 0;padding:2px 7px !important}
+.mapboxgl-map{font-family:inherit}
+.mapboxgl-ctrl-attrib{font-size:10.5px !important;background:rgba(255,255,255,.9) !important;border-radius:8px 0 0 0;padding:3px 8px !important}
+.mapboxgl-ctrl-group{border-radius:12px !important;box-shadow:var(--shadow-sm) !important;border:0 !important;overflow:hidden}
+.mapboxgl-ctrl-group button{width:38px !important;height:38px !important}
+.mapboxgl-ctrl-group button:hover{background:#f5f7fb !important}
 
-.pin{background:none;border:0}
-.pin span{position:absolute;left:0;top:0;transform:translate(-50%,-50%);display:inline-block;padding:5px 10px;border-radius:999px;background:#fff;color:var(--ink);font-size:12px;font-weight:800;white-space:nowrap;border:1.5px solid #d8e0ea;box-shadow:0 3px 10px rgba(13,27,42,.16);cursor:pointer}
-.pin:hover span,.pin.is-active span{background:var(--ink);color:#fff;border-color:var(--ink);transform:translate(-50%,-50%) scale(1.07);z-index:500}
-
-.view-toggle{display:none;position:fixed;left:50%;bottom:20px;transform:translateX(-50%);z-index:650;padding:5px;border-radius:999px;background:rgba(255,255,255,.96);box-shadow:0 10px 30px rgba(13,27,42,.22);border:1px solid var(--line)}
-.view-toggle button{padding:9px 22px;border-radius:999px;font-size:13.5px;font-weight:700;color:var(--muted)}
-.view-toggle button.active{background:var(--ink);color:#fff}
+.pin{cursor:pointer;transition:transform .18s cubic-bezier(.2,.8,.3,1)}
+.pin:hover{transform:scale(1.12);z-index:10}
+.pin span{display:inline-block;padding:6px 11px;border-radius:999px;background:#fff;color:var(--ink);font-size:12px;font-weight:800;letter-spacing:-.01em;white-space:nowrap;border:2px solid #fff;box-shadow:0 4px 14px rgba(10,22,40,.2),0 1px 3px rgba(10,22,40,.15);font-variant-numeric:tabular-nums}
+.pin.sale span{color:#0a4fd6}
+.pin.rent span{color:#0e7a4a}
 
 /* ============================================================
    DETAIL DRAWER
    ============================================================ */
-.scrim{position:fixed;inset:0;z-index:900;background:rgba(13,27,42,.42);opacity:0;pointer-events:none;transition:opacity .22s ease}
+.scrim{position:fixed;inset:0;z-index:900;background:rgba(10,22,40,.5);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);opacity:0;pointer-events:none;transition:opacity .26s ease}
 .scrim.show{opacity:1;pointer-events:auto}
 
-.drawer{position:fixed;top:0;right:0;z-index:950;width:min(560px,100%);height:100%;background:#fff;box-shadow:var(--shadow-lg);transform:translateX(103%);transition:transform .28s cubic-bezier(.22,.9,.3,1);overflow-y:auto}
+.drawer{position:fixed;top:0;right:0;z-index:950;width:min(600px,100%);height:100%;background:#fff;box-shadow:var(--shadow-xl);transform:translateX(103%);transition:transform .34s cubic-bezier(.22,.9,.3,1);overflow-y:auto;overscroll-behavior:contain}
 .drawer.open{transform:translateX(0)}
 
-.drawer-hero{position:relative;aspect-ratio:16/10;background:#eef1f5}
-.drawer-hero img{width:100%;height:100%;object-fit:cover}
+.drawer-hero{position:relative;aspect-ratio:16/10;background:#eef1f5;overflow:hidden}
+.drawer-hero img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0;opacity:0;transition:opacity .5s ease}
+.drawer-hero img.active{opacity:1}
+.drawer-hero::after{content:"";position:absolute;inset:0;background:linear-gradient(to bottom,rgba(10,22,40,.32) 0%,transparent 40%);pointer-events:none;z-index:1}
 
-.close-btn{position:absolute;top:14px;right:14px;z-index:3;width:38px;height:38px;border-radius:50%;display:grid;place-items:center;background:rgba(255,255,255,.96);box-shadow:0 3px 12px rgba(13,27,42,.2)}
-.close-btn svg{width:16px;height:16px;stroke:var(--ink);stroke-width:2.2;fill:none}
+.hero-dots{position:absolute;bottom:18px;left:50%;transform:translateX(-50%);display:flex;gap:7px;z-index:3;padding:7px 12px;background:rgba(0,0,0,.4);border-radius:999px;backdrop-filter:blur(10px)}
+.hero-dots span{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.4);transition:all .2s ease;cursor:pointer}
+.hero-dots span.active{background:#fff;transform:scale(1.3)}
 
-.drawer-body{padding:22px 26px 70px}
-.drow{display:flex;align-items:flex-start;justify-content:space-between;gap:16px}
-.drawer .price-lg{font-size:30px;font-weight:800;letter-spacing:-.035em;line-height:1.1}
-.drawer .specs-lg{margin-top:6px;font-size:15px;font-weight:600;color:var(--ink-2)}
-.drawer .addr-lg{margin-top:4px;font-size:13.5px;color:var(--muted)}
+.hero-arrow{position:absolute;top:50%;transform:translateY(-50%);z-index:4;width:42px;height:42px;border-radius:50%;display:grid;place-items:center;background:rgba(255,255,255,.94);backdrop-filter:blur(10px);box-shadow:0 4px 16px rgba(10,22,40,.24);transition:transform .16s ease,background .16s ease}
+.hero-arrow:hover{transform:translateY(-50%) scale(1.08);background:#fff}
+.hero-arrow.prev{left:16px}
+.hero-arrow.next{right:16px}
+.hero-arrow svg{width:18px;height:18px;stroke:var(--ink);fill:none;stroke-width:2.4}
 
-.heart-lg{flex:0 0 auto;width:46px;height:46px;border-radius:50%;display:grid;place-items:center;border:1.5px solid var(--line);background:#fff}
-.heart-lg svg{width:21px;height:21px;stroke:#7a8798;fill:transparent;stroke-width:1.9}
+.close-btn{position:absolute;top:18px;right:18px;z-index:5;width:42px;height:42px;border-radius:50%;display:grid;place-items:center;background:rgba(255,255,255,.96);backdrop-filter:blur(10px);box-shadow:0 4px 16px rgba(10,22,40,.24);transition:transform .16s ease,background .16s ease}
+.close-btn:hover{transform:scale(1.08);background:#fff}
+.close-btn svg{width:18px;height:18px;stroke:var(--ink);stroke-width:2.4;fill:none}
+
+.drawer-body{padding:26px 30px 80px;animation:contentFade .5s ease .1s backwards}
+@keyframes contentFade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+.drow{display:flex;align-items:flex-start;justify-content:space-between;gap:20px}
+.drawer .price-lg{font-family:var(--serif);font-size:34px;font-weight:700;letter-spacing:-.02em;line-height:1.1;color:var(--ink)}
+.drawer .specs-lg{margin-top:8px;font-size:15px;font-weight:600;color:var(--ink-2);display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.drawer .specs-lg .dot{width:3px;height:3px;border-radius:50%;background:#c5d1e0}
+.drawer .addr-lg{margin-top:6px;font-size:14px;color:var(--muted);font-weight:500}
+
+.heart-lg{flex:0 0 auto;width:50px;height:50px;border-radius:50%;display:grid;place-items:center;border:1.5px solid var(--line);background:#fff;transition:all .18s ease}
+.heart-lg svg{width:22px;height:22px;stroke:#7a8798;fill:transparent;stroke-width:2;transition:fill .18s ease,stroke .18s ease}
+.heart-lg:hover{border-color:#f3c3c0;background:#fff8f8;transform:scale(1.05)}
 .heart-lg.on{border-color:#f6cfcc;background:#fff5f5}
-.heart-lg.on svg{fill:#e8453c;stroke:#e8453c}
+.heart-lg.on svg{fill:var(--danger);stroke:var(--danger)}
 
-.pillrow{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
-.pill{padding:6px 12px;border-radius:999px;background:#f4f6fa;border:1px solid var(--line-2);font-size:12px;font-weight:600;color:var(--ink-2)}
+.pillrow{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px}
+.pill{padding:7px 13px;border-radius:999px;background:#f5f7fb;border:1px solid var(--line);font-size:12px;font-weight:700;color:var(--ink-2)}
 .pill.brand{background:var(--brand-soft);border-color:#d6e4ff;color:var(--brand-dark)}
-.pill.rent{background:#e6f7ef;border-color:#c8eedd;color:#0e7a4a}
+.pill.rent{background:var(--accent-soft);border-color:#c8eedd;color:#0e7a4a}
 
-.section-title{margin:28px 0 10px;font-size:14px;font-weight:800}
-.drawer p.desc{margin:0;font-size:14px;line-height:1.65;color:#46586c}
+.section-title{margin:32px 0 12px;font-size:14px;font-weight:800;color:var(--ink);display:flex;align-items:center;gap:8px}
+.section-title::before{content:"";width:3px;height:14px;border-radius:2px;background:linear-gradient(180deg,var(--brand),var(--brand-2))}
+.drawer p.desc{margin:0;font-size:14.5px;line-height:1.7;color:#3b4d63}
 
-.facts-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px 18px;padding:14px 16px;border-radius:12px;background:#f8fafc;border:1px solid var(--line-2)}
-.fact{display:flex;flex-direction:column;gap:1px}
-.fact span{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}
-.fact b{font-size:14px;font-weight:700;color:var(--ink)}
+.facts-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;padding:1px;border-radius:12px;background:var(--line);overflow:hidden;border:1px solid var(--line)}
+.fact{display:flex;flex-direction:column;gap:3px;padding:14px 16px;background:#fff}
+.fact span{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}
+.fact b{font-size:14.5px;font-weight:700;color:var(--ink)}
 
-.calc{display:grid;grid-template-columns:1fr auto auto;gap:14px;align-items:end;padding:16px;border-radius:14px;background:linear-gradient(150deg,#f7faff,#f1f6ff);border:1px solid #dfeaff}
-.calc-out{font-size:12px;font-weight:600;color:var(--muted);line-height:1.3}
-.calc-out strong{display:block;font-size:25px;font-weight:800;color:var(--ink)}
-.calc label{display:block;font-size:11px;font-weight:700;text-transform:uppercase;color:var(--muted)}
-.calc input{width:78px;height:36px;margin-top:5px;padding:0 10px;border:1px solid var(--line);border-radius:9px;background:#fff;font-size:14px;font-weight:600;outline:none;text-align:center}
-.calc input:focus{border-color:var(--brand);box-shadow:0 0 0 3px rgba(11,95,255,.12)}
-.calc-note{margin:9px 0 0;font-size:11.5px;color:#8a97a8;line-height:1.55}
+.calc{display:grid;grid-template-columns:1fr auto auto;gap:16px;align-items:end;padding:20px;border-radius:16px;background:linear-gradient(155deg,#f7faff,#eef4ff);border:1px solid #dfe9ff}
+.calc-out{font-size:12px;font-weight:600;color:var(--muted);line-height:1.4}
+.calc-out strong{display:block;font-size:28px;font-weight:800;letter-spacing:-.03em;color:var(--ink);font-variant-numeric:tabular-nums}
+.calc label{display:block;font-size:10.5px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+.calc input{width:82px;height:38px;margin-top:6px;padding:0 10px;border:1.5px solid var(--line);border-radius:9px;background:#fff;font-size:14px;font-weight:700;outline:none;text-align:center;font-variant-numeric:tabular-nums}
+.calc input:focus{border-color:var(--brand);box-shadow:0 0 0 3px rgba(11,95,255,.14)}
+.calc-note{margin:10px 0 0;font-size:11.5px;color:#8a97a8;line-height:1.6}
 
-.agent{display:flex;align-items:center;gap:13px;margin-top:20px;padding:14px;border-radius:14px;border:1px solid var(--line);background:#fff}
-.avatar{width:46px;height:46px;border-radius:50%;flex:0 0 auto;display:grid;place-items:center;background:linear-gradient(140deg,#2f7bff,#0b5fff);color:#fff;font-weight:800;font-size:15px}
+.agent{display:flex;align-items:center;gap:14px;margin-top:24px;padding:16px;border-radius:16px;border:1px solid var(--line);background:#fff;box-shadow:var(--shadow-xs)}
+.avatar{width:50px;height:50px;border-radius:50%;flex:0 0 auto;display:grid;place-items:center;background:linear-gradient(135deg,#3b82f6,#0b5fff);color:#fff;font-weight:800;font-size:15px;letter-spacing:.02em;box-shadow:0 4px 12px var(--brand-glow)}
 .agent-info{flex:1;min-width:0}
-.agent-info b{display:block;font-size:14px;font-weight:700}
-.agent-info span{font-size:12.5px;color:var(--muted)}
-.agent button{height:36px;padding:0 16px;border-radius:999px;background:var(--ink);color:#fff;font-size:13px;font-weight:700}
+.agent-info b{display:block;font-size:14.5px;font-weight:700;color:var(--ink)}
+.agent-info span{font-size:12.5px;color:var(--muted);margin-top:2px;display:block}
+.agent button{height:38px;padding:0 18px;border-radius:999px;background:var(--ink);color:#fff;font-size:13px;font-weight:700;transition:background .16s ease,transform .16s ease}
+.agent button:hover{background:#1c2f47;transform:translateY(-1px)}
 
-.similar-grid{display:grid;grid-template-columns:1fr 1fr;gap:13px}
-.mini{border:1px solid var(--line);border-radius:12px;overflow:hidden;background:#fff;cursor:pointer}
-.mini:hover{box-shadow:var(--shadow-md);transform:translateY(-2px)}
+.similar-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.mini{border-radius:12px;overflow:hidden;background:#fff;border:1px solid var(--line);cursor:pointer;transition:all .18s ease}
+.mini:hover{box-shadow:var(--shadow-md);transform:translateY(-2px);border-color:#d4ddea}
 .mini img{width:100%;aspect-ratio:4/3;object-fit:cover}
-.mini-body{padding:9px 11px 11px}
-.mini-price{font-size:14.5px;font-weight:800}
-.mini-specs{font-size:11.5px;color:var(--muted);margin-top:1px}
+.mini-body{padding:10px 12px 12px}
+.mini-price{font-size:15px;font-weight:800;color:var(--ink);font-variant-numeric:tabular-nums}
+.mini-specs{font-size:11.5px;color:var(--muted);margin-top:2px;font-weight:500}
 .mini-addr{font-size:11.5px;color:#8a97a8;margin-top:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 
-/* ============================================================
-   TOAST
-   ============================================================ */
-.toast{position:fixed;left:50%;bottom:26px;z-index:1000;transform:translate(-50%,24px);display:flex;align-items:center;gap:9px;padding:12px 20px;border-radius:12px;background:var(--ink);color:#fff;font-size:13.5px;font-weight:600;box-shadow:0 14px 34px rgba(13,27,42,.32);opacity:0;pointer-events:none;transition:opacity .2s ease, transform .2s ease}
+.toast{position:fixed;left:50%;bottom:26px;z-index:1000;transform:translate(-50%,24px);display:flex;align-items:center;gap:10px;padding:14px 22px;border-radius:14px;background:var(--ink);color:#fff;font-size:13.5px;font-weight:600;box-shadow:0 20px 44px rgba(10,22,40,.4);opacity:0;pointer-events:none;transition:opacity .22s ease,transform .22s ease}
 .toast.show{opacity:1;transform:translate(-50%,0)}
-.toast svg{width:16px;height:16px;stroke:#4ade80;fill:none;stroke-width:2.4}
+.toast svg{width:18px;height:18px;stroke:#4ade80;fill:none;stroke-width:2.6;flex:0 0 auto}
+
+/* ============================================================
+   WHATSAPP & TRANSLATE WIDGETS
+   ============================================================ */
+.whatsapp-float {
+  position: fixed;
+  bottom: 96px; /* Sits above the Tawk.to widget */
+  right: 22px;
+  z-index: 960;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background-color: var(--whatsapp);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 12px 32px rgba(37, 211, 102, 0.4);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  animation: pulse-whatsapp 2s infinite;
+}
+.whatsapp-float:hover {
+  transform: scale(1.08);
+  box-shadow: 0 16px 40px rgba(37, 211, 102, 0.5);
+}
+.whatsapp-float svg {
+  width: 32px;
+  height: 32px;
+  fill: currentColor;
+}
+@keyframes pulse-whatsapp {
+  0% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.5); }
+  70% { box-shadow: 0 0 0 16px rgba(37, 211, 102, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); }
+}
+
+/* Customizing GTranslate positioning so it doesn't clash with mobile nav */
+.gtranslate_wrapper {
+  position: fixed;
+  bottom: 24px;
+  left: 24px;
+  z-index: 940;
+}
+@media (max-width: 1000px) {
+  .gtranslate_wrapper {
+    bottom: 100px; /* Push above mobile bottom nav */
+    left: 14px;
+  }
+}
+
+/* ============================================================
+   MOBILE BOTTOM NAV
+   ============================================================ */
+.bottom-nav{display:none;position:fixed;left:14px;right:88px;bottom:calc(14px + env(safe-area-inset-bottom,0px));z-index:700;padding:6px;background:rgba(255,255,255,.94);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-radius:999px;box-shadow:0 14px 40px rgba(10,22,40,.2);border:1px solid rgba(255,255,255,.6);grid-template-columns:repeat(3,1fr);gap:4px}
+.bottom-nav button{display:flex;flex-direction:column;align-items:center;gap:3px;padding:9px 6px;border-radius:999px;font-size:10.5px;font-weight:700;color:var(--muted);transition:color .16s ease,background .16s ease;position:relative}
+.bottom-nav button svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:2}
+.bottom-nav button.active{color:var(--brand)}
+.bottom-nav button.active svg{stroke:var(--brand)}
+.bottom-nav button .nav-count{position:absolute;top:4px;right:14px;min-width:16px;height:16px;padding:0 4px;border-radius:999px;background:var(--brand);color:#fff;font-size:9.5px;font-weight:800;display:grid;place-items:center;box-shadow:0 2px 6px var(--brand-glow);transform:scale(0);transition:transform .2s cubic-bezier(.34,1.56,.64,1)}
+.bottom-nav button .nav-count.show{transform:scale(1)}
+
+.view-toggle{display:none;position:fixed;left:50%;bottom:calc(88px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:660;padding:5px;background:rgba(255,255,255,.96);backdrop-filter:blur(20px);border-radius:999px;box-shadow:0 14px 40px rgba(10,22,40,.22);border:1px solid rgba(255,255,255,.6);gap:2px}
+.view-toggle button{padding:9px 22px;border-radius:999px;font-size:13px;font-weight:700;color:var(--muted);transition:background .16s ease,color .16s ease}
+.view-toggle button.active{background:var(--ink);color:#fff}
 
 /* ============================================================
    RESPONSIVE
    ============================================================ */
 @media (max-width:1240px){
-  .app{grid-template-columns:240px minmax(0,1fr) minmax(300px,42%)}
-  .grid{grid-template-columns:repeat(auto-fill,minmax(240px,1fr))}
+  .app{grid-template-columns:264px minmax(0,1fr) minmax(320px,40%)}
+  .grid{grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:22px}
+  .results{padding:0 24px 100px}
+  .topbar{padding:0 20px;gap:14px}
 }
 @media (max-width:1000px){
   :root{--header-h:64px}
-  .topbar{padding:0 14px;gap:10px}
-  .nav-link.dim{display:none}
-  .btn-filter{display:inline-flex}
-  .app{grid-template-columns:1fr;height:auto}
-  .results{padding:0 16px 90px}
-  .mapwrap{display:none}
-  .filters{position:fixed;top:0;left:0;bottom:0;z-index:960;width:min(320px,86vw);transform:translateX(-103%);transition:transform .26s ease;box-shadow:var(--shadow-lg)}
-  .filters.open{transform:translateX(0)}
-  .view-toggle{display:flex}
-  body.show-map .results{display:none}
-  body.show-map .mapwrap{display:block;position:fixed;top:var(--header-h);left:0;right:0;bottom:0;z-index:400;border-left:0}
-  .toast{bottom:92px}
-}
-@media (max-width:640px){
-  .brand-name{font-size:17px}
-  .brand-sub{display:none}
-  .brand-mark{width:30px;height:30px;border-radius:9px}
-  .brand-mark svg{width:17px;height:17px}
-  .btn-saved .label{display:none}
-  .searchbar input{height:40px;font-size:14px}
-  .mode-toggle button{padding:7px 12px;font-size:12px}
-  .results-head{flex-direction:column;align-items:flex-start;gap:10px}
-  .grid{grid-template-columns:1fr;gap:16px}
-  .card-media{aspect-ratio:16/10}
-  .similar-grid{grid-template-columns:1fr}
-  .drawer-body{padding:18px 18px 60px}
-  .drawer .price-lg{font-size:25px}
-  .calc{grid-template-columns:1fr 1fr;gap:12px}
-  .calc-out{grid-column:1/-1}
+  .topbar{padding:0 14px;gap:10px;height:64px}
+  .brand-mark{width:34px;height:34px;border-radius:10px}
+  .brand-mark svg{width:18px;height:18px}
+  .brand-name{font-size:18px}
+  .brand-sub{font-size:8.5px;letter-spacing:.1em}
+  .mode-toggle{padding:3px}
+  .mode-toggle button{min-width:58px;padding:7px 12px;font-size:12.5px}
+  .searchbar{display:none}
   .nav-link{display:none}
+  .btn-filter{display:inline-flex;height:38px;padding:0 14px;font-size:12.5px;gap:6px}
+  .btn-saved{height:38px;padding:0 12px;font-size:12.5px}
+  .btn-saved .label{display:none}
+  .btn-saved svg{width:15px;height:15px}
+  .app{display:block;height:calc(100vh - 64px);overflow:hidden}
+  .results{height:100%;padding:0 16px 130px}
+  .results-head{padding:20px 0 16px;align-items:flex-start;flex-direction:column;gap:14px}
+  .results-head h1{font-size:22px}
+  .results-head .sub{font-size:12.5px;margin-top:4px}
+  .sort-wrap{width:100%}
+  .sort-wrap select{width:100%;height:42px;padding:0 34px;text-align:left}
+  .grid{grid-template-columns:1fr;gap:18px}
+  .card{border-radius:18px}
+  .card-media{aspect-ratio:16/10}
+  .card-price-overlay .price{font-size:24px}
+  .card-price-overlay .price .suffix{font-size:14px}
+  .card-body{padding:16px 16px 18px}
+  .specs{font-size:14px}
+  .addr{font-size:13.5px}
+  .slideshow-dots{opacity:1}
+  .slide-arrow{opacity:1;pointer-events:auto;width:32px;height:32px}
+  .mapwrap{display:none;position:fixed;top:64px;left:0;right:0;bottom:0;z-index:400}
+  body.show-map .results{display:none}
+  body.show-map .mapwrap{display:block}
+  .filters{position:fixed;top:auto;bottom:0;left:0;right:0;max-height:88vh;padding:8px 20px calc(120px + env(safe-area-inset-bottom,0px));border-radius:24px 24px 0 0;border-right:0;box-shadow:0 -24px 60px rgba(10,22,40,.24);transform:translateY(100%);transition:transform .34s cubic-bezier(.22,.9,.3,1);z-index:960;overflow-y:auto;overscroll-behavior:contain}
+  .filters.open{transform:translateY(0)}
+  .filters::before{content:"";display:block;width:40px;height:4px;margin:10px auto 18px;border-radius:2px;background:#d9e1ea}
+  .filters-head{padding-top:0;margin-bottom:20px}
+  .filters-head h2{font-size:14px;letter-spacing:0;text-transform:none;color:var(--ink);font-weight:800}
+  .filter-section{padding:18px 0}
+  .filter-section h3{font-size:14px;margin-bottom:14px}
+  .chip{padding:10px 16px;font-size:14px}
+  .range-slider{height:44px}
+  .range-slider input[type=range]::-webkit-slider-thumb{width:26px;height:26px}
+  .bottom-nav{display:grid}
+  .view-toggle{display:flex}
+  .drawer{width:100%;max-width:none;border-radius:0}
+  .drawer-hero{aspect-ratio:5/4}
+  .drawer-body{padding:22px 22px 120px}
+  .drawer .price-lg{font-size:28px}
+  .calc{grid-template-columns:1fr 1fr;gap:14px;padding:16px}
+  .calc-out{grid-column:1/-1}
+  .calc-out strong{font-size:24px}
+  .calc input{width:100%}
   .facts-grid{grid-template-columns:1fr}
+  .similar-grid{grid-template-columns:1fr}
+  .toast{bottom:calc(100px + env(safe-area-inset-bottom,0px));font-size:13px;padding:12px 18px;max-width:calc(100vw - 32px)}
+  
+  /* Adjust widgets for mobile */
+  .whatsapp-float { bottom: 90px; right: 16px; width: 50px; height: 50px; }
+  .whatsapp-float svg { width: 26px; height: 26px; }
+}
+@media (max-width:400px){
+  .brand-name{font-size:16px}
+  .mode-toggle button{min-width:52px;padding:7px 10px;font-size:12px}
+  .results-head h1{font-size:20px}
+  .bottom-nav{right:80px}
 }
 @media (prefers-reduced-motion:reduce){
-  *{animation-duration:.001ms !important;transition-duration:.001ms !important}
+  *,*::before,*::after{animation-duration:.001ms !important;transition-duration:.001ms !important}
 }
 </style>
 </head>
 <body>
 
-<!-- ============================ HEADER ============================ -->
 <header class="topbar">
-  <a class="brand" href="#" aria-label="CME Real Estate and Properties home" title="CME Real Estate and Properties">
-    <span class="brand-mark">
-      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.1 2.6 10.5a1 1 0 0 0 .62 1.79h1.3v7.7a1 1 0 0 0 1 1h4.3v-6.2h4.36v6.2h4.3a1 1 0 0 0 1-1v-7.7h1.3a1 1 0 0 0 .62-1.79z"/></svg>
-    </span>
-    <span class="brand-text">
-      <span class="brand-name">CME</span>
-      <span class="brand-sub">Real Estate &amp; Properties</span>
-    </span>
+  <a class="brand" href="#" aria-label="CME Real Estate and Properties home">
+    <span class="brand-mark"><svg viewBox="0 0 24 24"><path d="M12 3.1 2.6 10.5a1 1 0 0 0 .62 1.79h1.3v7.7a1 1 0 0 0 1 1h4.3v-6.2h4.36v6.2h4.3a1 1 0 0 0 1-1v-7.7h1.3a1 1 0 0 0 .62-1.79z"/></svg></span>
+    <span class="brand-text"><span class="brand-name">CME</span><span class="brand-sub">Real Estate &amp; Properties</span></span>
   </a>
 
-  <div class="mode-toggle" role="group" aria-label="Buy or rent">
+  <div class="mode-toggle" data-mode="sale" role="group" aria-label="Buy or rent">
     <button type="button" data-mode="sale" class="active">Buy</button>
     <button type="button" data-mode="rent">Rent</button>
   </div>
 
   <form class="searchbar" id="searchForm" role="search" autocomplete="off">
-    <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+    <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
     <input id="searchInput" type="search" placeholder="City, ZIP code, or address" aria-label="Search homes" />
   </form>
 
   <div class="top-actions">
     <button class="btn-filter" id="filterBtn" aria-label="Open filters">
-      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M7 12h10M10 18h4"/></svg>
-      Filters
+      <svg viewBox="0 0 24 24"><path d="M4 6h16M7 12h10M10 18h4"/></svg>
+      Filters <span class="badge" id="filterBadge">0</span>
     </button>
     <a class="nav-link dim" href="#">Buy</a>
     <a class="nav-link dim" href="#">Rent</a>
     <a class="nav-link dim" href="#">Sell</a>
     <button class="btn-saved" id="savedBtn" aria-pressed="false">
-      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20.5s-7.4-4.6-9.2-8.9C1.4 8.1 3.5 4.8 6.9 4.8c2 0 3.5 1 4.4 2.3.9-1.3 2.4-2.3 4.4-2.3 3.4 0 5.5 3.3 4.1 6.8-1.8 4.3-9.2 8.9-9.2 8.9z"/></svg>
-      <span class="label">Saved</span>
-      <span class="count" id="savedCount">0</span>
+      <svg viewBox="0 0 24 24"><path d="M12 20.5s-7.4-4.6-9.2-8.9C1.4 8.1 3.5 4.8 6.9 4.8c2 0 3.5 1 4.4 2.3.9-1.3 2.4-2.3 4.4-2.3 3.4 0 5.5 3.3 4.1 6.8-1.8 4.3-9.2 8.9-9.2 8.9z"/></svg>
+      <span class="label">Saved</span><span class="count" id="savedCount">0</span>
     </button>
   </div>
 </header>
 
-<!-- ============================ APP ============================ -->
 <main class="app">
 
-  <aside class="filters" id="filters">
-    <div class="filters-head">
-      <h2>Filters</h2>
-      <button class="link-reset" id="resetBtn">Reset</button>
-    </div>
+  <aside class="filters" id="filters" aria-label="Filters">
+    <div class="filters-head"><h2>Refine results</h2><button class="link-reset" id="resetBtn">Reset all</button></div>
 
-    <label class="field">
-      <span id="minPriceLabel">Min price</span>
-      <div class="select-wrap">
-        <select id="minPrice">
-          <option value="">No min</option>
-          <option value="200000">$200,000</option>
-          <option value="300000">$300,000</option>
-          <option value="400000">$400,000</option>
-          <option value="500000">$500,000</option>
-          <option value="750000">$750,000</option>
-          <option value="1000000">$1,000,000</option>
-        </select>
+    <section class="filter-section">
+      <h3>Price range</h3>
+      <div class="price-display"><span class="val" id="priceMinDisplay">$0</span><span class="val" id="priceMaxDisplay">$2M+</span></div>
+      <div class="range-slider">
+        <div class="range-track"><div class="range-fill" id="rangeFill"></div></div>
+        <input type="range" id="priceMin" min="0" max="2000000" step="25000" value="0" aria-label="Minimum price">
+        <input type="range" id="priceMax" min="0" max="2000000" step="25000" value="2000000" aria-label="Maximum price">
       </div>
-    </label>
+    </section>
 
-    <label class="field">
-      <span id="maxPriceLabel">Max price</span>
-      <div class="select-wrap">
-        <select id="maxPrice">
-          <option value="">No max</option>
-          <option value="300000">$300,000</option>
-          <option value="400000">$400,000</option>
-          <option value="500000">$500,000</option>
-          <option value="750000">$750,000</option>
-          <option value="1000000">$1,000,000</option>
-          <option value="2000000">$2,000,000</option>
-        </select>
+    <section class="filter-section">
+      <h3>Beds</h3>
+      <div class="chip-row" data-filter="beds">
+        <button class="chip active" data-val="">Any</button>
+        <button class="chip" data-val="1">1+</button><button class="chip" data-val="2">2+</button>
+        <button class="chip" data-val="3">3+</button><button class="chip" data-val="4">4+</button><button class="chip" data-val="5">5+</button>
       </div>
-    </label>
+    </section>
 
-    <label class="field">
-      <span>Beds</span>
-      <div class="select-wrap">
-        <select id="beds">
-          <option value="">Any</option>
-          <option value="1">1+</option>
-          <option value="2">2+</option>
-          <option value="3">3+</option>
-          <option value="4">4+</option>
-          <option value="5">5+</option>
-        </select>
+    <section class="filter-section">
+      <h3>Baths</h3>
+      <div class="chip-row" data-filter="baths">
+        <button class="chip active" data-val="">Any</button>
+        <button class="chip" data-val="1">1+</button><button class="chip" data-val="2">2+</button>
+        <button class="chip" data-val="3">3+</button><button class="chip" data-val="4">4+</button>
       </div>
-    </label>
+    </section>
 
-    <label class="field">
-      <span>Baths</span>
-      <div class="select-wrap">
-        <select id="baths">
-          <option value="">Any</option>
-          <option value="1">1+</option>
-          <option value="2">2+</option>
-          <option value="3">3+</option>
-          <option value="4">4+</option>
-        </select>
+    <section class="filter-section">
+      <h3>Home type</h3>
+      <div class="chip-row" data-filter="type">
+        <button class="chip active" data-val="">All</button>
+        <button class="chip" data-val="SINGLE_FAMILY">Single family</button>
+        <button class="chip" data-val="CONDO">Condo</button>
+        <button class="chip" data-val="TOWNHOUSE">Townhouse</button>
       </div>
-    </label>
+    </section>
 
-    <label class="field">
-      <span>Home type</span>
-      <div class="select-wrap">
-        <select id="type">
-          <option value="">All types</option>
-          <option value="SINGLE_FAMILY">Single family</option>
-          <option value="CONDO">Condo</option>
-          <option value="TOWNHOUSE">Townhouse</option>
-          <option value="MULTI_FAMILY">Multi-family</option>
-        </select>
+    <section class="filter-section" id="statusSection">
+      <h3>Status</h3>
+      <div class="chip-row" data-filter="status">
+        <button class="chip active" data-val="FOR_SALE">For sale</button>
+        <button class="chip" data-val="PENDING">Pending</button>
+        <button class="chip" data-val="SOLD">Sold</button>
       </div>
-    </label>
-
-    <label class="field" id="statusField">
-      <span>Status</span>
-      <div class="select-wrap">
-        <select id="status">
-          <option value="FOR_SALE">For sale</option>
-          <option value="PENDING">Pending</option>
-          <option value="SOLD">Sold</option>
-          <option value="">Any</option>
-        </select>
-      </div>
-    </label>
+    </section>
 
     <div class="side-card">
       <h3>Get price alerts</h3>
-      <p>Be the first to know when a matching home hits the market in your favorite neighborhood.</p>
+      <p>Be first to know when a matching home hits the market in your favorite neighborhood.</p>
       <button id="alertBtn">Create alert</button>
     </div>
   </aside>
 
   <section class="results" id="resultsPane">
     <div class="results-head">
-      <div>
-        <h1 id="resultsTitle">Homes for sale</h1>
-        <div class="sub" id="resultsSub">Loading listings…</div>
-      </div>
+      <div><h1 id="resultsTitle">Homes for sale</h1><div class="sub" id="resultsSub">Loading listings…</div></div>
       <div class="sort-wrap">
+        <svg viewBox="0 0 24 24"><path d="M3 6h18M6 12h12M10 18h4"/></svg>
         <select id="sortSelect" aria-label="Sort results">
-          <option value="newest">Newest</option>
-          <option value="price_asc">Price: low to high</option>
-          <option value="price_desc">Price: high to low</option>
-          <option value="sqft_desc">Square feet</option>
-          <option value="beds_desc">Bedrooms</option>
+          <option value="newest">Newest first</option><option value="price_asc">Price: low to high</option>
+          <option value="price_desc">Price: high to low</option><option value="sqft_desc">Largest first</option>
         </select>
       </div>
     </div>
-
     <div class="grid" id="grid"></div>
-
-    <div class="more-wrap">
-      <button class="more" id="moreBtn" hidden>Show more homes</button>
-    </div>
+    <div class="more-wrap"><button class="more" id="moreBtn" hidden>Show more homes</button></div>
   </section>
 
-  <section class="mapwrap">
-    <div id="map"></div>
-  </section>
+  <section class="mapwrap"><div id="map"></div></section>
 </main>
 
-<!-- ============================ OVERLAYS ============================ -->
+<nav class="bottom-nav" aria-label="Quick actions">
+  <button type="button" id="navFilters"><svg viewBox="0 0 24 24"><path d="M4 6h16M7 12h10M10 18h4"/></svg>Filters<span class="nav-count" id="navFilterCount">0</span></button>
+  <button type="button" id="navSaved"><svg viewBox="0 0 24 24"><path d="M12 20.5s-7.4-4.6-9.2-8.9C1.4 8.1 3.5 4.8 6.9 4.8c2 0 3.5 1 4.4 2.3.9-1.3 2.4-2.3 4.4-2.3 3.4 0 5.5 3.3 4.1 6.8-1.8 4.3-9.2 8.9-9.2 8.9z"/></svg>Saved<span class="nav-count" id="navSavedCount">0</span></button>
+  <button type="button" id="navMap"><svg viewBox="0 0 24 24"><path d="m9 3-6 3v15l6-3 6 3 6-3V3l-6 3-6-3z"/><path d="M9 3v15M15 6v15"/></svg>Map</button>
+</nav>
+
 <div class="view-toggle" role="group" aria-label="View mode">
-  <button data-view="list" class="active">List</button>
-  <button data-view="map">Map</button>
+  <button data-view="list" class="active">List</button><button data-view="map">Map</button>
 </div>
 
 <div class="scrim" id="scrim"></div>
 <aside class="drawer" id="drawer" aria-hidden="true" aria-label="Home details"></aside>
 
-<div class="toast" id="toast">
-  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m4 12.5 5 5L20 6.5"/></svg>
-  <span id="toastMsg"></span>
-</div>
+<div class="toast" id="toast"><svg viewBox="0 0 24 24"><path d="m4 12.5 5 5L20 6.5"/></svg><span id="toastMsg"></span></div>
 
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<!-- GTranslate Widget -->
+<div class="gtranslate_wrapper"></div>
+<script>window.gtranslateSettings = {"default_language":"en","detect_browser_language":true,"wrapper_selector":".gtranslate_wrapper"}</script>
+<script src="https://cdn.gtranslate.net/widgets/latest/float.js" defer></script>
+
+<!-- WhatsApp Float Widget -->
+<a href="https://wa.me/447787374543" class="whatsapp-float" target="_blank" rel="noopener noreferrer" aria-label="Chat with us on WhatsApp">
+  <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
+  </svg>
+</a>
+
 <script>
 /* =====================================================================
-   CME Real Estate and Properties — Buy & Rent
+   CME Real Estate — Mapbox + Live Property Data + Slideshows
    ===================================================================== */
 (function () {
   'use strict';
 
-  /* ==================================================================
-     1. IMAGE POOL
-     ================================================================== */
-  const IMAGES = [
+  /* ------------------------------------------------------------------
+     CONFIGURATION
+     ------------------------------------------------------------------ */
+  const CONFIG = {
+    // Your provided Mapbox token from the screenshot
+    MAPBOX_TOKEN: 'pk.eyJ1IjoiZ2xpYXdGMkRqMUlCQ2hJjoiY2lJjoiY2lJZ2VjZ2VjZ2VjZ2VjIn0.REPLACE...',
+
+    // RapidAPI key for live properties (Keep your own key here if you have one)
+    // If this is left as is, the site will fall back to high-quality demo data.
+    RAPIDAPI_KEY: 'REPLACE_WITH_YOUR_RAPIDAPI_KEY',
+    RAPIDAPI_HOST: 'realtor.p.rapidapi.com'
+  };
+
+  /* ------------------------------------------------------------------
+     IMAGE POOL (fallback if API images fail)
+     ------------------------------------------------------------------ */
+  const FALLBACK_IMAGES = [
     'https://images.unsplash.com/photo-1568605114967-8130f3a36994?auto=format&fit=crop&w=900&q=70',
     'https://images.unsplash.com/photo-1570129477492-45c003edd2be?auto=format&fit=crop&w=900&q=70',
     'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=900&q=70',
@@ -529,361 +654,39 @@ a{color:inherit;text-decoration:none}
     'https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&w=900&q=70',
     'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=900&q=70',
     'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=900&q=70',
-    'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=900&q=70',
-    'https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?auto=format&fit=crop&w=900&q=70',
-    'https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=900&q=70',
-    'https://images.unsplash.com/photo-1605276374104-dee2a0ed3cd6?auto=format&fit=crop&w=900&q=70',
-    'https://images.unsplash.com/photo-1502005229762-cf1b2da7c5d6?auto=format&fit=crop&w=900&q=70',
-    'https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?auto=format&fit=crop&w=900&q=70',
-    'https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&fit=crop&w=900&q=70',
-    'https://images.unsplash.com/photo-1600573472592-401b489a3cdc?auto=format&fit=crop&w=900&q=70',
-    'https://images.unsplash.com/photo-1518780664697-55e3ad937233?auto=format&fit=crop&w=900&q=70',
-    'https://images.unsplash.com/photo-1583608205776-bfd35f0d9f83?auto=format&fit=crop&w=900&q=70',
-    'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=900&q=70',
-    'https://images.unsplash.com/photo-1554995207-c18c203602cb?auto=format&fit=crop&w=900&q=70',
-    'https://images.unsplash.com/photo-1523217582562-09d0def993a6?auto=format&fit=crop&w=900&q=70',
-    'https://images.unsplash.com/photo-1449844908441-8829872d2607?auto=format&fit=crop&w=900&q=70',
-    'https://images.unsplash.com/photo-1600585154363-67eb9e2e2099?auto=format&fit=crop&w=900&q=70'
+    'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=900&q=70'
   ];
 
-  /* ==================================================================
-     2. FOR-SALE LISTINGS (10 REAL PROPERTIES)
-     Sources: Zillow / MLS data, opened pages & search results.
-     ================================================================== */
-  const LISTINGS = [
-    {
-      id: 1,
-      address: '1712 Alleghany Dr',
-      city: 'Austin', state: 'TX', zip: '78741',
-      price: 569900,
-      beds: 5, baths: 4, sqft: 1744,
-      lot: 10019, year: 1968,
-      type: 'SINGLE_FAMILY', status: 'FOR_SALE',
-      lat: 30.2325, lng: -97.7215,
-      listedAt: Date.now() - 21 * 86400000,
-      pricePerSqft: 327, zestimate: null, hoa: 0,
-      subtype: 'Single Family Residence',
-      description: 'Riverside’s ultimate house-hack hidden gem — a fully remodeled 4-bed, 2-bath single-story stunner with a sleek 260 SF attached 1-bed/1-bath ADU featuring its own private entrance. Chef’s kitchen with shaker cabinets, quartz counters, 8-ft island, pro vent hood. Covered patio, fenced backyard, no HOA.',
-      img: IMAGES[0],
-      agent: { name: 'Jordan Moorhead', title: 'Listing Agent · Keller Williams Realty' }
-    },
-    {
-      id: 2,
-      address: '16101 Larustinus St',
-      city: 'Austin', state: 'TX', zip: '78725',
-      price: 328990,
-      beds: 3, baths: 2, sqft: 1499,
-      lot: null, year: 2025,
-      type: 'SINGLE_FAMILY', status: 'FOR_SALE',
-      lat: 30.2450, lng: -97.6650,
-      listedAt: Date.now() - 16 * 86400000,
-      pricePerSqft: 219, zestimate: 329000, hoa: 0,
-      subtype: 'Single Family Residence',
-      description: 'Newly built Athena plan — one-story, open concept, granite countertops, brand-new stainless steel appliances, front porch and back patio. Move-in ready, no waiting. Part of Elm Park community with trails and parks.',
-      img: IMAGES[1],
-      agent: { name: 'Starlight Homes', title: 'Builder · Starlight' }
-    },
-    {
-      id: 3,
-      address: '8511 Dongan Dr',
-      city: 'Austin', state: 'TX', zip: '78744',
-      price: 624990,
-      beds: 5, baths: 4, sqft: 2709,
-      lot: 9239, year: 2025,
-      type: 'SINGLE_FAMILY', status: 'FOR_SALE',
-      lat: 30.1950, lng: -97.7350,
-      listedAt: Date.now() - 36 * 86400000,
-      pricePerSqft: 231, zestimate: null, hoa: 76,
-      subtype: 'Single Family Residence',
-      description: 'Newmark Homes Grace floorplan — 2-story, 5 spacious bedrooms, 4 full baths, 2-car garage. Grand curved staircase, open-concept kitchen and family room, upstairs game room, primary suite with soaking tub and dual vanities. Upgraded designer touches throughout.',
-      img: IMAGES[2],
-      agent: { name: 'Sarah', title: 'Listing Agent · RE/MAX' }
-    },
-    {
-      id: 4,
-      address: '18456 40th Place NE',
-      city: 'Lake Forest Park', state: 'WA', zip: '98155',
-      price: 799900,
-      beds: 3, baths: 1, sqft: 2400,
-      lot: 13050, year: 1958,
-      type: 'SINGLE_FAMILY', status: 'FOR_SALE',
-      lat: 47.7600, lng: -122.2850,
-      listedAt: Date.now() - 4 * 86400000,
-      pricePerSqft: 333, zestimate: 772900, hoa: 0,
-      subtype: 'Single Family Residence',
-      description: '1958 rambler on a mature, wooded 13,050 sq ft lot in quiet Lake Forest Park. Deeded rights to LFP Civic Club — private beach, dock, boat launch. Main level 3 bedrooms, 1 bath, fireplace, plus fully finished 1,200 sq ft daylight basement with second fireplace. Original condition, ready for your remodel vision.',
-      img: IMAGES[3],
-      agent: { name: 'Benjamin Kalhar Clough', title: 'Listing Agent · Real Property Associates' }
-    },
-    {
-      id: 5,
-      address: '8037 Wallingford Avenue N #B',
-      city: 'Seattle', state: 'WA', zip: '98103',
-      price: 699950,
-      beds: 2, baths: 2, sqft: 1117,
-      lot: 649, year: 2026,
-      type: 'SINGLE_FAMILY', status: 'FOR_SALE',
-      lat: 47.6775, lng: -122.3350,
-      listedAt: Date.now() - 2 * 86400000,
-      pricePerSqft: 627, zestimate: null, hoa: 66,
-      subtype: 'Single Family Residence',
-      description: 'New construction by JDL Developing, blocks from Green Lake Park. Two-level floor plan with two bedroom suites upstairs, open-concept kitchen/dining/living on main. Fisher & Paykel appliances, quartz counters, private yard, dedicated parking and EV charging. All homes have their own utilities.',
-      img: IMAGES[4],
-      agent: { name: 'Daniel Eaton', title: 'Listing Agent · Windermere R.E. Northeast' }
-    },
-    {
-      id: 6,
-      address: '7738 2nd Avenue NE',
-      city: 'Seattle', state: 'WA', zip: '98115',
-      price: 1200000,
-      beds: 3, baths: 2, sqft: 1980,
-      lot: 5418, year: 1900,
-      type: 'SINGLE_FAMILY', status: 'FOR_SALE',
-      lat: 47.6850, lng: -122.3250,
-      listedAt: Date.now() - 157 * 86400000,
-      pricePerSqft: 606, zestimate: 1126800, hoa: 0,
-      subtype: 'Single Family Residence',
-      description: 'Green Lake gem, short walk to the lake and community center with views of Mt Rainier and the Olympics from the deck. Extensive remodel: quartz counters, stainless appliances, upgraded baths, new plumbing and electrical. Stylish living/dining, open concept, large windows, fully finished downstairs media room, oversized attached garage, fenced backyard.',
-      img: IMAGES[5],
-      agent: { name: 'Eric Verrastro', title: 'Listing Agent · Skyline Properties' }
-    },
-    {
-      id: 7,
-      address: '15575 SW 9th Ln',
-      city: 'Miami', state: 'FL', zip: '33194',
-      price: 819900,
-      beds: 3, baths: 3, sqft: 2254,
-      lot: 5000, year: 2003,
-      type: 'SINGLE_FAMILY', status: 'FOR_SALE',
-      lat: 25.7350, lng: -80.3350,
-      listedAt: Date.now() - 148 * 86400000,
-      pricePerSqft: 364, zestimate: null, hoa: 0,
-      subtype: 'Single Family Residence',
-      description: 'Well-maintained 3 bed, 2.5 bath home with travertine floors, high ceilings, formal dining, cozy family room. Kitchen with granite counters, two-car garage, private pool and jacuzzi. Accordion and hurricane shutters, arched windows, no HOA. Designed for indoor-outdoor entertaining.',
-      img: IMAGES[6],
-      agent: { name: 'Michelle del Valle', title: 'Listing Agent · The Keyes Company' }
-    },
-    {
-      id: 8,
-      address: '1057 NE 202nd Ln',
-      city: 'Miami', state: 'FL', zip: '33179',
-      price: 625000,
-      beds: 3, baths: 2, sqft: 1673,
-      lot: 4792, year: 1980,
-      type: 'SINGLE_FAMILY', status: 'FOR_SALE',
-      lat: 25.9550, lng: -80.1750,
-      listedAt: Date.now() - 14 * 86400000,
-      pricePerSqft: 374, zestimate: null, hoa: 0,
-      subtype: 'Single Family Residence',
-      description: 'Updated 3-bed, 2-bath with flexible layout including den and separate office. Guard-gated Sky Lakes Villas within California Club. New roof (2024), new A/C (June 2025), impact windows, heated pool, artificial turf backyard. One side of 2-car garage converted to multi-use room. HOA covers basic cable and internet.',
-      img: IMAGES[7],
-      agent: { name: 'Cayhill + Dumott Realty', title: 'Listing Agent' }
-    },
-    {
-      id: 9,
-      address: '3300 SW 27th Terrace',
-      city: 'Miami', state: 'FL', zip: '33133',
-      price: 1590000,
-      beds: 5, baths: 5, sqft: 2517,
-      lot: null, year: 2025,
-      type: 'SINGLE_FAMILY', status: 'FOR_SALE',
-      lat: 25.7400, lng: -80.2450,
-      listedAt: Date.now() - 9 * 86400000,
-      pricePerSqft: 632, zestimate: null, hoa: 0,
-      subtype: 'Single Family Residence',
-      description: 'Newly built 2025 home in sought-after Coral Way area. 5 bedrooms, 5 baths, 2,517 sq ft. Modern luxury finishes, open layout, premium location near schools, shopping, and dining. A rare new-construction opportunity in one of Miami’s most established neighborhoods.',
-      img: IMAGES[8],
-      agent: { name: 'CME Partner', title: 'Listing Agent' }
-    },
-    {
-      id: 10,
-      address: '8444 E 55th Place',
-      city: 'Denver', state: 'CO', zip: '80238',
-      price: 999999,
-      beds: 4, baths: 3, sqft: 3639,
-      lot: 5227, year: 2020,
-      type: 'SINGLE_FAMILY', status: 'FOR_SALE',
-      lat: 39.7950, lng: -104.8850,
-      listedAt: Date.now() - 12 * 86400000,
-      pricePerSqft: 275, zestimate: null, hoa: 0,
-      subtype: 'Single Family Residence',
-      description: 'Spacious 4-bedroom, 3-bath home in Denver’s Central Park neighborhood. 3,639 sq ft with open floor plan, gourmet kitchen, large lot, and modern finishes. Close to parks, trails, and the Stanley Marketplace. Ideal for families seeking space and community.',
-      img: IMAGES[9],
-      agent: { name: 'CME Partner', title: 'Listing Agent' }
-    }
-  ];
+  /* ------------------------------------------------------------------
+     STATE
+     ------------------------------------------------------------------ */
+  const SAVED_KEY = 'cme_saved_v5';
+  const state = {
+    mode: 'sale', q: '', min: 0, max: 2000000,
+    beds: '', baths: '', type: '', status: 'FOR_SALE',
+    sort: 'newest', savedOnly: false, shown: 12, pageSize: 12,
+    listings: [], rentals: [], loading: true, apiError: false
+  };
 
-  /* ==================================================================
-     3. RENTAL LISTINGS (10 REAL PROPERTIES)
-     ================================================================== */
-  const RENTALS = [
-    {
-      id: 101,
-      address: '1407 Waterloo Trl #A',
-      city: 'Austin', state: 'TX', zip: '78704',
-      rent: 2095,
-      beds: 3, baths: 1, sqft: 939,
-      lot: null, year: null,
-      type: 'SINGLE_FAMILY', status: 'FOR_RENT',
-      lat: 30.2450, lng: -97.7650,
-      listedAt: Date.now() - 5 * 86400000,
-      leaseTerm: '12 months',
-      description: '3 bedroom, 1 bathroom, 939 sqft apartment in South Lamar. Listed as a rental in November 2025 at $2,095 per month. Walkable to South Lamar restaurants and shops.',
-      img: IMAGES[10],
-      agent: { name: 'CME Rentals', title: 'Leasing Agent' }
-    },
-    {
-      id: 102,
-      address: '11705 Fence Post Trl',
-      city: 'Austin', state: 'TX', zip: '78750',
-      rent: 2095,
-      beds: 3, baths: 2, sqft: 1500,
-      lot: null, year: null,
-      type: 'SINGLE_FAMILY', status: 'FOR_RENT',
-      lat: 30.4500, lng: -97.7800,
-      listedAt: Date.now() - 3 * 86400000,
-      leaseTerm: '12-month lease (24-month option)',
-      description: '12-month lease beginning November 1, 2025, with a 24-month option. Monthly rent payable via autopay. Spacious home in a quiet Northwest Austin neighborhood.',
-      img: IMAGES[11],
-      agent: { name: 'CME Rentals', title: 'Leasing Agent' }
-    },
-    {
-      id: 103,
-      address: '1212 Gingerlily Cv',
-      city: 'Austin', state: 'TX', zip: '78745',
-      rent: 2450,
-      beds: 3, baths: 2, sqft: 1400,
-      lot: null, year: null,
-      type: 'SINGLE_FAMILY', status: 'FOR_RENT',
-      lat: 30.2100, lng: -97.7900,
-      listedAt: Date.now() - 8 * 86400000,
-      leaseTerm: '1 year or longer',
-      description: 'Available now at $2,600/month with $2,600 security deposit (reduced to $2,450). One-year lease or longer. Tenant pays all utilities. Dog-friendly. No smoking or vaping indoors.',
-      img: IMAGES[12],
-      agent: { name: 'CME Rentals', title: 'Leasing Agent' }
-    },
-    {
-      id: 104,
-      address: '5114 S Creston St #1',
-      city: 'Seattle', state: 'WA', zip: '98178',
-      rent: 2695,
-      beds: 2, baths: 2, sqft: 1100,
-      lot: null, year: null,
-      type: 'SINGLE_FAMILY', status: 'FOR_RENT',
-      lat: 47.5100, lng: -122.2600,
-      listedAt: Date.now() - 1 * 86400000,
-      leaseTerm: '12 months',
-      description: '2-bedroom, 2-bathroom main-level apartment in a classic south Seattle home. Close to I-5 for easy commuting. Income must be 3x rent with 650+ credit score. Utilities separate.',
-      img: IMAGES[13],
-      agent: { name: 'CME Rentals', title: 'Leasing Agent' }
-    },
-    {
-      id: 105,
-      address: '1726 Boylston Ave #Studio',
-      city: 'Seattle', state: 'WA', zip: '98122',
-      rent: 1693,
-      beds: 0, baths: 1, sqft: 350,
-      lot: null, year: null,
-      type: 'CONDO', status: 'FOR_RENT',
-      lat: 47.6150, lng: -122.3250,
-      listedAt: Date.now() - 2 * 86400000,
-      leaseTerm: '12 months',
-      description: 'Studio apartment at $1,693/month (fees may apply). Efficient layout in Capitol Hill, close to downtown, restaurants, and transit. Ideal for a single professional or student.',
-      img: IMAGES[14],
-      agent: { name: 'CME Rentals', title: 'Leasing Agent' }
-    },
-    {
-      id: 106,
-      address: '8221 5th Ave NE',
-      city: 'Seattle', state: 'WA', zip: '98115',
-      rent: 2950,
-      beds: 2, baths: 2, sqft: 840,
-      lot: null, year: null,
-      type: 'CONDO', status: 'FOR_RENT',
-      lat: 47.6850, lng: -122.3150,
-      listedAt: Date.now() - 6 * 86400000,
-      leaseTerm: '12 months',
-      description: '2-bed, 2-bath apartment at $2,950/month. 840 sqft in a well-maintained building in North Seattle. Close to parks, shopping, and light rail. Income requirements apply.',
-      img: IMAGES[15],
-      agent: { name: 'CME Rentals', title: 'Leasing Agent' }
-    },
-    {
-      id: 107,
-      address: '37 NW 47th Ter',
-      city: 'Miami', state: 'FL', zip: '33127',
-      rent: 5100,
-      beds: 3, baths: 2, sqft: 2346,
-      lot: null, year: null,
-      type: 'SINGLE_FAMILY', status: 'FOR_RENT',
-      lat: 25.8250, lng: -80.1950,
-      listedAt: Date.now() - 23 * 86400000,
-      leaseTerm: 'Contact for details',
-      description: 'Beautifully remodeled 3-bed, 2-bath home with modern upgrades. Large living room, open layout, spacious kitchen with stainless steel appliances. Primary suite with two-sink vanity, tub, and separate shower. Laundry room with washer/dryer. Deep driveway for two cars. Cats and dogs OK. Close to Miami Design District and Midtown.',
-      img: IMAGES[16],
-      agent: { name: 'CME Rentals', title: 'Leasing Agent' }
-    },
-    {
-      id: 108,
-      address: '1613 SW 19th Ter',
-      city: 'Miami', state: 'FL', zip: '33145',
-      rent: 2500,
-      beds: 3, baths: 1, sqft: 900,
-      lot: null, year: null,
-      type: 'SINGLE_FAMILY', status: 'FOR_RENT',
-      lat: 25.7550, lng: -80.2200,
-      listedAt: Date.now() - 27 * 86400000,
-      leaseTerm: '1 year',
-      description: '3-bedroom, 1-bath second-floor unit with separate entrance. Full kitchen, hardwood floors, in-unit washer and dryer. One parking space. Water and internet included. No pets. Maximum occupancy 2 adults + 2 children. Walk to elementary school.',
-      img: IMAGES[17],
-      agent: { name: 'CME Rentals', title: 'Leasing Agent' }
-    },
-    {
-      id: 109,
-      address: '1555 Bay Rd',
-      city: 'Miami Beach', state: 'FL', zip: '33139',
-      rent: 3400,
-      beds: 2, baths: 1, sqft: 1600,
-      lot: null, year: null,
-      type: 'SINGLE_FAMILY', status: 'FOR_RENT',
-      lat: 25.7950, lng: -80.1400,
-      listedAt: Date.now() - 10 * 86400000,
-      leaseTerm: '12 months',
-      description: '2-bedroom, 1-bathroom single-family home at $3,400/month. 1,600 sqft, pet friendly. Listed April 7, 2025. Prime Miami Beach location near the beach, shops, and dining.',
-      img: IMAGES[18],
-      agent: { name: 'CME Rentals', title: 'Leasing Agent' }
-    },
-    {
-      id: 110,
-      address: '4700 Tennyson St',
-      city: 'Denver', state: 'CO', zip: '80212',
-      rent: 2900,
-      beds: 3, baths: 2, sqft: 1340,
-      lot: null, year: null,
-      type: 'SINGLE_FAMILY', status: 'FOR_RENT',
-      lat: 39.7850, lng: -105.0450,
-      listedAt: Date.now() - 4 * 86400000,
-      leaseTerm: '12 months',
-      description: 'Spacious 3-bedroom, 2-bath home with large front porch and bonus office. Park across the street. 1,340 sqft in Denver’s Berkeley neighborhood, walkable to Tennyson Street shops and restaurants.',
-      img: IMAGES[19],
-      agent: { name: 'CME Rentals', title: 'Leasing Agent' }
-    }
-  ];
+  let saved = new Set();
+  try { saved = new Set(JSON.parse(localStorage.getItem(SAVED_KEY) || '[]')); } catch (e) { saved = new Set(); }
+  function persistSaved() { try { localStorage.setItem(SAVED_KEY, JSON.stringify([...saved])); } catch (e) {} }
 
-  /* ==================================================================
-     4. UTILITIES
-     ================================================================== */
-  const $ = (sel, el = document) => el.querySelector(sel);
+  /* ------------------------------------------------------------------
+     UTILITIES
+     ------------------------------------------------------------------ */
+  const $ = (s, e = document) => e.querySelector(s);
+  const $$ = (s, e = document) => [...e.querySelectorAll(s)];
   const esc = v => String(v == null ? '' : v).replace(/[&<>"']/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c]));
   const fmtUSD = n => n == null ? '—' : new Intl.NumberFormat('en-US', { style:'currency', currency:'USD', maximumFractionDigits:0 }).format(n);
   const fmtNum = n => n == null ? '—' : new Intl.NumberFormat('en-US').format(n);
 
   function shortPrice(n) {
     if (n == null) return '—';
-    if (n >= 1000000) return '$' + (n / 1000000).toFixed(n % 1000000 === 0 ? 0 : 1).replace(/\.0$/, '') + 'M';
+    if (n >= 1000000) return '$' + (n / 1000000).toFixed(1).replace(/\.0$/, '') + 'M';
     if (n >= 1000) return '$' + Math.round(n / 1000) + 'K';
     return '$' + n;
   }
-
   function timeAgo(ts) {
     const d = Math.floor((Date.now() - ts) / 86400000);
     if (d <= 0) return 'today';
@@ -892,7 +695,6 @@ a{color:inherit;text-decoration:none}
     const m = Math.floor(d / 30);
     return m === 1 ? '1 month ago' : m + ' months ago';
   }
-
   function monthlyPayment(price, downPct, ratePct) {
     const principal = price * (1 - downPct / 100);
     const r = ratePct / 100 / 12;
@@ -900,47 +702,219 @@ a{color:inherit;text-decoration:none}
     if (r <= 0) return principal / n;
     return (principal * r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1);
   }
-
   function debounce(fn, ms) { let t; return function (...args) { clearTimeout(t); t = setTimeout(() => fn.apply(this, args), ms); }; }
-  function initials(name) { return name.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase(); }
+  function initials(name) { return (name || 'CME').split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase(); }
 
-  const TYPE_LABEL = { SINGLE_FAMILY: 'Single family', CONDO: 'Condo', TOWNHOUSE: 'Townhouse', MULTI_FAMILY: 'Multi-family' };
-  const STATUS_LABEL = { FOR_SALE: 'For sale', FOR_RENT: 'For rent', PENDING: 'Pending', SOLD: 'Sold' };
+  const TYPE_LABEL = { SINGLE_FAMILY:'Single family', CONDO:'Condo', TOWNHOUSE:'Townhouse', MULTI_FAMILY:'Multi-family' };
+  const STATUS_LABEL = { FOR_SALE:'For sale', FOR_RENT:'For rent', PENDING:'Pending', SOLD:'Sold' };
 
-  /* ==================================================================
-     5. STATE
-     ================================================================== */
-  const SAVED_KEY = 'cme_saved_v2';
-  const state = {
-    mode: 'sale', // 'sale' | 'rent'
-    q: '', min: '', max: '', beds: '', baths: '', type: '', status: 'FOR_SALE', sort: 'newest',
-    savedOnly: false, shown: 10, pageSize: 10
-  };
+  /* ------------------------------------------------------------------
+     DATA SOURCE
+     ------------------------------------------------------------------ */
+  function currentData() { return state.mode === 'sale' ? state.listings : state.rentals; }
+  function priceOf(l) { return state.mode === 'sale' ? (l.price || 0) : (l.rent || 0); }
+  function maxPriceForMode() { return state.mode === 'sale' ? 2000000 : 6000; }
+  function minPriceForMode() { return state.mode === 'sale' ? 0 : 500; }
 
-  let saved = new Set();
-  try { saved = new Set(JSON.parse(localStorage.getItem(SAVED_KEY) || '[]')); } catch (e) { saved = new Set(); }
-  function persistSaved() { try { localStorage.setItem(SAVED_KEY, JSON.stringify([...saved])); } catch (e) {} }
+  /* ------------------------------------------------------------------
+     API FETCH — Realtor.com via RapidAPI
+     ------------------------------------------------------------------ */
+  async function fetchListings(status, city = 'Austin', stateCode = 'TX') {
+    const url = `https://${CONFIG.RAPIDAPI_HOST}/properties/v3/list`;
+    const body = {
+      status: [status === 'FOR_SALE' ? 'for_sale' : status === 'FOR_RENT' ? 'for_rent' : 'recently_sold'],
+      city: city,
+      state_code: stateCode,
+      limit: 20,
+      offset: 0,
+      sort: { field: 'list_date', direction: 'desc' }
+    };
 
-  /* ==================================================================
-     6. DATA SOURCE BY MODE
-     ================================================================== */
-  function currentData() { return state.mode === 'sale' ? LISTINGS : RENTALS; }
-  function priceOf(l) { return state.mode === 'sale' ? l.price : l.rent; }
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-RapidAPI-Key': CONFIG.RAPIDAPI_KEY,
+        'X-RapidAPI-Host': CONFIG.RAPIDAPI_HOST
+      },
+      body: JSON.stringify(body)
+    });
 
-  /* ==================================================================
-     7. FILTER + SORT
-     ================================================================== */
+    if (!response.ok) throw new Error('API request failed: ' + response.status);
+    const data = await response.json();
+    const results = data?.data?.home_search?.results || [];
+    return results.map(item => normalizeListing(item, status === 'FOR_RENT' ? 'rent' : 'sale'));
+  }
+
+  function normalizeListing(item, mode) {
+    const isRent = mode === 'rent';
+    const address = item.location?.address || {};
+    const description = item.description || {};
+    const primaryPhoto = item.primary_photo;
+    const photos = item.photos || [];
+
+    const photoUrls = [];
+    if (primaryPhoto?.href) photoUrls.push(primaryPhoto.href);
+    photos.forEach(p => { if (p?.href && !photoUrls.includes(p.href)) photoUrls.push(p.href); });
+    while (photoUrls.length < 3) photoUrls.push(FALLBACK_IMAGES[photoUrls.length % FALLBACK_IMAGES.length]);
+
+    const price = isRent ? (item.list_price || 0) : (item.list_price || 0);
+    const beds = item.description?.beds ?? item.beds ?? 0;
+    const baths = item.description?.baths ?? item.baths ?? 0;
+    const sqft = item.description?.sqft ?? item.sqft ?? 0;
+
+    const propType = (item.description?.type || 'single_family').toUpperCase().replace(/ /g, '_');
+    const typeMap = { SINGLE_FAMILY:'SINGLE_FAMILY', CONDO:'CONDO', TOWNHOUSE:'TOWNHOUSE', MULTI_FAMILY:'MULTI_FAMILY', APARTMENT:'CONDO' };
+
+    return {
+      id: item.property_id || Math.random().toString(36).slice(2),
+      address: address.line || 'Address unavailable',
+      city: address.city || 'Unknown',
+      state: address.state_code || '',
+      zip: address.postal_code || '',
+      price: isRent ? null : price,
+      rent: isRent ? price : null,
+      beds, baths, sqft,
+      lot: item.description?.lot_sqft || null,
+      year: item.description?.year_built || null,
+      type: typeMap[propType] || 'SINGLE_FAMILY',
+      status: isRent ? 'FOR_RENT' : (item.status === 'for_sale' ? 'FOR_SALE' : item.status?.toUpperCase() || 'FOR_SALE'),
+      lat: item.location?.coordinates?.lat || null,
+      lng: item.location?.coordinates?.lon || null,
+      listedAt: item.list_date ? new Date(item.list_date).getTime() : Date.now(),
+      leaseTerm: isRent ? '12 months' : null,
+      pricePerSqft: sqft > 0 && price > 0 ? Math.round(price / sqft) : null,
+      zestimate: item.estimate?.estimate || null,
+      hoa: item.hoa?.fee || 0,
+      subtype: item.description?.sub_type || (isRent ? 'Rental' : 'Single Family'),
+      description: description.text || 'No description available for this property.',
+      photos: photoUrls,
+      agent: { name: item.agents?.[0]?.name || 'CME Partner', title: item.agents?.[0]?.title || 'Listing Agent' }
+    };
+  }
+
+  async function loadData() {
+    state.loading = true; state.apiError = false;
+    try {
+      const [sales, rentals] = await Promise.all([ fetchListings('FOR_SALE'), fetchListings('FOR_RENT') ]);
+      state.listings = sales; state.rentals = rentals; state.loading = false;
+      if (sales.length === 0) state.apiError = true;
+      render();
+      toast(`Loaded ${sales.length} for-sale and ${rentals.length} rental properties`);
+    } catch (err) {
+      console.error('API error:', err);
+      state.loading = false; state.apiError = true;
+      state.listings = getFallbackListings('sale');
+      state.rentals = getFallbackListings('rent');
+      render();
+      toast('Using offline demo data — add your RapidAPI key to fetch live listings');
+    }
+  }
+
+  function getFallbackListings(mode) {
+    const base = [
+      { id: 'f1', address: '1712 Alleghany Dr', city: 'Austin', state: 'TX', zip: '78741', price: 569900, rent: 2095, beds: 5, baths: 4, sqft: 1744, lot: 10019, year: 1968, type: 'SINGLE_FAMILY', lat: 30.2325, lng: -97.7215, photos: [FALLBACK_IMAGES[0], FALLBACK_IMAGES[1], FALLBACK_IMAGES[2]], agent: { name: 'Jordan Moorhead', title: 'Listing Agent' }, description: 'Remodeled 4-bed home with attached ADU.', listedAt: Date.now() - 21 * 86400000, status: 'FOR_SALE', leaseTerm: '12 months' },
+      { id: 'f2', address: '16101 Larustinus St', city: 'Austin', state: 'TX', zip: '78725', price: 328990, rent: 1895, beds: 3, baths: 2, sqft: 1499, lot: null, year: 2025, type: 'SINGLE_FAMILY', lat: 30.245, lng: -97.665, photos: [FALLBACK_IMAGES[3], FALLBACK_IMAGES[4], FALLBACK_IMAGES[5]], agent: { name: 'Starlight Homes', title: 'Builder' }, description: 'Newly built Athena plan — one-story, open concept.', listedAt: Date.now() - 16 * 86400000, status: 'FOR_SALE', leaseTerm: '12 months' },
+      { id: 'f3', address: '8037 Wallingford Ave N', city: 'Seattle', state: 'WA', zip: '98103', price: 699950, rent: 2695, beds: 2, baths: 2, sqft: 1117, lot: 649, year: 2026, type: 'SINGLE_FAMILY', lat: 47.6775, lng: -122.335, photos: [FALLBACK_IMAGES[6], FALLBACK_IMAGES[7], FALLBACK_IMAGES[0]], agent: { name: 'Daniel Eaton', title: 'Listing Agent' }, description: 'New construction blocks from Green Lake Park.', listedAt: Date.now() - 2 * 86400000, status: 'FOR_SALE', leaseTerm: '12 months' }
+    ];
+    return base.map(l => ({ ...l, rent: mode === 'rent' ? l.rent : null, price: mode === 'sale' ? l.price : null, status: mode === 'rent' ? 'FOR_RENT' : 'FOR_SALE' }));
+  }
+
+  /* ------------------------------------------------------------------
+     MAPBOX MAP
+     ------------------------------------------------------------------ */
+  let map = null;
+  const markers = [];
+
+  function initMap() {
+    if (!CONFIG.MAPBOX_TOKEN || CONFIG.MAPBOX_TOKEN.includes('REPLACE') || CONFIG.MAPBOX_TOKEN.length < 50) {
+      console.warn('Mapbox token missing or invalid — map will not render.');
+      return;
+    }
+
+    mapboxgl.accessToken = CONFIG.MAPBOX_TOKEN;
+    map = new mapboxgl.Map({
+      container: 'map',
+      style: 'mapbox://styles/mapbox/streets-v12',
+      center: [-97.74, 30.27],
+      zoom: 11
+    });
+
+    map.addControl(new mapboxgl.NavigationControl({ showCompass: false }), 'bottom-right');
+
+    map.on('load', () => {
+      if (map.getLayer('building')) return;
+      const layers = map.getStyle().layers;
+      const labelLayer = layers.find(l => l.type === 'symbol' && l.layout?.['text-field']);
+      if (labelLayer) {
+        map.addLayer({
+          id: '3d-buildings', source: 'composite', 'source-layer': 'building',
+          filter: ['==', 'extrude', 'true'], type: 'fill-extrusion', minzoom: 14,
+          paint: {
+            'fill-extrusion-color': '#c5d1e0',
+            'fill-extrusion-height': ['get', 'height'],
+            'fill-extrusion-base': ['get', 'min_height'],
+            'fill-extrusion-opacity': 0.65
+          }
+        }, labelLayer.id);
+      }
+    });
+  }
+
+  function renderMapMarkers(list) {
+    if (!map) return;
+    markers.forEach(m => m.remove());
+    markers.length = 0;
+
+    const bounds = new mapboxgl.LngLatBounds();
+    let hasCoords = false;
+
+    list.forEach(l => {
+      if (l.lat == null || l.lng == null) return;
+      const el = document.createElement('div');
+      el.className = 'pin ' + (state.mode === 'sale' ? 'sale' : 'rent');
+      const label = state.mode === 'sale' ? shortPrice(l.price) : '$' + fmtNum(l.rent) + '/mo';
+      el.innerHTML = '<span>' + esc(label) + '</span>';
+      el.addEventListener('click', () => openDetail(l.id));
+
+      const marker = new mapboxgl.Marker({ element: el, anchor: 'bottom' }).setLngLat([l.lng, l.lat]).addTo(map);
+      markers.push(marker);
+      bounds.extend([l.lng, l.lat]);
+      hasCoords = true;
+    });
+
+    if (hasCoords && list.length > 1) {
+      map.fitBounds(bounds, { padding: 80, maxZoom: 13, duration: 800 });
+    } else if (hasCoords) {
+      map.flyTo({ center: bounds.getCenter(), zoom: 13 });
+    }
+  }
+
+  /* ------------------------------------------------------------------
+     RENDER
+     ------------------------------------------------------------------ */
+  let currentResults = [];
+
+  function render() {
+    currentResults = filtered();
+    renderHead();
+    renderGrid();
+    renderMapMarkers(currentResults);
+    syncSavedUI();
+    updateModeUI();
+    updateFilterBadge();
+  }
+
   function filtered() {
     const q = state.q.trim().toLowerCase();
-    const source = currentData();
-    let out = source.filter(l => {
+    let out = currentData().filter(l => {
       if (q) {
-        const hay = (l.address + ' ' + l.city + ' ' + l.state + ' ' + l.zip + ' ' + l.city + ', ' + l.state).toLowerCase();
+        const hay = (l.address + ' ' + l.city + ' ' + l.state + ' ' + l.zip).toLowerCase();
         if (!hay.includes(q)) return false;
       }
       const p = priceOf(l);
-      if (state.min && p < +state.min) return false;
-      if (state.max && p > +state.max) return false;
+      if (state.min > minPriceForMode() && p < state.min) return false;
+      if (state.max < maxPriceForMode() && p > state.max) return false;
       if (state.beds && l.beds < +state.beds) return false;
       if (state.baths && l.baths < +state.baths) return false;
       if (state.type && l.type !== state.type) return false;
@@ -950,74 +924,19 @@ a{color:inherit;text-decoration:none}
     });
 
     switch (state.sort) {
-      case 'price_asc':  out.sort((a, b) => priceOf(a) - priceOf(b)); break;
+      case 'price_asc': out.sort((a, b) => priceOf(a) - priceOf(b)); break;
       case 'price_desc': out.sort((a, b) => priceOf(b) - priceOf(a)); break;
-      case 'sqft_desc':  out.sort((a, b) => b.sqft - a.sqft); break;
-      case 'beds_desc':  out.sort((a, b) => b.beds - a.beds); break;
-      default:           out.sort((a, b) => b.listedAt - a.listedAt);
+      case 'sqft_desc': out.sort((a, b) => b.sqft - a.sqft); break;
+      default: out.sort((a, b) => b.listedAt - a.listedAt);
     }
     return out;
-  }
-
-  /* ==================================================================
-     8. MAP
-     ================================================================== */
-  let map = null, pinLayer = null;
-  const pinById = new Map();
-  let activePinId = null;
-
-  function initMap() {
-    if (typeof L === 'undefined') return;
-    map = L.map('map', { zoomControl: false, attributionControl: true, scrollWheelZoom: true }).setView([39.5, -98.35], 4);
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
-      maxZoom: 19, subdomains: 'abcd', attribution: '&copy; OpenStreetMap &copy; CARTO'
-    }).addTo(map);
-    L.control.zoom({ position: 'bottomright' }).addTo(map);
-    pinLayer = L.layerGroup().addTo(map);
-  }
-
-  function pinIcon(label) {
-    return L.divIcon({ className: 'pin', html: '<span>' + esc(label) + '</span>', iconSize: [0, 0], iconAnchor: [0, 0] });
-  }
-
-  function renderPins(list) {
-    if (!map || !pinLayer) return;
-    pinLayer.clearLayers(); pinById.clear(); activePinId = null;
-    const bounds = [];
-    list.forEach(l => {
-      if (l.lat == null || l.lng == null) return;
-      const label = state.mode === 'sale' ? shortPrice(l.price) : '$' + fmtNum(l.rent) + '/mo';
-      const marker = L.marker([l.lat, l.lng], { icon: pinIcon(label), riseOnHover: true, title: l.address + ', ' + l.city });
-      marker.on('click', () => openDetail(l.id));
-      marker.addTo(pinLayer);
-      pinById.set(l.id, marker);
-      bounds.push([l.lat, l.lng]);
-    });
-    if (bounds.length === 1) map.setView(bounds[0], 13);
-    else if (bounds.length > 1) map.fitBounds(bounds, { padding: [48, 48], maxZoom: 13 });
-  }
-
-  function highlightPin(id) {
-    if (activePinId != null && pinById.has(activePinId)) { const prev = pinById.get(activePinId).getElement(); if (prev) prev.classList.remove('is-active'); }
-    activePinId = id;
-    if (id != null && pinById.has(id)) { const el = pinById.get(id).getElement(); if (el) el.classList.add('is-active'); }
-  }
-
-  /* ==================================================================
-     9. RENDER
-     ================================================================== */
-  let currentResults = [];
-
-  function render() {
-    currentResults = filtered();
-    renderHead(); renderGrid(); renderPins(currentResults); syncSavedUI(); updateModeUI();
   }
 
   function renderHead() {
     const title = $('#resultsTitle'), sub = $('#resultsSub'), total = currentResults.length;
     if (state.savedOnly) {
       title.textContent = 'Saved homes';
-      sub.textContent = total === 0 ? 'Tap the heart on any listing to save it here.' : total + (total === 1 ? ' home' : ' homes') + ' in your collection';
+      sub.innerHTML = total === 0 ? 'Tap the heart on any listing to save it here.' : '<b>' + total + '</b> ' + (total === 1 ? 'home' : 'homes') + ' in your collection';
       return;
     }
     if (state.mode === 'sale') {
@@ -1026,91 +945,179 @@ a{color:inherit;text-decoration:none}
     } else {
       title.textContent = 'Homes for rent';
     }
-    sub.textContent = total + (total === 1 ? ' listing' : ' listings') + (state.q ? ' matching “' + state.q + '”' : ' available right now');
+    const suffix = state.q ? ' matching “' + state.q + '”' : ' available right now';
+    sub.innerHTML = state.loading ? 'Loading live listings…' : '<b>' + total + '</b> ' + (total === 1 ? 'listing' : 'listings') + esc(suffix);
   }
 
-  function cardHTML(l) {
+  function cardHTML(l, index) {
     const isSaved = saved.has(l.id);
-    const fallback = 'https://picsum.photos/seed/cme' + l.id + '/900/675';
     const isRent = state.mode === 'rent';
-    const priceDisplay = isRent ? '$' + fmtNum(l.rent) + '/mo' : fmtUSD(l.price);
-    const estDisplay = isRent ? 'per month' : fmtUSD(Math.round(monthlyPayment(l.price, 20, 6.5))) + '/mo';
+    const isNew = Date.now() - l.listedAt < 7 * 86400000;
+
+    const priceDisplay = isRent ? '$' + fmtNum(l.rent) : fmtUSD(l.price);
+    const suffix = isRent ? '<span class="suffix">/mo</span>' : '';
+    const estDisplay = isRent ? 'Per month' : fmtUSD(Math.round(monthlyPayment(l.price, 20, 6.5))) + '/mo';
     const badgeClass = isRent ? 'for_rent' : 'for_sale';
     const badgeLabel = isRent ? 'For rent' : STATUS_LABEL[l.status];
     const metaLeft = isRent ? (l.leaseTerm || '12 mo lease') : (TYPE_LABEL[l.type] || l.subtype);
-    const metaRight = isRent ? 'Available ' + timeAgo(l.listedAt) : timeAgo(l.listedAt);
+    const metaRight = isRent ? 'Listed ' + timeAgo(l.listedAt) : timeAgo(l.listedAt);
 
-    return '' +
-      '<article class="card" data-id="' + l.id + '" tabindex="0" aria-label="' + esc(l.address + ', ' + l.city) + ' — ' + priceDisplay + '">' +
-        '<div class="card-media">' +
-          '<img src="' + esc(l.img) + '" alt="Photo of ' + esc(l.address) + '" loading="lazy" onerror="this.onerror=null;this.src=\'' + fallback + '\'">' +
-          '<span class="badge badge--' + badgeClass + '">' + esc(badgeLabel) + '</span>' +
-          '<button class="heart' + (isSaved ? ' on' : '') + '" data-fav="' + l.id + '" aria-label="' + (isSaved ? 'Remove from saved' : 'Save home') + '">' +
-            '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20.5s-7.4-4.6-9.2-8.9C1.4 8.1 3.5 4.8 6.9 4.8c2 0 3.5 1 4.4 2.3.9-1.3 2.4-2.3 4.4-2.3 3.4 0 5.5 3.3 4.1 6.8-1.8 4.3-9.2 8.9-9.2 8.9z"/></svg>' +
-          '</button>' +
-        '</div>' +
-        '<div class="card-body">' +
-          '<div class="card-price"><span class="price">' + priceDisplay + '</span><span class="est">' + estDisplay + '</span></div>' +
-          '<div class="specs">' + (l.beds === 0 ? 'Studio' : l.beds + ' bds') + ' · ' + l.baths + ' ba · ' + fmtNum(l.sqft) + ' sqft</div>' +
-          '<div class="addr">' + esc(l.address) + ', ' + esc(l.city) + ', ' + esc(l.state) + ' ' + esc(l.zip) + '</div>' +
-          '<div class="meta"><span>' + esc(metaLeft) + '</span><span>' + metaRight + '</span></div>' +
-        '</div>' +
-      '</article>';
+    const photos = l.photos || FALLBACK_IMAGES;
+    const slides = photos.map((src, i) =>
+      `<img src="${esc(src)}" alt="${esc(l.address)} photo ${i + 1}" loading="lazy" class="${i === 0 ? 'active' : ''}" onerror="this.onerror=null;this.src='${FALLBACK_IMAGES[i % FALLBACK_IMAGES.length]}'">`
+    ).join('');
+
+    const dots = photos.map((_, i) => `<span class="${i === 0 ? 'active' : ''}" data-slide="${i}"></span>`).join('');
+
+    return `
+      <article class="card" data-id="${l.id}" data-slide-index="0" tabindex="0" aria-label="${esc(l.address + ', ' + l.city)} — ${priceDisplay}" style="animation-delay:${index * 40}ms">
+        <div class="card-media">
+          ${slides}
+          <div class="card-badges">
+            <span class="badge badge--${badgeClass}">${esc(badgeLabel)}</span>
+            ${isNew ? '<span class="badge badge--new">New</span>' : ''}
+          </div>
+          <button class="card-heart${isSaved ? ' on' : ''}" data-fav="${l.id}" aria-label="${isSaved ? 'Remove from saved' : 'Save home'}">
+            <svg viewBox="0 0 24 24"><path d="M12 20.5s-7.4-4.6-9.2-8.9C1.4 8.1 3.5 4.8 6.9 4.8c2 0 3.5 1 4.4 2.3.9-1.3 2.4-2.3 4.4-2.3 3.4 0 5.5 3.3 4.1 6.8-1.8 4.3-9.2 8.9-9.2 8.9z"/></svg>
+          </button>
+          <button class="slide-arrow prev" data-slide-prev aria-label="Previous photo"><svg viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></svg></button>
+          <button class="slide-arrow next" data-slide-next aria-label="Next photo"><svg viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg></button>
+          <div class="slideshow-dots">${dots}</div>
+          <div class="card-price-overlay">
+            <span class="price">${priceDisplay}${suffix}</span>
+            <span class="est">${estDisplay}</span>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="specs">
+            <span>${l.beds === 0 ? 'Studio' : l.beds + ' bd'}</span><span class="dot"></span>
+            <span>${l.baths} ba</span><span class="dot"></span>
+            <span>${fmtNum(l.sqft)} sqft</span>
+          </div>
+          <div class="addr">${esc(l.address)}, ${esc(l.city)}, ${esc(l.state)} ${esc(l.zip)}</div>
+          <div class="meta-row">
+            <span class="meta-tag"><svg viewBox="0 0 24 24"><path d="M3 9h18M3 15h18M9 3v18M15 3v18"/></svg>${esc(metaLeft)}</span>
+            <span>${metaRight}</span>
+          </div>
+        </div>
+      </article>`;
   }
 
   function emptyHTML() {
-    if (state.savedOnly) return '<div class="empty"><h3>No saved homes yet</h3><p>Tap the heart icon on any listing and it will show up here, saved on this device.</p></div>';
-    return '<div class="empty"><h3>No homes match those filters</h3><p>Try widening your price range, removing a bedroom minimum, or searching a nearby city.</p></div>';
+    if (state.loading) {
+      return `<div class="empty"><div class="empty-ico"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg></div><h3>Loading live listings…</h3><p>Fetching real properties and photos from the API.</p></div>`;
+    }
+    if (state.savedOnly) {
+      return `<div class="empty"><div class="empty-ico"><svg viewBox="0 0 24 24"><path d="M12 20.5s-7.4-4.6-9.2-8.9C1.4 8.1 3.5 4.8 6.9 4.8c2 0 3.5 1 4.4 2.3.9-1.3 2.4-2.3 4.4-2.3 3.4 0 5.5 3.3 4.1 6.8-1.8 4.3-9.2 8.9-9.2 8.9z"/></svg></div><h3>No saved homes yet</h3><p>Tap the heart icon on any listing and it will show up here.</p></div>`;
+    }
+    return `<div class="empty"><div class="empty-ico"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg></div><h3>No homes match those filters</h3><p>Try widening your price range or searching a nearby city.</p></div>`;
   }
 
   function renderGrid() {
     const grid = $('#grid'), visible = currentResults.slice(0, state.shown);
     grid.innerHTML = visible.length ? visible.map(cardHTML).join('') : emptyHTML();
     $('#moreBtn').hidden = state.savedOnly || visible.length >= currentResults.length;
+    bindSlideshows();
   }
 
-  /* ==================================================================
-     10. SAVED HOMES
-     ================================================================== */
+  /* ------------------------------------------------------------------
+     CARD SLIDESHOWS
+     ------------------------------------------------------------------ */
+  function bindSlideshows() {
+    $$('.card').forEach(card => {
+      const imgs = $$('img', card);
+      const dots = $$('.slideshow-dots span', card);
+      let idx = 0;
+
+      function show(i) {
+        idx = (i + imgs.length) % imgs.length;
+        imgs.forEach((img, j) => img.classList.toggle('active', j === idx));
+        dots.forEach((d, j) => d.classList.toggle('active', j === idx));
+      }
+
+      const next = $('[data-slide-next]', card);
+      const prev = $('[data-slide-prev]', card);
+      if (next) next.addEventListener('click', e => { e.stopPropagation(); show(idx + 1); });
+      if (prev) prev.addEventListener('click', e => { e.stopPropagation(); show(idx - 1); });
+      dots.forEach((dot, i) => dot.addEventListener('click', e => { e.stopPropagation(); show(i); }));
+
+      let hoverTimer;
+      card.addEventListener('mouseenter', () => {
+        if (imgs.length < 2) return;
+        hoverTimer = setInterval(() => show(idx + 1), 3200);
+      });
+      card.addEventListener('mouseleave', () => clearInterval(hoverTimer));
+    });
+  }
+
+  /* ------------------------------------------------------------------
+     SAVED
+     ------------------------------------------------------------------ */
   function syncSavedUI() {
     $('#savedCount').textContent = saved.size;
+    const nav = $('#navSavedCount');
+    if (nav) { nav.textContent = saved.size; nav.classList.toggle('show', saved.size > 0); }
     const btn = $('#savedBtn');
     btn.classList.toggle('active', state.savedOnly);
     btn.setAttribute('aria-pressed', state.savedOnly);
+    const navSaved = $('#navSaved');
+    if (navSaved) navSaved.classList.toggle('active', state.savedOnly);
   }
 
   function toggleSaved(id) {
     const wasSaved = saved.has(id);
     if (wasSaved) saved.delete(id); else saved.add(id);
     persistSaved();
-    document.querySelectorAll('[data-fav="' + id + '"]').forEach(el => {
+    $$('[data-fav="' + id + '"]').forEach(el => {
       el.classList.toggle('on', !wasSaved);
       el.setAttribute('aria-label', wasSaved ? 'Save home' : 'Remove from saved');
     });
     syncSavedUI();
     if (state.savedOnly) render();
-    toast(wasSaved ? 'Removed from saved homes' : 'Saved to your homes');
+    toast(wasSaved ? 'Removed from saved' : 'Saved to your homes');
   }
 
-  /* ==================================================================
-     11. DETAIL DRAWER
-     ================================================================== */
+  /* ------------------------------------------------------------------
+     FILTER BADGE
+     ------------------------------------------------------------------ */
+  function updateFilterBadge() {
+    let count = 0;
+    if (state.min > minPriceForMode() || state.max < maxPriceForMode()) count++;
+    if (state.beds) count++;
+    if (state.baths) count++;
+    if (state.type) count++;
+    if (state.mode === 'sale' && state.status && state.status !== 'FOR_SALE') count++;
+    const badge = $('#filterBadge'), nav = $('#navFilterCount');
+    if (badge) { badge.textContent = count; badge.classList.toggle('show', count > 0); }
+    if (nav) { nav.textContent = count; nav.classList.toggle('show', count > 0); }
+  }
+
+  /* ------------------------------------------------------------------
+     DRAWER with HERO SLIDESHOW
+     ------------------------------------------------------------------ */
   const drawer = $('#drawer'), scrim = $('#scrim');
   let activeDetailId = null;
+  let heroIndex = 0;
 
   function factRow(label, value) {
     if (value == null || value === '' || value === 0) return '';
-    return '<div class="fact"><span>' + esc(label) + '</span><b>' + value + '</b></div>';
+    return `<div class="fact"><span>${esc(label)}</span><b>${value}</b></div>`;
   }
 
   function detailHTML(l) {
     const isSaved = saved.has(l.id);
     const isRent = state.mode === 'rent';
-    const fallback = 'https://picsum.photos/seed/cme' + l.id + '/1200/900';
     const priceDisplay = isRent ? '$' + fmtNum(l.rent) + '/mo' : fmtUSD(l.price);
     const est = isRent ? null : Math.round(monthlyPayment(l.price, 20, 6.5));
     const badgeLabel = isRent ? 'For rent' : STATUS_LABEL[l.status];
     const badgeClass = isRent ? 'rent' : 'brand';
+    const photos = l.photos || FALLBACK_IMAGES;
+
+    const heroSlides = photos.map((src, i) =>
+      `<img src="${esc(src)}" alt="${esc(l.address)} photo ${i + 1}" class="${i === 0 ? 'active' : ''}" onerror="this.onerror=null;this.src='${FALLBACK_IMAGES[i % FALLBACK_IMAGES.length]}'">`
+    ).join('');
+
+    const dots = photos.map((_, i) => `<span class="${i === 0 ? 'active' : ''}" data-hero-slide="${i}"></span>`).join('');
 
     const facts = [
       factRow('Price / sqft', l.pricePerSqft ? '$' + l.pricePerSqft : null),
@@ -1122,56 +1129,64 @@ a{color:inherit;text-decoration:none}
       isRent ? factRow('Lease term', l.leaseTerm) : ''
     ].filter(Boolean).join('');
 
-    return '' +
-      '<div class="drawer-hero">' +
-        '<img src="' + esc(l.img) + '" alt="Photo of ' + esc(l.address) + '" onerror="this.onerror=null;this.src=\'' + fallback + '\'">' +
-        '<button class="close-btn" id="closeDrawer" aria-label="Close details"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>' +
-      '</div>' +
-      '<div class="drawer-body">' +
-        '<div class="drow">' +
-          '<div>' +
-            '<div class="price-lg">' + priceDisplay + '</div>' +
-            '<div class="specs-lg">' + (l.beds === 0 ? 'Studio' : l.beds + ' bds') + ' · ' + l.baths + ' ba · ' + fmtNum(l.sqft) + ' sqft</div>' +
-            '<div class="addr-lg">' + esc(l.address) + ', ' + esc(l.city) + ', ' + esc(l.state) + ' ' + esc(l.zip) + '</div>' +
-          '</div>' +
-          '<button class="heart-lg' + (isSaved ? ' on' : '') + '" data-fav="' + l.id + '" aria-label="' + (isSaved ? 'Remove from saved' : 'Save home') + '">' +
-            '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20.5s-7.4-4.6-9.2-8.9C1.4 8.1 3.5 4.8 6.9 4.8c2 0 3.5 1 4.4 2.3.9-1.3 2.4-2.3 4.4-2.3 3.4 0 5.5 3.3 4.1 6.8-1.8 4.3-9.2 8.9-9.2 8.9z"/></svg>' +
-          '</button>' +
-        '</div>' +
-        '<div class="pillrow">' +
-          '<span class="pill ' + badgeClass + '">' + esc(badgeLabel) + '</span>' +
-          '<span class="pill">' + esc(TYPE_LABEL[l.type] || l.subtype || 'Home') + '</span>' +
-          (l.year ? '<span class="pill">Built ' + l.year + '</span>' : '') +
-          (l.lot ? '<span class="pill">' + fmtNum(l.lot) + ' sqft lot</span>' : '') +
-          '<span class="pill">Listed ' + timeAgo(l.listedAt) + '</span>' +
-        '</div>' +
-        (facts ? '<h3 class="section-title">Facts &amp; features</h3><div class="facts-grid">' + facts + '</div>' : '') +
-        '<h3 class="section-title">About this home</h3><p class="desc">' + esc(l.description) + '</p>' +
-        (isRent ? '' :
-          '<h3 class="section-title">Estimated monthly payment</h3>' +
-          '<div class="calc">' +
-            '<div class="calc-out"><strong id="calcOut">' + fmtUSD(est) + '</strong>principal &amp; interest</div>' +
-            '<label>Down<input id="calcDown" type="number" min="0" max="90" step="5" value="20">%</label>' +
-            '<label>Rate<input id="calcRate" type="number" min="0" max="15" step="0.1" value="6.5">%</label>' +
-          '</div>' +
-          '<p class="calc-note">Based on a 30-year fixed-rate loan. Taxes, insurance, and HOA dues are not included.</p>'
-        ) +
-        '<div class="agent">' +
-          '<div class="avatar">' + esc(initials(l.agent.name)) + '</div>' +
-          '<div class="agent-info"><b>' + esc(l.agent.name) + '</b><span>' + esc(l.agent.title) + '</span></div>' +
-          '<button type="button" data-contact>Contact</button>' +
-        '</div>' +
-        '<h3 class="section-title">Similar homes nearby</h3>' +
-        '<div class="similar-grid" id="similarGrid"></div>' +
-      '</div>';
+    return `
+      <div class="drawer-hero">
+        ${heroSlides}
+        <button class="close-btn" id="closeDrawer" aria-label="Close details"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+        <button class="hero-arrow prev" data-hero-prev aria-label="Previous photo"><svg viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></svg></button>
+        <button class="hero-arrow next" data-hero-next aria-label="Next photo"><svg viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg></button>
+        <div class="hero-dots">${dots}</div>
+      </div>
+      <div class="drawer-body">
+        <div class="drow">
+          <div>
+            <div class="price-lg">${priceDisplay}</div>
+            <div class="specs-lg">
+              <span>${l.beds === 0 ? 'Studio' : l.beds + ' beds'}</span><span class="dot"></span>
+              <span>${l.baths} baths</span><span class="dot"></span>
+              <span>${fmtNum(l.sqft)} sqft</span>
+            </div>
+            <div class="addr-lg">${esc(l.address)}, ${esc(l.city)}, ${esc(l.state)} ${esc(l.zip)}</div>
+          </div>
+          <button class="heart-lg${isSaved ? ' on' : ''}" data-fav="${l.id}" aria-label="${isSaved ? 'Remove from saved' : 'Save home'}">
+            <svg viewBox="0 0 24 24"><path d="M12 20.5s-7.4-4.6-9.2-8.9C1.4 8.1 3.5 4.8 6.9 4.8c2 0 3.5 1 4.4 2.3.9-1.3 2.4-2.3 4.4-2.3 3.4 0 5.5 3.3 4.1 6.8-1.8 4.3-9.2 8.9-9.2 8.9z"/></svg>
+          </button>
+        </div>
+        <div class="pillrow">
+          <span class="pill ${badgeClass}">${esc(badgeLabel)}</span>
+          <span class="pill">${esc(TYPE_LABEL[l.type] || l.subtype || 'Home')}</span>
+          ${l.year ? '<span class="pill">Built ' + l.year + '</span>' : ''}
+          ${l.lot ? '<span class="pill">' + fmtNum(l.lot) + ' sqft lot</span>' : ''}
+          <span class="pill">Listed ${timeAgo(l.listedAt)}</span>
+        </div>
+        ${facts ? '<h3 class="section-title">Facts &amp; features</h3><div class="facts-grid">' + facts + '</div>' : ''}
+        <h3 class="section-title">About this home</h3><p class="desc">${esc(l.description)}</p>
+        ${isRent ? '' : `
+          <h3 class="section-title">Estimated monthly payment</h3>
+          <div class="calc">
+            <div class="calc-out"><strong id="calcOut">${fmtUSD(est)}</strong>principal &amp; interest</div>
+            <label>Down<input id="calcDown" type="number" min="0" max="90" step="5" value="20">%</label>
+            <label>Rate<input id="calcRate" type="number" min="0" max="15" step="0.1" value="6.5">%</label>
+          </div>
+          <p class="calc-note">Based on a 30-year fixed-rate loan. Taxes, insurance, and HOA dues are not included.</p>
+        `}
+        <div class="agent">
+          <div class="avatar">${esc(initials(l.agent.name))}</div>
+          <div class="agent-info"><b>${esc(l.agent.name)}</b><span>${esc(l.agent.title)}</span></div>
+          <button type="button" data-contact>Contact</button>
+        </div>
+        <h3 class="section-title">Similar homes nearby</h3>
+        <div class="similar-grid" id="similarGrid"></div>
+      </div>`;
   }
 
   function similarFor(l) {
-    const source = currentData();
     const p = priceOf(l);
     const lo = p * 0.55, hi = p * 1.45;
-    return source.filter(x => x.id !== l.id && x.city === l.city && priceOf(x) >= lo && priceOf(x) <= hi)
-      .sort((a, b) => Math.abs(priceOf(a) - p) - Math.abs(priceOf(b) - p)).slice(0, 4);
+    return currentData()
+      .filter(x => x.id !== l.id && x.city === l.city && priceOf(x) >= lo && priceOf(x) <= hi)
+      .sort((a, b) => Math.abs(priceOf(a) - p) - Math.abs(priceOf(b) - p))
+      .slice(0, 4);
   }
 
   function renderSimilar(l) {
@@ -1179,15 +1194,58 @@ a{color:inherit;text-decoration:none}
     const items = similarFor(l);
     if (!items.length) { grid.innerHTML = '<div style="grid-column:1/-1;font-size:13px;color:#8a97a8">No similar homes found nearby.</div>'; return; }
     grid.innerHTML = items.map(x => {
-      const fb = 'https://picsum.photos/seed/cme' + x.id + '/600/450';
       const isR = state.mode === 'rent';
       const p = isR ? '$' + fmtNum(x.rent) + '/mo' : fmtUSD(x.price);
-      return '<div class="mini" data-id="' + x.id + '" role="button" tabindex="0">' +
-        '<img src="' + esc(x.img) + '" alt="Photo of ' + esc(x.address) + '" loading="lazy" onerror="this.onerror=null;this.src=\'' + fb + '\'">' +
-        '<div class="mini-body"><div class="mini-price">' + p + '</div>' +
-        '<div class="mini-specs">' + (x.beds === 0 ? 'Studio' : x.beds + ' bd') + ' · ' + x.baths + ' ba · ' + fmtNum(x.sqft) + ' sqft</div>' +
-        '<div class="mini-addr">' + esc(x.address) + '</div></div></div>';
+      const photo = (x.photos && x.photos[0]) || FALLBACK_IMAGES[0];
+      return `<div class="mini" data-id="${x.id}" role="button" tabindex="0">
+        <img src="${esc(photo)}" alt="${esc(x.address)}" loading="lazy" onerror="this.onerror=null;this.src='${FALLBACK_IMAGES[0]}'">
+        <div class="mini-body">
+          <div class="mini-price">${p}</div>
+          <div class="mini-specs">${x.beds === 0 ? 'Studio' : x.beds + ' bd'} · ${x.baths} ba · ${fmtNum(x.sqft)} sqft</div>
+          <div class="mini-addr">${esc(x.address)}</div>
+        </div>
+      </div>`;
     }).join('');
+  }
+
+  function bindHeroSlideshow() {
+    const imgs = $$('.drawer-hero img');
+    const dots = $$('.hero-dots span');
+    heroIndex = 0;
+
+    function show(i) {
+      heroIndex = (i + imgs.length) % imgs.length;
+      imgs.forEach((img, j) => img.classList.toggle('active', j === heroIndex));
+      dots.forEach((d, j) => d.classList.toggle('active', j === heroIndex));
+    }
+
+    const next = $('[data-hero-next]');
+    const prev = $('[data-hero-prev]');
+    if (next) next.addEventListener('click', e => { e.stopPropagation(); show(heroIndex + 1); });
+    if (prev) prev.addEventListener('click', e => { e.stopPropagation(); show(heroIndex - 1); });
+    dots.forEach((dot, i) => dot.addEventListener('click', e => { e.stopPropagation(); show(i); }));
+  }
+
+  function openDetail(id) {
+    const listing = currentData().find(x => x.id === id);
+    if (!listing) return;
+    activeDetailId = id;
+    drawer.innerHTML = detailHTML(listing);
+    drawer.classList.add('open');
+    drawer.setAttribute('aria-hidden', 'false');
+    drawer.scrollTop = 0;
+    scrim.classList.add('show');
+    if (state.mode === 'sale') bindCalculator(listing.price);
+    renderSimilar(listing);
+    bindHeroSlideshow();
+    const closeBtn = $('#closeDrawer'); if (closeBtn) closeBtn.focus({ preventScroll: true });
+  }
+
+  function closeDrawer() {
+    activeDetailId = null;
+    drawer.classList.remove('open');
+    drawer.setAttribute('aria-hidden', 'true');
+    scrim.classList.remove('show');
   }
 
   function bindCalculator(price) {
@@ -1198,160 +1256,178 @@ a{color:inherit;text-decoration:none}
       const r = Math.min(Math.max(parseFloat(rate.value) || 0, 0), 15);
       out.textContent = fmtUSD(Math.round(monthlyPayment(price, d, r)));
     };
-    down.addEventListener('input', update); rate.addEventListener('input', update);
+    down.addEventListener('input', update);
+    rate.addEventListener('input', update);
   }
 
-  function openDetail(id) {
-    const source = currentData();
-    const listing = source.find(x => x.id === id);
-    if (!listing) return;
-    activeDetailId = id;
-    drawer.innerHTML = detailHTML(listing);
-    drawer.classList.add('open');
-    drawer.setAttribute('aria-hidden', 'false');
-    drawer.scrollTop = 0;
-    scrim.classList.add('show');
-    if (state.mode === 'sale') bindCalculator(listing.price);
-    renderSimilar(listing);
-    highlightPin(id);
-    if (map) { const marker = pinById.get(id); if (marker) map.panTo(marker.getLatLng(), { animate: true }); }
-    const closeBtn = $('#closeDrawer'); if (closeBtn) closeBtn.focus({ preventScroll: true });
-  }
-
-  function closeDrawer() {
-    activeDetailId = null;
-    drawer.classList.remove('open');
-    drawer.setAttribute('aria-hidden', 'true');
-    scrim.classList.remove('show');
-    highlightPin(null);
-  }
-
-  /* ==================================================================
-     12. TOAST
-     ================================================================== */
+  /* ------------------------------------------------------------------
+     TOAST
+     ------------------------------------------------------------------ */
   let toastTimer = null;
   function toast(msg) {
     const el = $('#toast');
     $('#toastMsg').textContent = msg;
     el.classList.add('show');
     clearTimeout(toastTimer);
-    toastTimer = setTimeout(() => el.classList.remove('show'), 2300);
+    toastTimer = setTimeout(() => el.classList.remove('show'), 2600);
   }
 
-  /* ==================================================================
-     13. MOBILE PANELS
-     ================================================================== */
+  /* ------------------------------------------------------------------
+     MOBILE PANELS
+     ------------------------------------------------------------------ */
   const filtersPanel = $('#filters');
   function openFilters() { filtersPanel.classList.add('open'); scrim.classList.add('show'); }
   function closeFilters() { filtersPanel.classList.remove('open'); if (!drawer.classList.contains('open')) scrim.classList.remove('show'); }
 
-  /* ==================================================================
-     14. MODE (BUY / RENT) UI
-     ================================================================== */
+  /* ------------------------------------------------------------------
+     MODE UI
+     ------------------------------------------------------------------ */
   function updateModeUI() {
     const isRent = state.mode === 'rent';
-    $('#minPriceLabel').textContent = isRent ? 'Min rent' : 'Min price';
-    $('#maxPriceLabel').textContent = isRent ? 'Max rent' : 'Max price';
-    $('#statusField').style.display = isRent ? 'none' : '';
+    $('#statusSection').style.display = isRent ? 'none' : '';
     if (isRent) state.status = '';
 
-    // swap price filter options for rent mode
-    const minSel = $('#minPrice'), maxSel = $('#maxPrice');
-    if (isRent) {
-      minSel.innerHTML = '<option value="">No min</option><option value="1000">$1,000</option><option value="1500">$1,500</option><option value="2000">$2,000</option><option value="2500">$2,500</option><option value="3000">$3,000</option><option value="4000">$4,000</option>';
-      maxSel.innerHTML = '<option value="">No max</option><option value="1500">$1,500</option><option value="2000">$2,000</option><option value="2500">$2,500</option><option value="3000">$3,000</option><option value="4000">$4,000</option><option value="5000">$5,000</option>';
-    } else {
-      minSel.innerHTML = '<option value="">No min</option><option value="200000">$200,000</option><option value="300000">$300,000</option><option value="400000">$400,000</option><option value="500000">$500,000</option><option value="750000">$750,000</option><option value="1000000">$1,000,000</option>';
-      maxSel.innerHTML = '<option value="">No max</option><option value="300000">$300,000</option><option value="400000">$400,000</option><option value="500000">$500,000</option><option value="750000">$750,000</option><option value="1000000">$1,000,000</option><option value="2000000">$2,000,000</option>';
-    }
-    // reset price selects to avoid stale values
-    minSel.value = ''; maxSel.value = '';
-    state.min = ''; state.max = '';
+    const minSlider = $('#priceMin'), maxSlider = $('#priceMax');
+    minSlider.min = minPriceForMode(); maxSlider.min = minPriceForMode();
+    minSlider.max = maxPriceForMode(); maxSlider.max = maxPriceForMode();
+    minSlider.step = isRent ? 50 : 25000;
+    maxSlider.step = isRent ? 50 : 25000;
+    minSlider.value = minPriceForMode(); maxSlider.value = maxPriceForMode();
+    state.min = minPriceForMode(); state.max = maxPriceForMode();
+    updatePriceDisplay();
 
-    document.querySelectorAll('.mode-toggle button').forEach(btn => {
-      btn.classList.toggle('active', btn.dataset.mode === state.mode);
-    });
+    const toggle = document.querySelector('.mode-toggle');
+    toggle.dataset.mode = isRent ? 'rent' : 'sale';
+    $$('.mode-toggle button').forEach(b => b.classList.toggle('active', b.dataset.mode === state.mode));
     $('#searchInput').placeholder = isRent ? 'City, ZIP, or address (rentals)' : 'City, ZIP code, or address';
   }
 
-  /* ==================================================================
-     15. EVENTS
-     ================================================================== */
-  function readControls() {
-    state.min = $('#minPrice').value;
-    state.max = $('#maxPrice').value;
-    state.beds = $('#beds').value;
-    state.baths = $('#baths').value;
-    state.type = $('#type').value;
-    state.status = $('#status').value;
-    state.sort = $('#sortSelect').value;
+  function updatePriceDisplay() {
+    const isRent = state.mode === 'rent';
+    const min = +$('#priceMin').value, max = +$('#priceMax').value;
+    $('#priceMinDisplay').textContent = isRent ? '$' + fmtNum(min) : (min === 0 ? '$0' : shortPrice(min));
+    $('#priceMaxDisplay').textContent = isRent
+      ? (max >= maxPriceForMode() ? '$' + fmtNum(maxPriceForMode()) + '+' : '$' + fmtNum(max))
+      : (max >= maxPriceForMode() ? '$2M+' : shortPrice(max));
+    const minPct = ((min - minPriceForMode()) / (maxPriceForMode() - minPriceForMode())) * 100;
+    const maxPct = ((max - minPriceForMode()) / (maxPriceForMode() - minPriceForMode())) * 100;
+    $('#rangeFill').style.left = minPct + '%';
+    $('#rangeFill').style.right = (100 - maxPct) + '%';
   }
 
-  function rerenderFromControls() { readControls(); state.shown = state.pageSize; render(); $('#resultsPane').scrollTop = 0; }
-
+  /* ------------------------------------------------------------------
+     EVENTS
+     ------------------------------------------------------------------ */
   function bindEvents() {
-    // Mode toggle
-    document.querySelectorAll('.mode-toggle button').forEach(btn => {
+    $$('.mode-toggle button').forEach(btn => {
       btn.addEventListener('click', () => {
         if (state.mode === btn.dataset.mode) return;
         state.mode = btn.dataset.mode;
         state.savedOnly = false;
         state.q = ''; $('#searchInput').value = '';
-        state.shown = state.pageSize;
+        state.beds = ''; state.baths = ''; state.type = '';
         state.status = state.mode === 'sale' ? 'FOR_SALE' : '';
-        $('#status').value = state.status;
+        $$('.chip-row').forEach(row => {
+          $$('.chip', row).forEach(c => c.classList.toggle('active', c.dataset.val === (row.dataset.filter === 'status' ? 'FOR_SALE' : '')));
+        });
         updateModeUI();
         render();
       });
     });
 
-    ['#minPrice', '#maxPrice', '#beds', '#baths', '#type', '#status', '#sortSelect'].forEach(sel => {
-      $(sel).addEventListener('change', () => { state.savedOnly = false; rerenderFromControls(); });
+    const minSlider = $('#priceMin'), maxSlider = $('#priceMax');
+    function onSliderInput(which) {
+      let min = +minSlider.value, max = +maxSlider.value;
+      const step = state.mode === 'sale' ? 25000 : 50;
+      if (min > max - step) { if (which === 'min') minSlider.value = max - step; else maxSlider.value = min + step; }
+      min = +minSlider.value; max = +maxSlider.value;
+      state.min = min; state.max = max;
+      updatePriceDisplay(); updateFilterBadge(); render();
+    }
+    minSlider.addEventListener('input', () => onSliderInput('min'));
+    maxSlider.addEventListener('input', () => onSliderInput('max'));
+
+    $$('.chip-row').forEach(row => {
+      row.addEventListener('click', e => {
+        const chip = e.target.closest('.chip');
+        if (!chip) return;
+        $$('.chip', row).forEach(c => c.classList.remove('active'));
+        chip.classList.add('active');
+        state[row.dataset.filter] = chip.dataset.val;
+        state.savedOnly = false;
+        render();
+      });
     });
 
     $('#searchForm').addEventListener('submit', e => {
-      e.preventDefault(); state.q = $('#searchInput').value; state.savedOnly = false; state.shown = state.pageSize; render(); $('#resultsPane').scrollTop = 0;
+      e.preventDefault(); state.q = $('#searchInput').value; state.savedOnly = false; render(); $('#resultsPane').scrollTop = 0;
     });
-
     $('#searchInput').addEventListener('input', debounce(function () {
       const v = this.value; if (v === state.q) return;
-      state.q = v; state.savedOnly = false; state.shown = state.pageSize; render();
+      state.q = v; state.savedOnly = false; render();
     }, 320));
 
-    $('#savedBtn').addEventListener('click', () => { state.savedOnly = !state.savedOnly; state.shown = state.pageSize; render(); $('#resultsPane').scrollTop = 0; });
+    $('#savedBtn').addEventListener('click', () => {
+      state.savedOnly = !state.savedOnly; render();
+      if (window.innerWidth <= 1000) document.body.classList.remove('show-map');
+    });
+    $('#navSaved').addEventListener('click', () => {
+      state.savedOnly = !state.savedOnly; render();
+      document.body.classList.remove('show-map');
+      $$('.view-toggle button').forEach(b => b.classList.toggle('active', b.dataset.view === 'list'));
+      $('#navMap').classList.remove('active');
+    });
+
+    $('#sortSelect').addEventListener('change', e => { state.sort = e.target.value; render(); });
 
     $('#resetBtn').addEventListener('click', () => {
-      ['#minPrice', '#maxPrice', '#beds', '#baths', '#type', '#searchInput'].forEach(sel => { $(sel).value = ''; });
-      $('#status').value = state.mode === 'sale' ? 'FOR_SALE' : '';
-      $('#sortSelect').value = 'newest';
-      state.q = ''; state.savedOnly = false;
-      rerenderFromControls();
-      toast('Filters cleared');
+      state.q = ''; $('#searchInput').value = '';
+      state.beds = ''; state.baths = ''; state.type = '';
+      state.status = state.mode === 'sale' ? 'FOR_SALE' : '';
+      state.savedOnly = false;
+      state.sort = 'newest'; $('#sortSelect').value = 'newest';
+      $$('.chip-row').forEach(row => {
+        $$('.chip', row).forEach(c => c.classList.toggle('active', c.dataset.val === (row.dataset.filter === 'status' ? 'FOR_SALE' : '')));
+      });
+      minSlider.value = minPriceForMode(); maxSlider.value = maxPriceForMode();
+      state.min = minPriceForMode(); state.max = maxPriceForMode();
+      updatePriceDisplay(); render(); toast('Filters cleared');
     });
 
     $('#moreBtn').addEventListener('click', () => { state.shown += state.pageSize; renderGrid(); });
     $('#filterBtn').addEventListener('click', openFilters);
+    $('#navFilters').addEventListener('click', openFilters);
 
-    document.querySelectorAll('.view-toggle button').forEach(btn => {
+    $$('.view-toggle button').forEach(btn => {
       btn.addEventListener('click', () => {
-        document.querySelectorAll('.view-toggle button').forEach(b => b.classList.remove('active'));
+        $$('.view-toggle button').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
         const showMap = btn.dataset.view === 'map';
         document.body.classList.toggle('show-map', showMap);
-        if (showMap && map) setTimeout(() => map.invalidateSize(), 60);
+        $('#navMap').classList.toggle('active', showMap);
+        if (showMap && map) setTimeout(() => map.resize(), 60);
       });
     });
+    $('#navMap').addEventListener('click', () => {
+      const isMap = document.body.classList.toggle('show-map');
+      $('#navMap').classList.toggle('active', isMap);
+      $$('.view-toggle button').forEach(b => b.classList.toggle('active', b.dataset.view === (isMap ? 'map' : 'list')));
+      if (isMap && map) setTimeout(() => map.resize(), 60);
+    });
 
-    scrim.addEventListener('click', () => { if (drawer.classList.contains('open')) closeDrawer(); else closeFilters(); });
+    scrim.addEventListener('click', () => {
+      if (drawer.classList.contains('open')) closeDrawer();
+      else closeFilters();
+    });
 
     document.addEventListener('click', e => {
       if (e.target.closest('#closeDrawer')) { closeDrawer(); return; }
       const favBtn = e.target.closest('[data-fav]');
-      if (favBtn) { e.preventDefault(); e.stopPropagation(); toggleSaved(Number(favBtn.dataset.fav)); return; }
+      if (favBtn) { e.preventDefault(); e.stopPropagation(); toggleSaved(favBtn.dataset.fav); return; }
       if (e.target.closest('[data-contact]')) { toast('An agent will reach out shortly'); return; }
       if (e.target.closest('#alertBtn')) { toast('Price alert created for this search'); return; }
       const target = e.target.closest('.card[data-id], .mini[data-id]');
-      if (target) openDetail(Number(target.dataset.id));
+      if (target) openDetail(target.dataset.id);
     });
 
     document.addEventListener('keydown', e => {
@@ -1360,24 +1436,22 @@ a{color:inherit;text-decoration:none}
         if (filtersPanel.classList.contains('open')) { closeFilters(); return; }
         return;
       }
-      if ((e.key === 'Enter' || e.key === ' ') && e.target.matches('.card[data-id], .mini[data-id]')) { e.preventDefault(); openDetail(Number(e.target.dataset.id)); }
+      if ((e.key === 'Enter' || e.key === ' ') && e.target.matches('.card[data-id], .mini[data-id]')) {
+        e.preventDefault(); openDetail(e.target.dataset.id);
+      }
     });
 
-    const grid = $('#grid');
-    grid.addEventListener('mouseover', e => { const card = e.target.closest('.card[data-id]'); if (card) highlightPin(Number(card.dataset.id)); });
-    grid.addEventListener('mouseout', e => { const card = e.target.closest('.card[data-id]'); if (card && activeDetailId == null) highlightPin(null); });
-
-    window.addEventListener('resize', debounce(() => { if (map) map.invalidateSize(); }, 180));
+    window.addEventListener('resize', debounce(() => { if (map) map.resize(); }, 180));
   }
 
-  /* ==================================================================
-     16. BOOT
-     ================================================================== */
+  /* ------------------------------------------------------------------
+     BOOT
+     ------------------------------------------------------------------ */
   function boot() {
     initMap();
     bindEvents();
     updateModeUI();
-    render();
+    loadData();
   }
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot); else boot();
